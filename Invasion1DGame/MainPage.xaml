@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Invasion1DGame.MainPage">
+
+    <Grid RowDefinitions="*,8*,*"
+          ColumnDefinitions="*,*,*,*">
+
+        <VerticalStackLayout
+            Grid.Column="0">
+            <Label
+                Text="Time"
+                />
+            <Label
+                x:Name="TimeLabel"
+                />
+        </VerticalStackLayout>
+        <VerticalStackLayout 
+            Grid.Column="1">
+            <Label
+                 Text="Health"
+                 />
+            <Label
+                 x:Name="HealthLabel"
+                 />
+        </VerticalStackLayout>
+        <VerticalStackLayout 
+            Grid.Column="2">
+            <Label
+                 Text="Vitalux"
+                 />
+            <Label
+                 x:Name="VitaluxLabel"
+                 />
+        </VerticalStackLayout>
+        <VerticalStackLayout 
+            Grid.Column="3">
+            <Label
+                 Text="Warpium"
+                 />
+            <Label
+                 x:Name="WarpiumLabel"
+                 />
+        </VerticalStackLayout>
+
+        <Frame 
+            Grid.Row="1"
+            Grid.ColumnSpan="2"
+            BackgroundColor="Black"
+            x:Name="PlayerView">
+        </Frame>
+
+        <AbsoluteLayout
+            Grid.Row="1"
+            Grid.Column="2"
+            Grid.ColumnSpan="2"
+            IsVisible="true"
+            Padding="0"
+            Margin="0"
+            x:Name="MapView"/>
+
+        <HorizontalStackLayout
+            Grid.Row="2"
+            Grid.ColumnSpan="4"
+            Margin="0,0,20,0">
+            <Button
+                Text="&lt;--"
+                Clicked="NegClicked"
+                x:Name="NegKey"/>
+            <Button
+                Text="-->"
+                Clicked="PosClicked"
+                x:Name="PosKey"/>
+            <Button
+                Text="#"
+                Clicked="ShootClicked"
+                x:Name="ShootKey"/>
+            <Button
+                Text="Map Mode"
+                Clicked="MapModeClicked"
+                x:Name="MapModeKey"/>
+        </HorizontalStackLayout>
+    </Grid>
+
+</ContentPage>
