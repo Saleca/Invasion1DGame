@@ -34,7 +34,7 @@ namespace Invasion1DGame.Models
 
 		public override Point GetPositionInShape(Interactive physicalShape)
 		{
-			double angle = physicalShape.PositionPercentage * TwoPI;
+			double angle = physicalShape.PercentageInShape * TwoPI;
 			double offset = Radius - strokeThickness / 2;
 			return new(
 				(offset * Math.Cos(angle)) + Position.X + strokeThickness - physicalShape.Radius,

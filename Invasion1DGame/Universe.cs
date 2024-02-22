@@ -40,8 +40,7 @@ namespace Invasion1DGame
 			double pp = .9f;
 			playerData = new((Circular)dimensions[0], pp, 10);
 
-			playerData.target = playerData.FindTarget(out double distanceFromTarget, typeof(Player));
-			MainPage.Instance.ChangeView(GameColors.CalculateView(distanceFromTarget, playerData.target?.DisplayColor()));
+			MainPage.Instance.ChangeView(playerData.GetView());
 		}
 
 		public void ReStart()

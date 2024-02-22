@@ -6,7 +6,7 @@
 		{
 			InitializeComponent();
 
-			MainPage = new AppShell();
+			MainPage = Invasion1DGame.MainPage.Instance;
 		}
 	}
 }

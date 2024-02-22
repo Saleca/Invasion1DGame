@@ -1,4 +1,5 @@
 ﻿using Invasion1DGame.Helpers;
+using Microsoft.Maui;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace Invasion1DGame.Models
@@ -34,7 +35,7 @@ namespace Invasion1DGame.Models
 
 		public override Point GetPositionInShape(Interactive mobileShape)
 		{
-			Point position = GameMath.GetPositionInLine(this, mobileShape.PositionPercentage);
+			Point position = GameMath.GetPositionInLine(this, mobileShape.PercentageInShape);
 			position.X -= mobileShape.Radius;
 			position.Y -= mobileShape.Radius;
 			return position;

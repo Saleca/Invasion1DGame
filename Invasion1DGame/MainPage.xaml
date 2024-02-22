@@ -76,6 +76,10 @@
                 Clicked="ShootClicked"
                 x:Name="ShootKey"/>
             <Button
+                Text="@"
+                Clicked="WarpClicked"
+                x:Name="WarpKey"/>
+            <Button
                 Text="Map Mode"
                 Clicked="MapModeClicked"
                 x:Name="MapModeKey"/>

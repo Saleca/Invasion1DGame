@@ -17,36 +17,40 @@ namespace Invasion1DGame.Models
 			direction = clockwise;
 			IsPositiveTouching = false;
 			IsNegativeTouching = false;
-
-			dimension.EnemiesEliminated += TeleportAsync;
 		}
 
-		public async void TeleportAsync(object? sender, EventArgs args)
+		public async void WarpAsync()
 		{
-			visitedDimensions.Add(CurrentDimention);
-			if (visitedDimensions.Count == Dimension.dimensions.Count)
+			if (warpium > 0)
 			{
-				visitedDimensions.Clear();
+				visitedDimensions.Add(CurrentDimention);
+
+				if (visitedDimensions.Count == Dimension.dimensions.Count)
+					visitedDimensions.Clear();
+
+				var unvisitedDimentions = Dimension.dimensions.Except(visitedDimensions).ToArray();
+
+				Random random = new();
+				CurrentDimention = unvisitedDimentions[random.Next(unvisitedDimentions.Length)];
+
+				do
+				{
+					PercentageInShape = random.NextDouble();
+				} while (CurrentDimention.CheckOverlap(this));
+
+				warpium--;
+
+				await MainPage.Instance.AnimateTeleportation(
+					start: new(body.TranslationX, body.TranslationY),
+					end: new(Position.X, Position.Y));
 			}
-
-			var unvisitedDimentions = Dimension.dimensions.Except(visitedDimensions).ToArray();
-			Random random = new();
-
-			CurrentDimention.EnemiesEliminated -= TeleportAsync; //unsubscribe from old dimension
-			CurrentDimention = unvisitedDimentions[random.Next(unvisitedDimentions.Length)];
-			CurrentDimention.EnemiesEliminated += TeleportAsync; //subscribe to new dimension
-
-			PositionPercentage = random.NextDouble();
-
-			await MainPage.Instance.AnimateTeleportation(
-				start: new(body.TranslationX, body.TranslationY),
-				end: new(Position.X, Position.Y));
 		}
 
 		public override void Attack()
 		{
+			//TODO
 			//Add cooldown timer
-			if (vitalux > attackCost)
+			if (vitalux >= attackCost)
 			{
 				vitalux -= attackCost;
 
@@ -54,8 +58,8 @@ namespace Invasion1DGame.Models
 					new Bullet(
 						shape: CurrentDimention,
 						position: direction ?
-							GameMath.AddPercentage(PositionPercentage, percentageOffset) :
-							GameMath.SubtractPercentage(PositionPercentage, percentageOffset),
+								GameMath.AddPercentage(PercentageInShape, sizePercentage) :
+								GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
 						direction: direction));
 			}
 		}
@@ -75,22 +79,50 @@ namespace Invasion1DGame.Models
 
 			this.direction = direction;
 
-			target = FindTarget(out double distanceFromTarget, typeof(Player));
+			double stepDistance = default!;
+			bool completeStep = false;
 
-			double stepDistance = speed;
-			if (distanceFromTarget < stepDistance)
+			List<Type> ignore = [typeof(Player)];
+			while (!completeStep)
 			{
-				stepDistance = distanceFromTarget;
-				isTouching = true;
+				Interactive? target = FindInteractive(out double distanceFromTarget, [.. ignore]);
+
+				stepDistance = speed;
+				if (distanceFromTarget < stepDistance)
+				{
+					if (target is Item item)
+					{
+						if (item.Power(this))
+						{
+							continue;
+						}
+						else
+						{
+							switch (item)
+							{
+								case Vitalux:
+									ignore.Add(typeof(Vitalux));
+									break;
+								case Warpium:
+									ignore.Add(typeof(Warpium));
+									break;
+							}
+							continue;
+						}
+					}
+					stepDistance = distanceFromTarget;
+					isTouching = true;
+				}
+				completeStep = true;
 			}
 
 			if (direction)
 			{
-				PositionPercentage += CurrentDimention.GetPercentageFromDistance(stepDistance);
+				PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
 			}
 			else
 			{
-				PositionPercentage -= CurrentDimention.GetPercentageFromDistance(stepDistance);
+				PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
 			}
 
 			body.TranslationX = Position.X;

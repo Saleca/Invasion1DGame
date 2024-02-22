@@ -9,12 +9,15 @@ namespace Invasion1DGame
 	public partial class MainPage : ContentPage
 	{
 		//Frame? frame;
-		public static MainPage Instance = null!;
-		//public static MainPage Instance => instance ??= new();
+		private static MainPage instance = null!;
+		public static MainPage Instance => instance ??= new();
 
-		internal List<Bullet> bullets = [];
+		public List<Bullet> bullets = [];
 
 		readonly Player playerData = null!;
+
+		//check if better use datetime and span to display time
+		public Stopwatch stopwatch = null!;
 
 		bool isMapVisible = true;
 
@@ -37,20 +40,14 @@ namespace Invasion1DGame
 				}
 			}
 		}
-		
 
-		public MainPage()
+
+		MainPage()
 		{
-			if (Instance is null)
-			{
-				Instance = this;
-			}
-			else return;
-
-
 			InitializeComponent();
 
-			//Awake
+			//TOTO 1
+			//get frame to focus allowing keyboard control
 			/*if (Instance.Handler?.PlatformView is not null)
 			{
 				frame = (Frame)Instance.Handler.PlatformView;
@@ -61,6 +58,7 @@ namespace Invasion1DGame
 			bullets = [];
 			_ = new Seed();
 
+			//TODO 2
 			//
 			//select shape on map to start player on that shape
 			//
@@ -68,8 +66,7 @@ namespace Invasion1DGame
 			double pp = .9f;
 			playerData = new((Circular)Dimension.dimensions[0], pp, 10);
 
-			playerData.target = playerData.FindTarget(out double distanceFromTarget, typeof(Player));
-			ChangeView(GameColors.CalculateView(distanceFromTarget, playerData.target?.DisplayColor()));
+			ChangeView(playerData.GetView());
 
 			Draw();
 		}
@@ -77,6 +74,7 @@ namespace Invasion1DGame
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
+			stopwatch = Stopwatch.StartNew();
 			Task.Run(Update);
 		}
 
@@ -103,18 +101,21 @@ namespace Invasion1DGame
 				UpdateBullets();
 			}
 
+			//TODO
+			//automate and update enemies
+
 			if (!IsAnimating)
 			{
-				playerData.target = playerData.FindTarget(out double distanceFromTarget, typeof(Player));
-				if (playerData.target != null)
-				{
-					ChangeView(GameColors.CalculateView(distanceFromTarget, playerData.target.DisplayColor()));
-				}
-				else
-				{
-					ChangeView();
-				}
+				ChangeView(playerData.GetView());
 			}
+
+			//make bar for health and vitalux
+			HealthLabel.Text = playerData.health.ToString();
+			VitaluxLabel.Text = playerData.vitalux.ToString();
+
+			WarpiumLabel.Text = playerData.warpium.ToString();
+
+			TimeLabel.Text = stopwatch.Elapsed.CustomToString();
 		}
 
 		internal async Task AnimateTeleportation(Point start, Point end)
@@ -162,6 +163,7 @@ namespace Invasion1DGame
 			IsAnimating = false;
 			MapView.IsVisible = false;
 
+			//TODO 1
 			//frame.Focus();
 		}
 
@@ -208,6 +210,8 @@ namespace Invasion1DGame
 		public void ClearView()
 		{
 			MapView.Children.Clear();
+			//TODO 3
+			//reset game
 			//default stats views
 		}
 
@@ -226,6 +230,7 @@ namespace Invasion1DGame
 		private void NegClicked(object sender, EventArgs e) => PlayerMove(false);
 		private void PosClicked(object sender, EventArgs e) => PlayerMove(true);
 		private void ShootClicked(object sender, EventArgs e) => PlayerAttack();
+		private void WarpClicked(object sender, EventArgs e) => WarpPlayer();
 		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 
 		public void PlayerMove(bool dir)
@@ -235,6 +240,7 @@ namespace Invasion1DGame
 			else playerData.NegativeMove();
 		}
 		public void PlayerAttack() => playerData.Attack();
+		public void WarpPlayer() => playerData.WarpAsync();
 		public void ChangeMapMode()
 		{
 			isMapVisible = !isMapVisible;
@@ -248,7 +254,7 @@ namespace Invasion1DGame
 			}
 		}
 
-		public static Color VoidColor => Microsoft.Maui.Controls.Application.Current?.RequestedTheme switch
+		public static Color VoidColor => Application.Current?.RequestedTheme switch
 		{
 			AppTheme.Dark => Colors.Black,
 			AppTheme.Light => Colors.White,

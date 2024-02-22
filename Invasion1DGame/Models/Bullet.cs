@@ -14,7 +14,6 @@
 		{
 			this.direction = direction;
 
-			target = FindTarget(out _, typeof(Bullet), typeof(Player));
 			Damage = 1;
 		}
 
@@ -27,13 +26,13 @@
 		void Move(ref bool isTouching, ref bool isTouchingOpposite, bool direction)
 		{
 			if (isTouching)
-				return; //dispose
+				return; //TODO check if should be disposed
 			if (isTouchingOpposite)
 				isTouchingOpposite = false;
 
 			base.direction = direction;
 
-			target = FindTarget(out double distanceFromTarget, typeof(Bullet), typeof(Player));
+			Kinetic? target = FindInteractive(out double distanceFromTarget, typeof(Bullet), typeof(Vitalux), typeof(Warpium)) as Kinetic;
 
 			double stepDistance = speed;
 			if (distanceFromTarget < stepDistance)
@@ -46,11 +45,11 @@
 
 			if (direction)
 			{
-				PositionPercentage += CurrentDimention.GetPercentageFromDistance(stepDistance);
+				PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
 			}
 			else
 			{
-				PositionPercentage -= CurrentDimention.GetPercentageFromDistance(stepDistance);
+				PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
 			}
 
 			PointF newPosition = Position;

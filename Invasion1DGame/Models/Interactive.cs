@@ -7,7 +7,7 @@ namespace Invasion1DGame.Models
 		public double Radius { get; init; }
 		public Point Position { get; set; }
 
-		internal double percentageOffset;
+		internal double sizePercentage;
 
 		private Dimension currentDimention = null!;
 		public Dimension CurrentDimention
@@ -17,12 +17,12 @@ namespace Invasion1DGame.Models
 			{
 				currentDimention = value;
 				CurrentDimention.AddInteractiveObject(this);
-				percentageOffset = CurrentDimention.GetPercentageFromDistance(Radius * 2);
+				sizePercentage = CurrentDimention.GetPercentageFromDistance(Radius * 2);
 			}
 		}
 
 		double percentageInShape;
-		public double PositionPercentage
+		public double PercentageInShape
 		{
 			get => percentageInShape;
 			set
@@ -34,9 +34,9 @@ namespace Invasion1DGame.Models
 
 		public Interactive(Dimension dimension, double positionPercentage, Color color) : base(0, color, color)
 		{
-			CurrentDimention = dimension;
 			Radius = 5;
-			PositionPercentage = positionPercentage;
+			CurrentDimention = dimension;
+			PercentageInShape = positionPercentage;
 
 			body = new Ellipse()
 			{
@@ -53,8 +53,6 @@ namespace Invasion1DGame.Models
 			body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
 			body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
 		}
-
-		public abstract void TakeDamage(double damage);
 
 		public override void Reset()
 		{
