@@ -54,7 +54,7 @@
             <Label
                 Grid.Row="2"
                 Grid.Column="0"
-                TextColor="Yellow"
+                TextColor="{StaticResource Vitalux}"
                 Text="Vitalux"
                 />
             <Label
@@ -66,7 +66,7 @@
             <Label
                 Grid.Row="2"
                 Grid.Column="1"
-                TextColor="Blue"
+                TextColor="{StaticResource Warpium}"
                 Text="Warpium"
                 />
             <Label
@@ -84,7 +84,7 @@
             VerticalOptions="FillAndExpand">
             <Frame 
                 Grid.ColumnSpan="2"
-                BackgroundColor="Black"
+                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                 x:Name="PlayerView">
             </Frame>
 
@@ -116,14 +116,15 @@
             <Button
                 Grid.Row="1"
                 Grid.Column="0"
-                TextColor="Yellow"
+                TextColor="{StaticResource Vitalux}"
                 Text="Shoot"
                 Clicked="ShootClicked"
-                x:Name="ShootKey"/>
+                x:Name="ShootKey"
+                />
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
-                TextColor="Blue"
+                TextColor="{StaticResource Warpium}"
                 Text="Warp"
                 Clicked="WarpClicked"
                 x:Name="WarpKey"/>
