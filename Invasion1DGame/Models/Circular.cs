@@ -9,7 +9,7 @@ namespace Invasion1DGame.Models
 		public Point Position { get; set; }
 		public double Radius { get; init; }
 
-		public Circular(Universe? universe, Point position, double radius) : base(universe)
+		public Circular(Point position, double radius) : base()
 		{
 			Position = position;
 			Radius = radius;
@@ -29,7 +29,7 @@ namespace Invasion1DGame.Models
 			};
 			body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
 
-			dimensions.Add(this);
+			MainPage.Instance.universe.dimensions.Add(this);
 		}
 
 		public override Point GetPositionInShape(Interactive physicalShape)

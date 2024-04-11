@@ -1,9 +1,7 @@
 ﻿namespace Invasion1DGame.Models
 {
-	public abstract class Dimension(Universe? universe) : GFX(6, Colors.Black, Colors.White)
+	public abstract class Dimension() : GFX(6, Colors.Black, Colors.White)
 	{
-		public static readonly List<Dimension> dimensions = [];//
-		public Universe? universe = universe;
 		public readonly List<Interactive> interactiveObjects = [];
 
 		//TODO
@@ -27,7 +25,7 @@
 		public override void Dispose()
 		{
 			base.Dispose();
-			dimensions.Remove(this);
+			MainPage.Instance.universe.dimensions.Remove(this);
 		}
 
 		public abstract Point GetPositionInShape(Interactive interactive);

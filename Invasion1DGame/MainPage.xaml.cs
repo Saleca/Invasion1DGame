@@ -8,18 +8,17 @@ namespace Invasion1DGame
 {
 	public partial class MainPage : ContentPage
 	{
+		//TODO *1
 		//Frame? frame;
-		private static MainPage instance = null!;
-		public static MainPage Instance => instance ??= new();
 
+		public static MainPage Instance = null!;
+		//public static MainPage Instance => instance ??= new();
+
+		bool isStarted = false;
+
+		public Universe universe = null!;
+		bool isMapVisible = false;
 		public List<Bullet> bullets = [];
-
-		readonly Player playerData = null!;
-
-		//check if better use datetime and span to display time
-		public Stopwatch stopwatch = null!;
-
-		bool isMapVisible = true;
 
 		readonly object locker = new();
 		bool isAnimating;
@@ -41,132 +40,101 @@ namespace Invasion1DGame
 			}
 		}
 
-
-		MainPage()
+		public MainPage()
 		{
+			if (Instance == null)
+			{
+				Instance = this;
+			}
+			else
+			{
+				return;
+			}
+
 			InitializeComponent();
 
-			//TOTO 1
+
+			//TOTO *1
 			//get frame to focus allowing keyboard control
 			/*if (Instance.Handler?.PlatformView is not null)
 			{
 				frame = (Frame)Instance.Handler.PlatformView;
 			}*/
 
-			//(re)Start
-			IsAnimating = false;
-			bullets = [];
-			_ = new Seed();
-
-			//TODO 2
-			//
-			//select shape on map to start player on that shape
-			//
-
-			double pp = .9f;
-			playerData = new((Circular)Dimension.dimensions[0], pp, 10);
-
-			ChangeView(playerData.GetView());
-
-			Draw();
 		}
 
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
-			stopwatch = Stopwatch.StartNew();
-			Task.Run(Update);
 		}
 
-		private async Task Update()
+		public void Initiate()
 		{
-			bool isGameOver = false;
-			while (!isGameOver)
+			IsAnimating = false;
+			bullets = [];
+			universe = new();
+			universe.Initiate();
+		}
+
+		public void Start()
+		{
+			if (isStarted)
 			{
-				try
+				universe.CancelUpdate();
+				Reset();
+			}
+			Initiate();
+
+			universe.Start();
+			isStarted = true;
+			StartKey.Text = "Restart";
+		}
+
+		public void Reset()
+		{
+			universe.ResetDimentions();
+			MapView.Children.Clear();
+		}
+
+		public void Draw()
+		{
+			foreach (var dimension in universe.dimensions)
+			{
+				MapView.Add(dimension.body);
+
+				foreach (var interactiveObj in dimension.interactiveObjects)
 				{
-					await MainThread.InvokeOnMainThreadAsync(UpdateUI);
-					await Task.Delay(100);
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine(ex.ToString());
+					MapView.Add(interactiveObj.body);
 				}
 			}
 		}
-		void UpdateUI()
+
+		public void UpdateUI(Player playerData, string time)
 		{
 			if (bullets.Count > 0)
 			{
 				UpdateBullets();
 			}
-
 			//TODO
 			//automate and update enemies
 
 			if (!IsAnimating)
 			{
-				ChangeView(playerData.GetView());
+				UpdateView(playerData.GetView());
 			}
 
+			//TODO
 			//make bar for health and vitalux
 			HealthLabel.Text = playerData.health.ToString();
 			VitaluxLabel.Text = playerData.vitalux.ToString();
 
 			WarpiumLabel.Text = playerData.warpium.ToString();
 
-			TimeLabel.Text = stopwatch.Elapsed.CustomToString();
+			TimeLabel.Text = time;
 		}
 
-		internal async Task AnimateTeleportation(Point start, Point end)
-		{
-			double scale = 5;
-
-			MapView.Scale = scale;
-
-			double offset = playerData.Radius - playerData.strokeThickness,
-				mapOffsetX = MapView.Width / 2 - offset,
-				mapOffsetY = MapView.Height / 2 - offset,
-
-				startX = mapOffsetX - start.X,
-				startY = mapOffsetY - start.Y,
-				startScaledX = startX * scale,
-				startScaledY = startY * scale,
-
-				endX = mapOffsetX - end.X,
-				endY = mapOffsetY - end.Y,
-				endScaledX = endX * scale,
-				endScaledY = endY * scale,
-
-				midX = GameMath.LinearInterpolation(startX, endX, .5),
-				midY = GameMath.LinearInterpolation(startY, endY, .5);
-
-			MapView.TranslationX = startScaledX;
-			MapView.TranslationY = startScaledY;
-
-			IsAnimating = true;
-			ChangeView(Colors.Transparent);
-			MapView.IsVisible = true;
-
-			var translatePlayer = playerData.body.TranslateTo(end.X, end.Y, 4000, Easing.CubicInOut);
-
-			var translateOut = MapView.TranslateTo(midX, midY, 2000, Easing.CubicOut);
-			var scaleOut = MapView.ScaleTo(1, 2000, Easing.CubicOut);
-			await Task.WhenAll(translateOut, scaleOut);
-
-			var translateIn = MapView.TranslateTo(endScaledX, endScaledY, 2000, Easing.CubicIn);
-			var scaleIn = MapView.ScaleTo(scale, 2000, Easing.CubicIn);
-			await Task.WhenAll(translateIn, scaleIn);
-
-			await translatePlayer;
-
-			IsAnimating = false;
-			MapView.IsVisible = false;
-
-			//TODO 1
-			//frame.Focus();
-		}
-
+		//TODO 
+		//move this to bullet page as instance
 		void UpdateBullets()
 		{
 			List<Bullet> bulletsToRemove = [];
@@ -192,28 +160,73 @@ namespace Invasion1DGame
 			}
 		}
 
-		void Draw()
+		internal async Task WarpAnimation(Player playerData, Point start, Point end)
 		{
-			foreach (var dimension in Dimension.dimensions)
+			double offset = playerData.Radius - playerData.strokeThickness,
+				mapOffsetX = PlayerView.Width / 2 - offset,
+				mapOffsetY = PlayerView.Height / 2 - offset,
+
+				startX = mapOffsetX - start.X,
+				startY = mapOffsetY - start.Y,
+				endX = mapOffsetX - end.X,
+				endY = mapOffsetY - end.Y;
+
+			double scale = default!,
+				endScaledX = default!,
+				endScaledY = default!,
+				midX = default!,
+				midY = default!;
+			if (!isMapVisible)
 			{
-				MapView.Add(dimension.body);
+				scale = 5;
 
-				foreach (var interactiveObj in dimension.interactiveObjects)
-				{
-					MapView.Add(interactiveObj.body);
-				}
+				MapView.Scale = scale;
+
+				double startScaledX = startX * scale,
+				startScaledY = startY * scale;
+
+				endScaledX = endX * scale;
+				endScaledY = endY * scale;
+
+				midX = GameMath.LinearInterpolation(startX, endX, .5);
+				midY = GameMath.LinearInterpolation(startY, endY, .5);
+
+				MapView.TranslationX = startScaledX;
+				MapView.TranslationY = startScaledY;
+
+				UpdateView(Colors.Transparent);
+				MapView.IsVisible = true;
 			}
+
+			IsAnimating = true;
+
+			Task<bool> translatePlayer = playerData.body.TranslateTo(end.X, end.Y, 4000, Easing.CubicInOut);
+
+			if (!isMapVisible)
+			{
+				Task<bool> translateOut = MapView.TranslateTo(midX, midY, 2000, Easing.CubicOut);
+				Task<bool> scaleOut = MapView.ScaleTo(1, 2000, Easing.CubicOut);
+				await Task.WhenAll(translateOut, scaleOut);
+
+				Task<bool> translateIn = MapView.TranslateTo(endScaledX, endScaledY, 2000, Easing.CubicIn);
+				Task<bool> scaleIn = MapView.ScaleTo(scale, 2000, Easing.CubicIn);
+				await Task.WhenAll(translateIn, scaleIn);
+			}
+
+			await translatePlayer;
+
+			IsAnimating = false;
+
+			if (!isMapVisible)
+			{
+				MapView.IsVisible = false;
+			}
+
+			//TODO *1
+			//frame.Focus();
 		}
 
-		internal void ChangeView(Color? color = null) => PlayerView.BackgroundColor = color ?? VoidColor;
-
-		public void ClearView()
-		{
-			MapView.Children.Clear();
-			//TODO 3
-			//reset game
-			//default stats views
-		}
+		internal void UpdateView(Color? color = null) => PlayerView.BackgroundColor = color ?? VoidColor;
 
 		internal void RemoveFromView(Shape shape)
 		{
@@ -227,32 +240,7 @@ namespace Invasion1DGame
 			MapView.Children.Add(bullet.body);
 		}
 
-		private void NegClicked(object sender, EventArgs e) => PlayerMove(false);
-		private void PosClicked(object sender, EventArgs e) => PlayerMove(true);
-		private void ShootClicked(object sender, EventArgs e) => PlayerAttack();
-		private void WarpClicked(object sender, EventArgs e) => WarpPlayer();
-		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 
-		public void PlayerMove(bool dir)
-		{
-			if (dir)
-				playerData.PositiveMove();
-			else playerData.NegativeMove();
-		}
-		public void PlayerAttack() => playerData.Attack();
-		public void WarpPlayer() => playerData.WarpAsync();
-		public void ChangeMapMode()
-		{
-			isMapVisible = !isMapVisible;
-			if (isMapVisible)
-			{
-				MapView.IsVisible = true;
-			}
-			else
-			{
-				MapView.IsVisible = false;
-			}
-		}
 
 		public static Color VoidColor => Application.Current?.RequestedTheme switch
 		{
@@ -260,5 +248,37 @@ namespace Invasion1DGame
 			AppTheme.Light => Colors.White,
 			_ => Colors.Black,
 		};
+
+		public void ChangeMapMode()
+		{
+			isMapVisible = !isMapVisible;
+			if (isMapVisible)
+			{
+				MapView.IsVisible = true;
+
+				Grid.SetColumn(PlayerView, 0);
+				Grid.SetColumnSpan(PlayerView, 1);
+				Grid.SetColumn(MapView, 1);
+				Grid.SetColumnSpan(MapView, 1);
+				MapView.Scale = 1;
+				MapView.TranslationX = 0;
+				MapView.TranslationY = 0;
+			}
+			else
+			{
+				MapView.IsVisible = false;
+				Grid.SetColumn(PlayerView, 0);
+				Grid.SetColumnSpan(PlayerView, 2);
+				Grid.SetColumn(MapView, 0);
+				Grid.SetColumnSpan(MapView, 2);
+			}
+		}
+
+		private void NegClicked(object sender, EventArgs e) => universe.PlayerMove(false);
+		private void PosClicked(object sender, EventArgs e) => universe.PlayerMove(true);
+		private void ShootClicked(object sender, EventArgs e) => universe.PlayerAttack();
+		private void WarpClicked(object sender, EventArgs e) => universe.WarpPlayer();
+		private void StartClicked(object sender, EventArgs e) => Start();
+		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 	}
 }

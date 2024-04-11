@@ -6,7 +6,7 @@
 		{
 			InitializeComponent();
 
-			MainPage = Invasion1DGame.MainPage.Instance;
+			MainPage = new MainPage();//Invasion1DGame.MainPage.Instance;
 		}
 	}
 }

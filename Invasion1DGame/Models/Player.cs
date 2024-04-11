@@ -25,22 +25,23 @@ namespace Invasion1DGame.Models
 			{
 				visitedDimensions.Add(CurrentDimention);
 
-				if (visitedDimensions.Count == Dimension.dimensions.Count)
+				if (visitedDimensions.Count == MainPage.Instance.universe.dimensions.Count)
 					visitedDimensions.Clear();
 
-				var unvisitedDimentions = Dimension.dimensions.Except(visitedDimensions).ToArray();
+				var unvisitedDimentions = MainPage.Instance.universe.dimensions.Except(visitedDimensions).ToArray();
 
-				Random random = new();
-				CurrentDimention = unvisitedDimentions[random.Next(unvisitedDimentions.Length)];
+				Dimension cd = CurrentDimention;
+				CurrentDimention = unvisitedDimentions[MainPage.Instance.universe.random.Next(unvisitedDimentions.Length)];
+				cd.interactiveObjects.Remove(this);
 
 				do
 				{
-					PercentageInShape = random.NextDouble();
+					PercentageInShape = MainPage.Instance.universe.random.NextDouble();
 				} while (CurrentDimention.CheckOverlap(this));
 
 				warpium--;
 
-				await MainPage.Instance.AnimateTeleportation(
+				await MainPage.Instance.WarpAnimation(this,
 					start: new(body.TranslationX, body.TranslationY),
 					end: new(Position.X, Position.Y));
 			}

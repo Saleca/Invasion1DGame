@@ -12,7 +12,7 @@ namespace Invasion1DGame.Models
 
 		//calculate length of line
 
-		public Linear(Universe? universe, Point startPosition, Point endPosition) : base(universe)
+		public Linear(Point startPosition, Point endPosition) : base()
 		{
 			StartPosition = startPosition;
 			EndPosition = endPosition;
@@ -30,7 +30,7 @@ namespace Invasion1DGame.Models
 			};
 			body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
 
-			dimensions.Add(this);
+			MainPage.Instance.universe.dimensions.Add(this);
 		}
 
 		public override Point GetPositionInShape(Interactive mobileShape)

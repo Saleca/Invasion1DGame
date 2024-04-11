@@ -1,56 +1,98 @@
 ﻿using Invasion1DGame.Data;
 using Invasion1DGame.Helpers;
 using Invasion1DGame.Models;
+using Microsoft.Maui.Controls.Shapes;
+using System.Diagnostics;
 
 namespace Invasion1DGame
 {
 	public class Universe
 	{
-		public List<Dimension> dimensions = [];
-		public List<Bullet> bullets = [];
+		public Random random = null!;
+		public readonly List<Dimension> dimensions = [];
+		Player playerData = null!;
+		private CancellationTokenSource cancelUpdate = new();
 
-		public Player playerData;
-
-		readonly object locker = new();
-		bool isAnimating;
-		bool IsAnimating
-		{
-			get
-			{
-				lock (locker)
-				{
-					return isAnimating;
-				}
-			}
-			set
-			{
-				lock (locker)
-				{
-					isAnimating = value;
-				}
-			}
-		}
+		//TODO
+		//check if better use datetime and span to display time
+		public Stopwatch stopwatch = null!;
 
 		public Universe()
 		{
-			IsAnimating = false;
+			random = new(1);
+		}
 
-			_ = new Seed(this);
-
+		public void Initiate()
+		{
+			_ = new Seed();
 			double pp = .9f;
 			playerData = new((Circular)dimensions[0], pp, 10);
 
-			MainPage.Instance.ChangeView(playerData.GetView());
+			//TODO
+			//select shape on map to start player on that shape
+
+			MainPage.Instance.UpdateView(playerData.GetView());
+			MainPage.Instance.Draw();
 		}
 
-		public void ReStart()
+		public void Start()
 		{
-			MainPage.Instance.ClearView();
-			//clear all dimentions data
+			stopwatch = Stopwatch.StartNew();
+			cancelUpdate = new();
 
-			bullets.Clear();
-			IsAnimating = false;
-			_ = new Seed(this);
+			Task.Run(Update);
 		}
+
+		public void ResetDimentions()
+		{
+			/*int dimentionsCount = dimensions.Count;
+			for (int iD = 0; iD < dimentionsCount; iD++)
+			{
+				int interactiveObjectsCount = dimensions[0].interactiveObjects.Count;
+				for (int i = 0; i < interactiveObjectsCount; i++)
+				{
+					dimensions[0].interactiveObjects[0].Dispose();
+				}
+			}*/
+			dimensions.Clear();
+		}
+
+		public void CancelUpdate() => cancelUpdate.Cancel();
+
+		private async Task Update()
+		{
+			while (!cancelUpdate.IsCancellationRequested)
+			{
+				try
+				{
+					await MainThread.InvokeOnMainThreadAsync(() => MainPage.Instance.UpdateUI(playerData, stopwatch.Elapsed.CustomToString()));
+					await Task.Delay(100, cancelUpdate.Token);
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine(ex.ToString());
+				}
+			}
+		}
+
+		public void PlayerMove(bool dir)
+		{
+			//TODO
+			//darken current direction button
+			if (dir)
+			{
+				playerData.PositiveMove();
+				//PosKey.Background = Colors.DarkGray;
+				//NegKey.Background = Colors.Gray;
+			}
+			else
+			{
+				playerData.NegativeMove();
+				//NegKey.Background = Colors.DarkGray;
+				//PosKey.Background = Colors.Gray;
+			}
+		}
+		public void PlayerAttack() => playerData.Attack();
+		public void WarpPlayer() => playerData.WarpAsync();
 	}
 }

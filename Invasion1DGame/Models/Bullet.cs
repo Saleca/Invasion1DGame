@@ -2,15 +2,12 @@
 {
 	public class Bullet : Kinetic
 	{
-		private bool isPositiveTouching;
 		protected override bool IsNegativeTouching { get; set; }
-
-		private bool isNegativeTouching;
 		protected override bool IsPositiveTouching { get; set; }
 
 		public double Damage { get; set; }
 
-		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 2)
+		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 5)
 		{
 			this.direction = direction;
 
@@ -18,18 +15,13 @@
 		}
 
 		public override void NegativeMove() =>
-			Move(ref isNegativeTouching, ref isPositiveTouching, !clockwise);
+			Move(!clockwise);
 
 		public override void PositiveMove() =>
-			Move(ref isPositiveTouching, ref isNegativeTouching, clockwise);
+			Move(clockwise);
 
-		void Move(ref bool isTouching, ref bool isTouchingOpposite, bool direction)
+		void Move(bool direction)
 		{
-			if (isTouching)
-				return; //TODO check if should be disposed
-			if (isTouchingOpposite)
-				isTouchingOpposite = false;
-
 			base.direction = direction;
 
 			Kinetic? target = FindInteractive(out double distanceFromTarget, typeof(Bullet), typeof(Vitalux), typeof(Warpium)) as Kinetic;
@@ -39,8 +31,7 @@
 			{
 				stepDistance = distanceFromTarget;
 				target?.TakeDamage(Damage);
-				toDispose = true;//fix logic to take damage and allow bullets to take down two enemies(maybe)
-				isTouching = true;
+				toDispose = true;
 			}
 
 			if (direction)

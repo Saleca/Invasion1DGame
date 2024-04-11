@@ -3,87 +3,131 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Invasion1DGame.MainPage">
 
-    <Grid RowDefinitions="*,8*,*"
-          ColumnDefinitions="*,*,*,*">
-
-        <VerticalStackLayout
-            Grid.Column="0">
+    <Grid RowDefinitions="2*,6*,2*">
+        <Grid 
+            RowDefinitions="*,*,*,*"
+            ColumnDefinitions="*,*,*"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            Margin="5">
             <Label
+                Grid.Row="0"
+                Grid.Column="0"
                 Text="Time"
                 />
             <Label
+                Grid.Row="1"
+                Grid.Column="0"
                 x:Name="TimeLabel"
                 />
-        </VerticalStackLayout>
-        <VerticalStackLayout 
-            Grid.Column="1">
-            <Label
-                 Text="Health"
-                 />
-            <Label
-                 x:Name="HealthLabel"
-                 />
-        </VerticalStackLayout>
-        <VerticalStackLayout 
-            Grid.Column="2">
-            <Label
-                 Text="Vitalux"
-                 />
-            <Label
-                 x:Name="VitaluxLabel"
-                 />
-        </VerticalStackLayout>
-        <VerticalStackLayout 
-            Grid.Column="3">
-            <Label
-                 Text="Warpium"
-                 />
-            <Label
-                 x:Name="WarpiumLabel"
-                 />
-        </VerticalStackLayout>
 
-        <Frame 
-            Grid.Row="1"
-            Grid.ColumnSpan="2"
-            BackgroundColor="Black"
-            x:Name="PlayerView">
-        </Frame>
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="Health"
+                />
+            <Label
+                Grid.Row="1"
+                Grid.Column="1"
+                x:Name="HealthLabel"
+                />
 
-        <AbsoluteLayout
-            Grid.Row="1"
-            Grid.Column="2"
-            Grid.ColumnSpan="2"
-            IsVisible="true"
-            Padding="0"
-            Margin="0"
-            x:Name="MapView"/>
-
-        <HorizontalStackLayout
-            Grid.Row="2"
-            Grid.ColumnSpan="4"
-            Margin="0,0,20,0">
             <Button
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                Grid.Column="2"
+                
+                Text="Start"
+                Clicked="StartClicked"
+                x:Name="StartKey"/>
+
+            <Button
+                Grid.Row="2"
+                Grid.RowSpan="2"
+                Grid.Column="2"
+                
+                Text="Map"
+                Clicked="MapModeClicked"
+                x:Name="MapModeKey"
+                IsVisible="false"/>
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                TextColor="Yellow"
+                Text="Vitalux"
+                />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                x:Name="VitaluxLabel"
+                />
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="1"
+                TextColor="Blue"
+                Text="Warpium"
+                />
+            <Label
+                Grid.Row="3"
+                Grid.Column="1"
+                x:Name="WarpiumLabel"
+                />
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            ColumnDefinitions="*,*"
+            Margin="5,0"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Frame 
+                Grid.ColumnSpan="2"
+                BackgroundColor="Black"
+                x:Name="PlayerView">
+            </Frame>
+
+            <AbsoluteLayout
+                Grid.ColumnSpan="2"
+                IsVisible="false"
+                Padding="0"
+                x:Name="MapView"/>
+        </Grid>
+
+        <Grid
+            RowDefinitions="*,*"
+            ColumnDefinitions="*,*"
+            Grid.Row="2"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
                 Text="&lt;--"
                 Clicked="NegClicked"
                 x:Name="NegKey"/>
             <Button
+                Grid.Row="0"
+                Grid.Column="1"
                 Text="-->"
                 Clicked="PosClicked"
                 x:Name="PosKey"/>
             <Button
-                Text="#"
+                Grid.Row="1"
+                Grid.Column="0"
+                TextColor="Yellow"
+                Text="Shoot"
                 Clicked="ShootClicked"
                 x:Name="ShootKey"/>
             <Button
-                Text="@"
+                Grid.Row="1"
+                Grid.Column="1"
+                TextColor="Blue"
+                Text="Warp"
                 Clicked="WarpClicked"
                 x:Name="WarpKey"/>
-            <Button
-                Text="Map Mode"
-                Clicked="MapModeClicked"
-                x:Name="MapModeKey"/>
-        </HorizontalStackLayout>
+        </Grid>
     </Grid>
 
 </ContentPage>
