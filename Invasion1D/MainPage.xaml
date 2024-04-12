@@ -1,0 +1,134 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Invasion1D.MainPage">
+
+    <Grid RowDefinitions="2*,6*,2*">
+        <Grid 
+            RowDefinitions="*,*,*,*"
+            ColumnDefinitions="*,*,*"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand"
+            Margin="5">
+            <Label
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="Time"
+                />
+            <Label
+                Grid.Row="1"
+                Grid.Column="0"
+                x:Name="TimeLabel"
+                />
+
+            <Label
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="Health"
+                />
+            <Label
+                Grid.Row="1"
+                Grid.Column="1"
+                x:Name="HealthLabel"
+                />
+
+            <Button
+                Grid.Row="0"
+                Grid.RowSpan="4"
+                Grid.Column="2"
+                
+                Text="Start"
+                Clicked="StartClicked"
+                x:Name="StartKey"/>
+
+            <Button
+                Grid.Row="2"
+                Grid.RowSpan="2"
+                Grid.Column="2"
+                
+                Text="Map"
+                Clicked="MapModeClicked"
+                x:Name="MapModeKey"
+                IsVisible="false"/>
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="0"
+                TextColor="{StaticResource Vitalux}"
+                Text="Vitalux"
+                />
+            <Label
+                Grid.Row="3"
+                Grid.Column="0"
+                x:Name="VitaluxLabel"
+                />
+
+            <Label
+                Grid.Row="2"
+                Grid.Column="1"
+                TextColor="{StaticResource Warpium}"
+                Text="Warpium"
+                />
+            <Label
+                Grid.Row="3"
+                Grid.Column="1"
+                x:Name="WarpiumLabel"
+                />
+        </Grid>
+
+        <Grid 
+            Grid.Row="1"
+            ColumnDefinitions="*,*"
+            Margin="5,0"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Frame 
+                Grid.ColumnSpan="2"
+                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                x:Name="PlayerView">
+            </Frame>
+
+            <AbsoluteLayout
+                Grid.ColumnSpan="2"
+                IsVisible="false"
+                Padding="0"
+                x:Name="MapView"/>
+        </Grid>
+
+        <Grid
+            RowDefinitions="*,*"
+            ColumnDefinitions="*,*"
+            Grid.Row="2"
+            HorizontalOptions="FillAndExpand"
+            VerticalOptions="FillAndExpand">
+            <Button
+                Grid.Row="0"
+                Grid.Column="0"
+                Text="&lt;--"
+                Clicked="NegClicked"
+                x:Name="NegKey"/>
+            <Button
+                Grid.Row="0"
+                Grid.Column="1"
+                Text="-->"
+                Clicked="PosClicked"
+                x:Name="PosKey"/>
+            <Button
+                Grid.Row="1"
+                Grid.Column="0"
+                TextColor="{StaticResource Vitalux}"
+                Text="Shoot"
+                Clicked="ShootClicked"
+                x:Name="ShootKey"
+                />
+            <Button
+                Grid.Row="1"
+                Grid.Column="1"
+                TextColor="{StaticResource Warpium}"
+                Text="Warp"
+                Clicked="WarpClicked"
+                x:Name="WarpKey"/>
+        </Grid>
+    </Grid>
+
+</ContentPage>
