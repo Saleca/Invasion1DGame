@@ -1,6 +1,7 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
+using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.Controls.Shapes;
 using System.Diagnostics;
 
@@ -8,11 +9,13 @@ namespace Invasion1D
 {
 	public partial class MainPage : ContentPage
 	{
-		//TODO *1
-		//Frame? frame;
+		readonly bool debug = false;
 
 		public static MainPage Instance = null!;
 		//public static MainPage Instance => instance ??= new();
+
+		//TODO *1
+		//Frame? frame;
 
 		bool isStarted = false;
 
@@ -53,6 +56,11 @@ namespace Invasion1D
 
 			InitializeComponent();
 
+			if (debug)
+			{
+				Grid.SetRowSpan(StartKey, 2);
+				MapModeKey.IsVisible = true;
+			}
 
 			//TOTO *1
 			//get frame to focus allowing keyboard control
@@ -63,17 +71,13 @@ namespace Invasion1D
 
 		}
 
-		protected override void OnAppearing()
-		{
-			base.OnAppearing();
-		}
-
 		public void Initiate()
 		{
 			IsAnimating = false;
 			bullets = [];
 			universe = new();
 			universe.Initiate();
+			isStarted = true;
 		}
 
 		public void Start()
@@ -86,8 +90,9 @@ namespace Invasion1D
 			Initiate();
 
 			universe.Start();
-			isStarted = true;
+
 			StartKey.Text = "Restart";
+			ControlsGrid.IsVisible = true;
 		}
 
 		public void Reset()
@@ -115,6 +120,7 @@ namespace Invasion1D
 			{
 				UpdateBullets();
 			}
+
 			//TODO
 			//automate and update enemies
 
@@ -134,7 +140,7 @@ namespace Invasion1D
 		}
 
 		//TODO 
-		//move this to bullet page as instance
+		//move this to bullet class
 		void UpdateBullets()
 		{
 			List<Bullet> bulletsToRemove = [];
@@ -240,7 +246,21 @@ namespace Invasion1D
 			MapView.Children.Add(bullet.body);
 		}
 
+		public void PositiveMove(bool pressed)
+		{
+			if (pressed)
+			{
+				universe.PlayerMove(true);
+			}
+		}
 
+		public void NegativeMove(bool pressed)
+		{
+			if (pressed)
+			{
+				universe.PlayerMove(false);
+			}
+		}
 
 		public static Color VoidColor => Application.Current?.RequestedTheme switch
 		{
@@ -274,8 +294,12 @@ namespace Invasion1D
 			}
 		}
 
-		private void NegClicked(object sender, EventArgs e) => universe.PlayerMove(false);
-		private void PosClicked(object sender, EventArgs e) => universe.PlayerMove(true);
+		private void NegPressed(object sender, EventArgs e) => NegativeMove(true);
+		private void NegReleased(object sender, EventArgs e) => NegativeMove(false);
+
+		private void PosPressed(object sender, EventArgs e) => PositiveMove(true);
+		private void PosReleased(object sender, EventArgs e) => PositiveMove(false);
+
 		private void ShootClicked(object sender, EventArgs e) => universe.PlayerAttack();
 		private void WarpClicked(object sender, EventArgs e) => universe.WarpPlayer();
 		private void StartClicked(object sender, EventArgs e) => Start();

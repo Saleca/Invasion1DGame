@@ -13,30 +13,25 @@
             <Label
                 Grid.Row="0"
                 Grid.Column="0"
-                Text="Time"
-                />
+                Text="Time"/>
             <Label
                 Grid.Row="1"
                 Grid.Column="0"
-                x:Name="TimeLabel"
-                />
+                x:Name="TimeLabel"/>
 
             <Label
                 Grid.Row="0"
                 Grid.Column="1"
-                Text="Health"
-                />
+                Text="Health"/>
             <Label
                 Grid.Row="1"
                 Grid.Column="1"
-                x:Name="HealthLabel"
-                />
+                x:Name="HealthLabel"/>
 
             <Button
                 Grid.Row="0"
                 Grid.RowSpan="4"
                 Grid.Column="2"
-                
                 Text="Start"
                 Clicked="StartClicked"
                 x:Name="StartKey"/>
@@ -45,7 +40,6 @@
                 Grid.Row="2"
                 Grid.RowSpan="2"
                 Grid.Column="2"
-                
                 Text="Map"
                 Clicked="MapModeClicked"
                 x:Name="MapModeKey"
@@ -55,25 +49,21 @@
                 Grid.Row="2"
                 Grid.Column="0"
                 TextColor="{StaticResource Vitalux}"
-                Text="Vitalux"
-                />
+                Text="Vitalux"/>
             <Label
                 Grid.Row="3"
                 Grid.Column="0"
-                x:Name="VitaluxLabel"
-                />
+                x:Name="VitaluxLabel"/>
 
             <Label
                 Grid.Row="2"
                 Grid.Column="1"
                 TextColor="{StaticResource Warpium}"
-                Text="Warpium"
-                />
+                Text="Warpium"/>
             <Label
                 Grid.Row="3"
                 Grid.Column="1"
-                x:Name="WarpiumLabel"
-                />
+                x:Name="WarpiumLabel"/>
         </Grid>
 
         <Grid 
@@ -96,22 +86,26 @@
         </Grid>
 
         <Grid
+            x:Name="ControlsGrid"
             RowDefinitions="*,*"
             ColumnDefinitions="*,*"
             Grid.Row="2"
             HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand">
+            VerticalOptions="FillAndExpand"
+            IsVisible="false">
             <Button
                 Grid.Row="0"
                 Grid.Column="0"
                 Text="&lt;--"
-                Clicked="NegClicked"
+                Pressed="NegPressed"
+                Released="NegReleased"
                 x:Name="NegKey"/>
             <Button
                 Grid.Row="0"
                 Grid.Column="1"
                 Text="-->"
-                Clicked="PosClicked"
+                Pressed="PosPressed"
+                Released="PosReleased"
                 x:Name="PosKey"/>
             <Button
                 Grid.Row="1"
@@ -119,8 +113,7 @@
                 TextColor="{StaticResource Vitalux}"
                 Text="Shoot"
                 Clicked="ShootClicked"
-                x:Name="ShootKey"
-                />
+                x:Name="ShootKey"/>
             <Button
                 Grid.Row="1"
                 Grid.Column="1"
@@ -130,5 +123,4 @@
                 x:Name="WarpKey"/>
         </Grid>
     </Grid>
-
 </ContentPage>
