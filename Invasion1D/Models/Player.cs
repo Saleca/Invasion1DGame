@@ -15,8 +15,6 @@ namespace Invasion1D.Models
 		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
 		{
 			direction = clockwise;
-			IsPositiveTouching = false;
-			IsNegativeTouching = false;
 		}
 
 		public async void WarpAsync()
@@ -66,18 +64,13 @@ namespace Invasion1D.Models
 		}
 
 		public override void NegativeMove() =>
-			Move(ref isNegativeTouching, ref isPositiveTouching, !clockwise);
+			Move(!clockwise);
 
 		public override void PositiveMove() =>
-			Move(ref isPositiveTouching, ref isNegativeTouching, clockwise);
+			Move(clockwise);
 
-		void Move(ref bool isTouching, ref bool isTouchingOpposite, bool direction)
+		void Move(bool direction)
 		{
-			if (isTouching)
-				return;
-			if (isTouchingOpposite)
-				isTouchingOpposite = false;
-
 			this.direction = direction;
 
 			double stepDistance = default!;
@@ -112,7 +105,6 @@ namespace Invasion1D.Models
 						}
 					}
 					stepDistance = distanceFromTarget;
-					isTouching = true;
 				}
 				completeStep = true;
 			}

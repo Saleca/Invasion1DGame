@@ -11,7 +11,7 @@ namespace Invasion1D
 		public Random random = null!;
 		public readonly List<Dimension> dimensions = [];
 		Player playerData = null!;
-		private CancellationTokenSource cancelUpdate = new();
+		private CancellationTokenSource? cancelUpdate;
 
 		//TODO
 		//check if better use datetime and span to display time
@@ -48,20 +48,27 @@ namespace Invasion1D
 			dimensions.Clear();
 		}
 
-		public void CancelUpdate() => cancelUpdate.Cancel();
+		public void CancelUpdate()
+		{
+			if (cancelUpdate is null)
+				return;
+
+			cancelUpdate.Cancel();
+			cancelUpdate.Dispose();
+		}
 
 		private async Task Update()
 		{
-			while (!cancelUpdate.IsCancellationRequested)
+			while (cancelUpdate is not null)
 			{
+				await MainThread.InvokeOnMainThreadAsync(() => MainPage.Instance.UpdateUI(playerData, stopwatch.Elapsed.CustomToString()));
 				try
 				{
-					await MainThread.InvokeOnMainThreadAsync(() => MainPage.Instance.UpdateUI(playerData, stopwatch.Elapsed.CustomToString()));
 					await Task.Delay(100, cancelUpdate.Token);
 				}
-				catch (Exception ex)
+				catch (OperationCanceledException)
 				{
-					Debug.WriteLine(ex.ToString());
+					break;
 				}
 			}
 		}

@@ -4,11 +4,7 @@
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
     
-    <Style TargetType="Page">
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
-    </Style>
-    
-    <Style TargetType="ContentPage">
+    <Style TargetType="ContentPage" x:Key="ContentPage">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
     </Style>
 
@@ -18,12 +14,6 @@
         <Setter Property="CornerRadius" Value="8" />
     </Style>
     
-    <Shadow
-        x:Key="Shadow" 
-        Brush="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" 
-        Radius="5" 
-        Opacity=".25" />
-
     <Style TargetType="Button">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
@@ -31,10 +21,7 @@
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
         <Setter Property="VerticalOptions" Value="FillAndExpand"/>
-        <Setter Property="FontFamily" Value="OpenSansBold"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="Shadow" Value="{StaticResource Shadow}"/>
         <Setter Property="Padding" Value="2,1"/>
         <Setter Property="Margin" Value="5"/>
         <Setter Property="MinimumHeightRequest" Value="10"/>
@@ -49,7 +36,7 @@
                     </VisualState>
                     <VisualState x:Name="Pressed" >
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
+                            <Setter Property="BackgroundColor" Value="Gray" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Released" >
@@ -67,10 +54,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
-        <Setter Property="FontFamily" Value="OpenSansBold"/>
-        <Setter Property="FontAttributes" Value="Bold"/>
         <Setter Property="FontSize" Value="14" />
-        <Setter Property="Shadow" Value="{StaticResource Shadow}"/>
     </Style>
    
 </ResourceDictionary>

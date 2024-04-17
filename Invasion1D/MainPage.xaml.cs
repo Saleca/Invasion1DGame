@@ -91,8 +91,8 @@ namespace Invasion1D
 
 			universe.Start();
 
-			StartKey.Text = "Restart";
 			ControlsGrid.IsVisible = true;
+			StartKey.Text = "Restart";
 		}
 
 		public void Reset()
@@ -294,6 +294,17 @@ namespace Invasion1D
 			}
 		}
 
+		protected override void OnAppearing()
+		{
+			base.OnAppearing();
+			Window.Destroying += OnWindowDestroying;
+		}
+
+		private void OnWindowDestroying(object? sender, EventArgs e)
+		{
+			universe.CancelUpdate();
+		}
+
 		private void NegPressed(object sender, EventArgs e) => NegativeMove(true);
 		private void NegReleased(object sender, EventArgs e) => NegativeMove(false);
 
@@ -301,7 +312,7 @@ namespace Invasion1D
 		private void PosReleased(object sender, EventArgs e) => PositiveMove(false);
 
 		private void ShootClicked(object sender, EventArgs e) => universe.PlayerAttack();
-		private void WarpClicked(object sender, EventArgs e) => universe.WarpPlayer();
+		private void WarpClicked(object sender, EventArgs e) => WarpKey.Text = "test";//universe.WarpPlayer();
 		private void StartClicked(object sender, EventArgs e) => Start();
 		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 	}
