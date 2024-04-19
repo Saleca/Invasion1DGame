@@ -2,9 +2,6 @@
 {
 	public class Bullet : Kinetic
 	{
-		protected override bool IsNegativeTouching { get; set; }
-		protected override bool IsPositiveTouching { get; set; }
-
 		public double Damage { get; set; }
 
 		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 5)
@@ -20,6 +17,8 @@
 		public override void PositiveMove() =>
 			Move(clockwise);
 
+		public override void StopMovement() => throw new NotImplementedException();
+		
 		void Move(bool direction)
 		{
 			base.direction = direction;

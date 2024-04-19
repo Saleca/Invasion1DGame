@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<svg width="456" height="456" viewBox="0 0 456 456" version="1.1" xmlns="http://www.w3.org/2000/svg">
-    <rect x="0" y="0" width="456" height="456" fill="#512BD4" />
+<?xml version="1.0" encoding="utf-8"?>
+<svg viewBox="0 0 500 500" xmlns="http://www.w3.org/2000/svg">
+  <ellipse style="stroke: rgb(0, 0, 0); fill-rule: evenodd; fill: none; stroke-width: 20px;" cx="491.904" cy="498.599" rx="488.975" ry="491.736"/>
+  <ellipse style="stroke: rgb(0, 255, 0); paint-order: stroke; stroke-width: 0px; fill: rgb(0, 221, 0);" cx="-150.244" cy="-142.552" rx="34.985" ry="34.985" transform="matrix(-1, 0, 0, -1, 0, 0)"/>
 </svg>

@@ -11,7 +11,7 @@ namespace Invasion1D
 		public Random random = null!;
 		public readonly List<Dimension> dimensions = [];
 		Player playerData = null!;
-		private CancellationTokenSource? cancelUpdate;
+		private CancellationTokenSource cancelUpdate = null!;
 
 		//TODO
 		//check if better use datetime and span to display time
@@ -19,7 +19,7 @@ namespace Invasion1D
 
 		public Universe()
 		{
-			random = new(1);
+			random = new();
 		}
 
 		public void Initiate()
@@ -48,9 +48,16 @@ namespace Invasion1D
 			dimensions.Clear();
 		}
 
+		public void GameOver()
+		{
+			CancelUpdate();
+			MainPage.Instance.ShowText("Game Over");
+		}
+
+
 		public void CancelUpdate()
 		{
-			if (cancelUpdate is null)
+			if (cancelUpdate is null || cancelUpdate.IsCancellationRequested)
 				return;
 
 			cancelUpdate.Cancel();
@@ -59,15 +66,20 @@ namespace Invasion1D
 
 		private async Task Update()
 		{
-			while (cancelUpdate is not null)
+			while (!cancelUpdate.IsCancellationRequested)
 			{
-				await MainThread.InvokeOnMainThreadAsync(() => MainPage.Instance.UpdateUI(playerData, stopwatch.Elapsed.CustomToString()));
 				try
 				{
+					await MainThread.InvokeOnMainThreadAsync(() => MainPage.Instance.UpdateUI(playerData, stopwatch.Elapsed.CustomToString()));
 					await Task.Delay(100, cancelUpdate.Token);
 				}
 				catch (OperationCanceledException)
 				{
+					break;
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"An error occurred: {ex.Message}");
 					break;
 				}
 			}
@@ -83,6 +95,10 @@ namespace Invasion1D
 			{
 				playerData.NegativeMove();
 			}
+		}
+		public void StopPlayer()
+		{
+			playerData.StopMovement();
 		}
 		public void PlayerAttack() => playerData.Attack();
 		public void WarpPlayer() => playerData.WarpAsync();

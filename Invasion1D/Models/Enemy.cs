@@ -7,9 +7,6 @@
 			direction = clockwise; //randomize
 		}
 
-		protected override bool IsPositiveTouching { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-		protected override bool IsNegativeTouching { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
 		public override void Attack()
 		{
 			throw new NotImplementedException();
@@ -34,6 +31,9 @@
 			throw new NotImplementedException();
 		}
 
-		//Make move method and ignore warpium
+		public override void StopMovement()
+		{
+			throw new NotImplementedException();
+		}
 	}
 }

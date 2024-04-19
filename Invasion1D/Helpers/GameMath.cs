@@ -7,6 +7,9 @@ namespace Invasion1D.Helpers
 		internal static double LinearInterpolation(double start, double end, double position) => start + position * (end - start);
 		internal static float LinearInterpolation(float start, float end, float position) => start + position * (end - start);
 
+		internal static double EaseInInterpolation(double start, double end, double position) => LinearInterpolation(start, end, Math.Sqrt(position));
+		internal static float EaseInInterpolation(float start, float end, float position) => LinearInterpolation(start, end, MathF.Sqrt(position));
+
 		internal static double LineLength(Point a, Point b) => Math.Sqrt(Math.Pow(b.X - a.X, 2) + Math.Pow(b.Y - a.Y, 2));
 		internal static Point GetPositionInLine(Linear line, double percentage)
 		{

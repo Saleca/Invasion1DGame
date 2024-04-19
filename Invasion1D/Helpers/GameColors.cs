@@ -11,6 +11,15 @@
 
 			return new Color(red, green, blue);
 		}
+		internal static Color EaseInInterpolation(Color a, Color b, float i)
+		{
+			float
+				red = GameMath.EaseInInterpolation(a.Red, b.Red, i),
+				green = GameMath.EaseInInterpolation(a.Green, b.Green, i),
+				blue = GameMath.EaseInInterpolation(a.Blue, b.Blue, i);
+
+			return new Color(red, green, blue);
+		}
 
 		internal static Color? CalculateView(double distance, Color? color)
 		{
@@ -19,13 +28,13 @@
 			Color? viewColor = null;
 
 			double
-				minDistance = 1,
+				minDistance = 0,
 				maxDistance = 50;
 
 			if (distance < maxDistance)
 			{
 				float i = GameMath.Normalize(minDistance, maxDistance, distance);
-				viewColor = LinearInterpolation(color, MainPage.VoidColor, i);
+				viewColor = EaseInInterpolation(color, MainPage.VoidColor, i);
 			}
 			return viewColor;
 		}

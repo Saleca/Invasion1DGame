@@ -9,7 +9,7 @@ namespace Invasion1D
 {
 	public partial class MainPage : ContentPage
 	{
-		readonly bool debug = false;
+		readonly bool debug = true;
 
 		public static MainPage Instance = null!;
 		//public static MainPage Instance => instance ??= new();
@@ -97,6 +97,7 @@ namespace Invasion1D
 
 		public void Reset()
 		{
+			HideText();
 			universe.ResetDimentions();
 			MapView.Children.Clear();
 		}
@@ -246,20 +247,25 @@ namespace Invasion1D
 			MapView.Children.Add(bullet.body);
 		}
 
-		public void PositiveMove(bool pressed)
+		public void ShowText(string text)
 		{
-			if (pressed)
-			{
-				universe.PlayerMove(true);
-			}
+			MainLabel.Text = text;
+			MainLabel.IsVisible = true;
 		}
 
-		public void NegativeMove(bool pressed)
+		public void HideText()
 		{
-			if (pressed)
-			{
-				universe.PlayerMove(false);
-			}
+			MainLabel.IsVisible = false;
+		}
+
+		public void PositiveMove()
+		{
+			universe.PlayerMove(true);
+		}
+
+		public void NegativeMove()
+		{
+			universe.PlayerMove(false);
 		}
 
 		public static Color VoidColor => Application.Current?.RequestedTheme switch
@@ -305,14 +311,14 @@ namespace Invasion1D
 			universe.CancelUpdate();
 		}
 
-		private void NegPressed(object sender, EventArgs e) => NegativeMove(true);
-		private void NegReleased(object sender, EventArgs e) => NegativeMove(false);
+		private void NegPressed(object sender, EventArgs e) => NegativeMove();
+		private void NegReleased(object sender, EventArgs e) => universe.StopPlayer();
 
-		private void PosPressed(object sender, EventArgs e) => PositiveMove(true);
-		private void PosReleased(object sender, EventArgs e) => PositiveMove(false);
+		private void PosPressed(object sender, EventArgs e) => PositiveMove();
+		private void PosReleased(object sender, EventArgs e) => universe.StopPlayer();
 
 		private void ShootClicked(object sender, EventArgs e) => universe.PlayerAttack();
-		private void WarpClicked(object sender, EventArgs e) => WarpKey.Text = "test";//universe.WarpPlayer();
+		private void WarpClicked(object sender, EventArgs e) => universe.WarpPlayer();
 		private void StartClicked(object sender, EventArgs e) => Start();
 		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 	}

@@ -79,6 +79,11 @@
                 x:Name="PlayerView">
             </Frame>
 
+            <Label 
+                Grid.ColumnSpan="2"
+                x:Name="MainLabel"
+                IsVisible="false"/>
+
             <AbsoluteLayout
                 Grid.ColumnSpan="2"
                 IsVisible="false"

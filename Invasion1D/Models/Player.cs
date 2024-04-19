@@ -1,16 +1,13 @@
 ﻿using Invasion1D.Helpers;
+using System.Diagnostics;
 
 namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
-		private bool isPositiveTouching;
-		protected override bool IsPositiveTouching { get => isPositiveTouching; set => isPositiveTouching = value; }
-
-		private bool isNegativeTouching;
-		protected override bool IsNegativeTouching { get => isNegativeTouching; set => isNegativeTouching = value; }
-
 		public List<Dimension> visitedDimensions = [];
+
+		CancellationTokenSource cancelMovement = null!;
 
 		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
 		{
@@ -63,63 +60,97 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void NegativeMove() =>
-			Move(!clockwise);
+		public override void NegativeMove()
+		{
+			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
+			{
+				StopMovement();
+			}
+			cancelMovement = new();
+			_ = MoveAsync(!clockwise);
+		}
 
-		public override void PositiveMove() =>
-			Move(clockwise);
+		public override void PositiveMove()
+		{
+			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
+			{
+				StopMovement();
+			}
+			cancelMovement = new();
+			_ = MoveAsync(clockwise);
+		}
 
-		void Move(bool direction)
+		public override void StopMovement()
+		{
+			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
+			{
+				cancelMovement.Cancel();
+				cancelMovement.Dispose();
+			}
+		}
+
+		async Task MoveAsync(bool direction)
 		{
 			this.direction = direction;
-
-			double stepDistance = default!;
-			bool completeStep = false;
-
 			List<Type> ignore = [typeof(Player)];
-			while (!completeStep)
-			{
-				Interactive? target = FindInteractive(out double distanceFromTarget, [.. ignore]);
 
-				stepDistance = speed;
-				if (distanceFromTarget < stepDistance)
+			while (!cancelMovement.IsCancellationRequested)
+			{
+				try
 				{
-					if (target is Item item)
+					Interactive? target = FindInteractive(out double distanceFromTarget, [.. ignore]);
+					double tryStep = stepDistance;
+					if (distanceFromTarget < tryStep)
 					{
-						if (item.Power(this))
+						if (target is Item item)
 						{
-							continue;
+							if (!item.Power(this))
+							{
+								switch (item)
+								{
+									case Vitalux:
+										ignore.Add(typeof(Vitalux));
+										break;
+									case Warpium:
+										ignore.Add(typeof(Warpium));
+										break;
+								}
+							}
 						}
 						else
 						{
-							switch (item)
-							{
-								case Vitalux:
-									ignore.Add(typeof(Vitalux));
-									break;
-								case Warpium:
-									ignore.Add(typeof(Warpium));
-									break;
-							}
-							continue;
+							tryStep = distanceFromTarget;
+							StopMovement();
 						}
 					}
-					stepDistance = distanceFromTarget;
+
+					if (direction)
+					{
+						PercentageInShape += CurrentDimention.GetPercentageFromDistance(tryStep);
+					}
+					else
+					{
+						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(tryStep);
+					}
+
+					body.TranslationX = Position.X;
+					body.TranslationY = Position.Y;
+
+					try
+					{
+						await Task.Delay(movementInterval, cancelMovement.Token);
+					}
+					catch (OperationCanceledException)
+					{
+						break;
+					}
 				}
-				completeStep = true;
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"An error occurred: {ex.Message}");
+					break;
+				}
 			}
-
-			if (direction)
-			{
-				PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
-			}
-			else
-			{
-				PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
-			}
-
-			body.TranslationX = Position.X;
-			body.TranslationY = Position.Y;
 		}
 
 		public override void TakeDamage(double damage)
@@ -128,6 +159,7 @@ namespace Invasion1D.Models
 			if (health <= 0)
 			{
 				Dispose();
+				MainPage.Instance.universe.GameOver();
 			}
 		}
 	}

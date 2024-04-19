@@ -9,6 +9,9 @@ namespace Invasion1D.Models
 		public double speed = speed;
 		public bool direction;
 
+		protected double stepDistance = speed/10;//modify when implementing framerate and delta time
+		protected TimeSpan movementInterval = TimeSpan.FromMilliseconds(100);
+
 		public double DistanceFromTarget(Interactive target)
 		{
 			//double characterOffset = Radius + target.Radius;
@@ -44,11 +47,9 @@ namespace Invasion1D.Models
 			return GameColors.CalculateView(interactiveDistance, target?.DisplayColor());
 		}
 
-		protected abstract bool IsPositiveTouching { get; set; }
 		public abstract void PositiveMove();
-
-		protected abstract bool IsNegativeTouching { get; set; }
 		public abstract void NegativeMove();
+		public abstract void StopMovement();
 
 		public abstract void TakeDamage(double damage);
 	}
