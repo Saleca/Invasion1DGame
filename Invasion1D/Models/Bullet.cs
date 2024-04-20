@@ -6,8 +6,6 @@ namespace Invasion1D.Models
 	{
 		static App Game => (App)Application.Current!;
 
-		public static List<Bullet> Bullets = null!;
-
 		public static double Damage => 1;
 
 		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 20)
@@ -26,7 +24,6 @@ namespace Invasion1D.Models
 
 		public static void AddBullets(Bullet bullet)
 		{
-			Bullets.Add(bullet);
 			Game.UI.AddToMap(bullet.body);
 		}
 
@@ -80,7 +77,6 @@ namespace Invasion1D.Models
 		public override void TakeDamage(double damage)
 		{
 			StopMovement();
-			Bullets.Remove(this);
 			Dispose();
 		}
 	}

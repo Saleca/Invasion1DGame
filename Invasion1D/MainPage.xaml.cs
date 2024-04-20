@@ -18,7 +18,7 @@ namespace Invasion1D
 
 		readonly object locker = new();
 		bool isAnimating;
-		bool IsAnimating
+		public bool IsAnimating
 		{
 			get
 			{
@@ -54,11 +54,7 @@ namespace Invasion1D
 			}*/
 		}
 
-		public void StartKeyText(string text)
-		{
-			StartKey.Text = text;
 
-		}
 		public void Initiate()
 		{
 			IsAnimating = false;
@@ -77,21 +73,36 @@ namespace Invasion1D
 			}
 		}
 
-		public void Update(Player playerData, string time)
+		public void UpdateView(Color? color)
 		{
-			if (!IsAnimating)//
-			{
-				UpdateView(playerData.GetView());
-			}
+			PlayerView.BackgroundColor = color ?? GameColors.VoidColor;
+		}
 
-			//TODO
-			//make bar for health and vitalux
-			HealthLabel.Text = playerData.health.ToString();
-			VitaluxLabel.Text = playerData.vitalux.ToString();
-
-			WarpiumLabel.Text = playerData.warpium.ToString();
-
+		public void UpdateTime(string time)
+		{
 			TimeLabel.Text = time;
+		}
+
+		//make bar for health and vitalux
+		public void UpdateHealth(string health)
+		{
+			HealthLabel.Text = health; //playerData.health.ToString();
+		}
+
+		public void UpdateVitaLux(string vitalux)
+		{
+			VitaluxLabel.Text = vitalux; //playerData.vitalux.ToString();
+		}
+
+		public void UpdateWarpium(string warpium)
+		{
+			WarpiumLabel.Text = warpium; //playerData.warpium.ToString();
+		}
+
+		public void UpdateStartKeyText(string text)
+		{
+			StartKey.Text = text;
+
 		}
 
 		internal async Task WarpAnimation(Player playerData, Point start, Point end)
@@ -160,13 +171,6 @@ namespace Invasion1D
 			//frame.Focus();
 		}
 
-		public void UpdateView(Color? color = null) => PlayerView.BackgroundColor = color ?? VoidColor;
-		public static Color VoidColor => Application.Current?.RequestedTheme switch
-		{
-			AppTheme.Dark => Colors.Black,
-			AppTheme.Light => Colors.White,
-			_ => Colors.Black,
-		};
 
 		public void AddToMap(Shape shape)
 		{

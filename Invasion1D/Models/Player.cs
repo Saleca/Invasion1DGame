@@ -13,6 +13,9 @@ namespace Invasion1D.Models
 		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
 		{
 			direction = clockwise;//randomize
+			Game.UI.UpdateWarpium(warpium.ToString());
+			Game.UI.UpdateVitaLux(vitalux.ToString());
+			Game.UI.UpdateHealth(health.ToString());
 		}
 
 		public async void WarpAsync()
@@ -36,6 +39,7 @@ namespace Invasion1D.Models
 				} while (CurrentDimention.CheckOverlap(this));
 
 				warpium--;
+				Game.UI.UpdateWarpium(warpium.ToString());
 
 				await Game.UI.WarpAnimation(this,
 					start: new(body.TranslationX, body.TranslationY),
@@ -50,6 +54,7 @@ namespace Invasion1D.Models
 			if (vitalux >= attackCost)
 			{
 				vitalux -= attackCost;
+				Game.UI.UpdateVitaLux(vitalux.ToString());
 
 				Bullet.AddBullets(
 					new(shape: CurrentDimention,
@@ -75,15 +80,15 @@ namespace Invasion1D.Models
 					{
 						if (target is Item item)
 						{
-							if (!item.Power(this))
+							if (item.Power(this))
 							{
 								switch (item)
 								{
 									case Vitalux:
-										ignore.Add(typeof(Vitalux));
+										Game.UI.UpdateVitaLux(vitalux.ToString());
 										break;
 									case Warpium:
-										ignore.Add(typeof(Warpium));
+										Game.UI.UpdateWarpium(warpium.ToString());
 										break;
 								}
 							}
@@ -127,6 +132,7 @@ namespace Invasion1D.Models
 		public override void TakeDamage(double damage)
 		{
 			health -= damage;
+			Game.UI.UpdateHealth(health.ToString());
 			if (health <= 0)
 			{
 				Dispose();

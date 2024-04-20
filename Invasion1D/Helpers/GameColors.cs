@@ -34,9 +34,16 @@
 			if (distance < maxDistance)
 			{
 				float i = GameMath.Normalize(minDistance, maxDistance, distance);
-				viewColor = EaseInInterpolation(color, MainPage.VoidColor, i);
+				viewColor = EaseInInterpolation(color, VoidColor, i);
 			}
 			return viewColor;
 		}
+
+		public static Color VoidColor => Application.Current?.RequestedTheme switch
+		{
+			AppTheme.Dark => Colors.Black,
+			AppTheme.Light => Colors.White,
+			_ => Colors.Black,
+		};
 	}
 }

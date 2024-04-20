@@ -29,15 +29,6 @@ namespace Invasion1D
 			{
 				AppDomain.CurrentDomain.FirstChanceException += FirstChanceException;
 			}
-
-			//start game
-		}
-
-		public void Initiate()
-		{
-			Bullet.Bullets = [];
-			universe = new();
-			universe.Initiate();
 		}
 
 		public void Start()
@@ -49,18 +40,17 @@ namespace Invasion1D
 			}
 			else
 			{
-				UI.StartKeyText("Restart");
+				UI.UpdateStartKeyText("Restart");
 			}
-			Initiate();
-
+			universe = new();
+			universe.Initiate();
 			cancelUpdate = new();
-			Task.Run(Update);
-
 
 			universe.Start();
+			UI.ShowControls(true);
+			Task.Run(Update);
 
 			isStarted = true;
-			UI.ShowControls(true);
 		}
 
 		public void CancelUpdate()
@@ -81,7 +71,14 @@ namespace Invasion1D
 
 				try
 				{
-					await MainThread.InvokeOnMainThreadAsync(() => UI.Update(universe.playerData, universe.stopwatch.Elapsed.CustomToString()));
+					await MainThread.InvokeOnMainThreadAsync(() =>
+					{
+						if (!UI.IsAnimating)
+						{
+							UI.UpdateView(universe.playerData.GetView());
+						}
+						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
+					});
 					await Task.Delay(100, cancelUpdate.Token);
 				}
 				catch (OperationCanceledException)

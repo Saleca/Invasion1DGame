@@ -11,13 +11,22 @@ namespace Invasion1D.Models
 		double amount = 1;
 		public override bool Power(Character character)
 		{
+			double startAmount = amount;
 			character.AddVitalux(amount, out amount);
+
 			if (amount <= 0)
 			{
 				Dispose();
+			}
+
+			if (amount < startAmount)
+			{
 				return true;
 			}
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 	}
 }
