@@ -4,7 +4,7 @@ using Path = Microsoft.Maui.Controls.Shapes.Path;
 
 namespace Invasion1D.Helpers
 {
-	internal class Geometry
+	internal static class Geometry
 	{
 		internal static Path DrawCurvedLink(Point start, IEnumerable<Point> segments, Brush brush, int strokeThickness)
 		{

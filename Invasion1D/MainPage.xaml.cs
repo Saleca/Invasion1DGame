@@ -1,27 +1,20 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
-using Microsoft.Maui.Controls.Platform;
 using Microsoft.Maui.Controls.Shapes;
-using System.Diagnostics;
 
 namespace Invasion1D
 {
 	public partial class MainPage : ContentPage
 	{
-		readonly bool debug = true;
+		readonly bool debug = false;
 
-		public static MainPage Instance = null!;
-		//public static MainPage Instance => instance ??= new();
+		static App Game => ((App)Application.Current!);
 
 		//TODO *1
 		//Frame? frame;
 
-		bool isStarted = false;
-
-		public Universe universe = null!;
 		bool isMapVisible = false;
-		public List<Bullet> bullets = [];
 
 		readonly object locker = new();
 		bool isAnimating;
@@ -45,15 +38,6 @@ namespace Invasion1D
 
 		public MainPage()
 		{
-			if (Instance == null)
-			{
-				Instance = this;
-			}
-			else
-			{
-				return;
-			}
-
 			InitializeComponent();
 
 			if (debug)
@@ -68,43 +52,21 @@ namespace Invasion1D
 			{
 				frame = (Frame)Instance.Handler.PlatformView;
 			}*/
-
 		}
 
+		public void StartKeyText(string text)
+		{
+			StartKey.Text = text;
+
+		}
 		public void Initiate()
 		{
 			IsAnimating = false;
-			bullets = [];
-			universe = new();
-			universe.Initiate();
-			isStarted = true;
-		}
-
-		public void Start()
-		{
-			if (isStarted)
-			{
-				universe.CancelUpdate();
-				Reset();
-			}
-			Initiate();
-
-			universe.Start();
-
-			ControlsGrid.IsVisible = true;
-			StartKey.Text = "Restart";
-		}
-
-		public void Reset()
-		{
-			HideText();
-			universe.ResetDimentions();
-			MapView.Children.Clear();
 		}
 
 		public void Draw()
 		{
-			foreach (var dimension in universe.dimensions)
+			foreach (var dimension in Game.universe.dimensions)
 			{
 				MapView.Add(dimension.body);
 
@@ -115,17 +77,9 @@ namespace Invasion1D
 			}
 		}
 
-		public void UpdateUI(Player playerData, string time)
+		public void Update(Player playerData, string time)
 		{
-			if (bullets.Count > 0)
-			{
-				UpdateBullets();
-			}
-
-			//TODO
-			//automate and update enemies
-
-			if (!IsAnimating)
+			if (!IsAnimating)//
 			{
 				UpdateView(playerData.GetView());
 			}
@@ -138,33 +92,6 @@ namespace Invasion1D
 			WarpiumLabel.Text = playerData.warpium.ToString();
 
 			TimeLabel.Text = time;
-		}
-
-		//TODO 
-		//move this to bullet class
-		void UpdateBullets()
-		{
-			List<Bullet> bulletsToRemove = [];
-			foreach (Bullet b in bullets)
-			{
-				if (b.direction)
-				{
-					b.PositiveMove();
-				}
-				else
-				{
-					b.NegativeMove();
-				}
-				if (b.toDispose)
-				{
-					bulletsToRemove.Add(b);
-				}
-			}
-			foreach (Bullet b in bulletsToRemove)
-			{
-				bullets.Remove(b);
-				b.Dispose();
-			}
 		}
 
 		internal async Task WarpAnimation(Player playerData, Point start, Point end)
@@ -233,41 +160,7 @@ namespace Invasion1D
 			//frame.Focus();
 		}
 
-		internal void UpdateView(Color? color = null) => PlayerView.BackgroundColor = color ?? VoidColor;
-
-		internal void RemoveFromView(Shape shape)
-		{
-			MapView.Children.Remove(shape);
-		}
-
-		internal void AddBullets(Bullet bullet)
-		{
-			bullets.Add(bullet);
-
-			MapView.Children.Add(bullet.body);
-		}
-
-		public void ShowText(string text)
-		{
-			MainLabel.Text = text;
-			MainLabel.IsVisible = true;
-		}
-
-		public void HideText()
-		{
-			MainLabel.IsVisible = false;
-		}
-
-		public void PositiveMove()
-		{
-			universe.PlayerMove(true);
-		}
-
-		public void NegativeMove()
-		{
-			universe.PlayerMove(false);
-		}
-
+		public void UpdateView(Color? color = null) => PlayerView.BackgroundColor = color ?? VoidColor;
 		public static Color VoidColor => Application.Current?.RequestedTheme switch
 		{
 			AppTheme.Dark => Colors.Black,
@@ -275,13 +168,53 @@ namespace Invasion1D
 			_ => Colors.Black,
 		};
 
+		public void AddToMap(Shape shape)
+		{
+			MapView.Children.Add(shape);
+		}
+
+		public void RemoveFromMap(Shape shape)
+		{
+			MapView.Children.Remove(shape);
+		}
+
+		public void ClearMap()
+		{
+			MapView.Children.Clear();
+		}
+
+		public void ShowText(bool show = true, string text = "")
+		{
+			if (show)
+			{
+				MainLabel.Text = text;
+				MainLabel.IsVisible = true;
+			}
+			else
+			{
+				MainLabel.IsVisible = false;
+				MainLabel.Text = "";
+			}
+		}
+
+		public void ShowControls(bool show)
+		{
+			if (show)
+			{
+				ControlsGrid.IsVisible = true;
+			}
+			else
+			{
+				ControlsGrid.IsVisible = false;
+			}
+		}
+
 		public void ChangeMapMode()
 		{
 			isMapVisible = !isMapVisible;
 			if (isMapVisible)
 			{
 				MapView.IsVisible = true;
-
 				Grid.SetColumn(PlayerView, 0);
 				Grid.SetColumnSpan(PlayerView, 1);
 				Grid.SetColumn(MapView, 1);
@@ -308,18 +241,18 @@ namespace Invasion1D
 
 		private void OnWindowDestroying(object? sender, EventArgs e)
 		{
-			universe.CancelUpdate();
+			Game.CancelUpdate();
 		}
 
-		private void NegPressed(object sender, EventArgs e) => NegativeMove();
-		private void NegReleased(object sender, EventArgs e) => universe.StopPlayer();
+		private void NegPressed(object sender, EventArgs e) => Game.universe.PlayerMove(false);
+		private void NegReleased(object sender, EventArgs e) => Game.universe.StopPlayer();
 
-		private void PosPressed(object sender, EventArgs e) => PositiveMove();
-		private void PosReleased(object sender, EventArgs e) => universe.StopPlayer();
+		private void PosPressed(object sender, EventArgs e) => Game.universe.PlayerMove(true);
+		private void PosReleased(object sender, EventArgs e) => Game.universe.StopPlayer();
 
-		private void ShootClicked(object sender, EventArgs e) => universe.PlayerAttack();
-		private void WarpClicked(object sender, EventArgs e) => universe.WarpPlayer();
-		private void StartClicked(object sender, EventArgs e) => Start();
+		private void ShootClicked(object sender, EventArgs e) => Game.universe.PlayerAttack();
+		private void WarpClicked(object sender, EventArgs e) => Game.universe.WarpPlayer();
+		private void StartClicked(object sender, EventArgs e) => Game.Start();
 		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 	}
 }

@@ -1,4 +1,6 @@
-﻿namespace Invasion1D.Models
+﻿using System.Diagnostics;
+
+namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
@@ -17,23 +19,73 @@
 			health -= damage;
 			if (health <= 0)
 			{
+				StopMovement();
 				Dispose();
 			}
 		}
 
-		public override void NegativeMove()
+		protected override async Task MoveAsync(bool direction)
 		{
-			throw new NotImplementedException();
-		}
+			this.direction = direction;
+			List<Type> ignore = [];
 
-		public override void PositiveMove()
-		{
-			throw new NotImplementedException();
-		}
+			while (!cancelMovement.IsCancellationRequested)
+			{
+				try
+				{
+					Interactive? target = FindInteractive(out double distanceFromTarget, ignoreTypes: [.. ignore]);
+					double tryStep = stepDistance;
+					if (distanceFromTarget < tryStep)
+					{
+						if (target is Item item)
+						{
+							if (!item.Power(this))
+							{
+								switch (item)
+								{
+									case Vitalux:
+										ignore.Add(typeof(Vitalux));
+										break;
+									case Warpium:
+										ignore.Add(typeof(Warpium));
+										break;
+								}
+							}
+						}
+						else
+						{
+							tryStep = distanceFromTarget;
+							StopMovement();
+						}
+					}
 
-		public override void StopMovement()
-		{
-			throw new NotImplementedException();
+					if (direction)
+					{
+						PercentageInShape += CurrentDimention.GetPercentageFromDistance(tryStep);
+					}
+					else
+					{
+						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(tryStep);
+					}
+
+					body.TranslationX = Position.X;
+					body.TranslationY = Position.Y;
+
+					try
+					{
+						await Task.Delay(movementInterval, cancelMovement.Token);
+					}
+					catch (OperationCanceledException)
+					{
+						break;
+					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"An error occurred: {ex.Message}");
+					break;
+				}
+			}
 		}
 	}
 }

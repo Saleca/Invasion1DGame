@@ -25,7 +25,7 @@
 		public override void Dispose()
 		{
 			base.Dispose();
-			MainPage.Instance.universe.dimensions.Remove(this);
+			((App)Application.Current!).universe.dimensions.Remove(this);
 		}
 
 		public abstract Point GetPositionInShape(Interactive interactive);

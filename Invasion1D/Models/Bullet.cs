@@ -1,55 +1,87 @@
-﻿namespace Invasion1D.Models
+﻿using System.Diagnostics;
+
+namespace Invasion1D.Models
 {
 	public class Bullet : Kinetic
 	{
-		public double Damage { get; set; }
+		static App Game => (App)Application.Current!;
 
-		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 5)
+		public static List<Bullet> Bullets = null!;
+
+		public static double Damage => 1;
+
+		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 20)
 		{
 			this.direction = direction;
 
-			Damage = 1;
-		}
-
-		public override void NegativeMove() =>
-			Move(!clockwise);
-
-		public override void PositiveMove() =>
-			Move(clockwise);
-
-		public override void StopMovement() => throw new NotImplementedException();
-		
-		void Move(bool direction)
-		{
-			base.direction = direction;
-
-			Kinetic? target = FindInteractive(out double distanceFromTarget, typeof(Bullet), typeof(Vitalux), typeof(Warpium)) as Kinetic;
-
-			double stepDistance = speed;
-			if (distanceFromTarget < stepDistance)
-			{
-				stepDistance = distanceFromTarget;
-				target?.TakeDamage(Damage);
-				toDispose = true;
-			}
-
 			if (direction)
 			{
-				PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
+				PositiveMove();
 			}
 			else
 			{
-				PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
+				NegativeMove();
 			}
+		}
 
-			PointF newPosition = Position;
-			body.TranslationX = newPosition.X;
-			body.TranslationY = newPosition.Y;
+		public static void AddBullets(Bullet bullet)
+		{
+			Bullets.Add(bullet);
+			Game.UI.AddToMap(bullet.body);
+		}
+
+		protected override async Task MoveAsync(bool direction)
+		{
+			this.direction = direction;
+			List<Type> ignore = [typeof(Vitalux), typeof(Warpium)];
+
+			while (!cancelMovement.IsCancellationRequested)
+			{
+				try
+				{
+					Kinetic? target = FindInteractive(out double distanceFromTarget, this, [.. ignore]) as Kinetic;
+
+					if (distanceFromTarget < stepDistance)
+					{
+						target?.TakeDamage(Damage);
+						TakeDamage(Damage);
+						return;
+					}
+
+					if (direction)
+					{
+						PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
+					}
+					else
+					{
+						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
+					}
+
+					body.TranslationX = Position.X;
+					body.TranslationY = Position.Y;
+
+					try
+					{
+						await Task.Delay(movementInterval, cancelMovement.Token);
+					}
+					catch (OperationCanceledException)
+					{
+						break;
+					}
+				}
+				catch (Exception ex)
+				{
+					Debug.WriteLine($"An error occurred: {ex.Message}");
+					break;
+				}
+			}
 		}
 
 		public override void TakeDamage(double damage)
 		{
-			throw new NotImplementedException();
+			StopMovement();
+			Bullets.Remove(this);
+			Dispose();
 		}
 	}
 }

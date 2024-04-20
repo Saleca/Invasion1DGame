@@ -29,7 +29,7 @@ namespace Invasion1D.Models
 			};
 			body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
 
-			MainPage.Instance.universe.dimensions.Add(this);
+			((App)Application.Current!).universe.dimensions.Add(this);
 		}
 
 		public override Point GetPositionInShape(Interactive physicalShape)

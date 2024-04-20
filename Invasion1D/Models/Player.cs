@@ -5,13 +5,14 @@ namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
+		static App Game => (App)Application.Current!;
+
 		public List<Dimension> visitedDimensions = [];
 
-		CancellationTokenSource cancelMovement = null!;
 
 		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
 		{
-			direction = clockwise;
+			direction = clockwise;//randomize
 		}
 
 		public async void WarpAsync()
@@ -20,23 +21,23 @@ namespace Invasion1D.Models
 			{
 				visitedDimensions.Add(CurrentDimention);
 
-				if (visitedDimensions.Count == MainPage.Instance.universe.dimensions.Count)
+				if (visitedDimensions.Count == Game.universe.dimensions.Count)
 					visitedDimensions.Clear();
 
-				var unvisitedDimentions = MainPage.Instance.universe.dimensions.Except(visitedDimensions).ToArray();
+				var unvisitedDimentions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
 
 				Dimension cd = CurrentDimention;
-				CurrentDimention = unvisitedDimentions[MainPage.Instance.universe.random.Next(unvisitedDimentions.Length)];
+				CurrentDimention = unvisitedDimentions[Game.random.Next(unvisitedDimentions.Length)];
 				cd.interactiveObjects.Remove(this);
 
 				do
 				{
-					PercentageInShape = MainPage.Instance.universe.random.NextDouble();
+					PercentageInShape = Game.random.NextDouble();
 				} while (CurrentDimention.CheckOverlap(this));
 
 				warpium--;
 
-				await MainPage.Instance.WarpAnimation(this,
+				await Game.UI.WarpAnimation(this,
 					start: new(body.TranslationX, body.TranslationY),
 					end: new(Position.X, Position.Y));
 			}
@@ -50,46 +51,16 @@ namespace Invasion1D.Models
 			{
 				vitalux -= attackCost;
 
-				MainPage.Instance.AddBullets(
-					new Bullet(
-						shape: CurrentDimention,
+				Bullet.AddBullets(
+					new(shape: CurrentDimention,
 						position: direction ?
-								GameMath.AddPercentage(PercentageInShape, sizePercentage) :
-								GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
+							GameMath.AddPercentage(PercentageInShape, sizePercentage) :
+							GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
 						direction: direction));
 			}
 		}
 
-		public override void NegativeMove()
-		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
-			{
-				StopMovement();
-			}
-			cancelMovement = new();
-			_ = MoveAsync(!clockwise);
-		}
-
-		public override void PositiveMove()
-		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
-			{
-				StopMovement();
-			}
-			cancelMovement = new();
-			_ = MoveAsync(clockwise);
-		}
-
-		public override void StopMovement()
-		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
-			{
-				cancelMovement.Cancel();
-				cancelMovement.Dispose();
-			}
-		}
-
-		async Task MoveAsync(bool direction)
+		protected override async Task MoveAsync(bool direction)
 		{
 			this.direction = direction;
 			List<Type> ignore = [typeof(Player)];
@@ -98,7 +69,7 @@ namespace Invasion1D.Models
 			{
 				try
 				{
-					Interactive? target = FindInteractive(out double distanceFromTarget, [.. ignore]);
+					Interactive? target = FindInteractive(out double distanceFromTarget, ignoreTypes: [.. ignore]);
 					double tryStep = stepDistance;
 					if (distanceFromTarget < tryStep)
 					{
@@ -159,7 +130,7 @@ namespace Invasion1D.Models
 			if (health <= 0)
 			{
 				Dispose();
-				MainPage.Instance.universe.GameOver();
+				Game.End();
 			}
 		}
 	}
