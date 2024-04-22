@@ -1,4 +1,5 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
+using System.Timers;
 
 namespace Invasion1D.Models
 {
@@ -54,13 +55,32 @@ namespace Invasion1D.Models
 			body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
 		}
 
-		public override void Reset()
+		List<System.Timers.Timer?> timers = [];
+
+		protected System.Timers.Timer SetUpTimer(int miliseconds, Action onElapsed, bool reset = false)
 		{
-			throw new NotImplementedException();
+			System.Timers.Timer? timer = new(miliseconds);
+			timer.Elapsed += (s, e) => onElapsed();
+			timer.AutoReset = reset;
+			timers.Add(timer);
+			return timer;
 		}
 
 		public override void Dispose()
 		{
+			if (timers.Count != 0)
+			{
+				for (int i = 0; i < timers.Count; i++)
+				{
+					if (timers[i] is not null)
+					{
+						timers[i]?.Stop();
+						timers[i]?.Dispose();
+						timers[i] = null;
+					}
+				}
+			}
+
 			base.Dispose();
 			CurrentDimention.RemoveInteractiveObject(this);
 		}

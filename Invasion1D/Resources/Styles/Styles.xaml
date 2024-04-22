@@ -2,19 +2,39 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
-    
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Invasion1D.Controls">
+
     <Style TargetType="ContentPage" x:Key="ContentPage">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
     </Style>
 
-    <Style TargetType="Frame">
-        <Setter Property="HasShadow" Value="False" />
+    <Style TargetType="Frame" x:Key="BaseFrame">
+        <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="FillAndExpand" />
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
-        <Setter Property="CornerRadius" Value="8" />
     </Style>
+    <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}"/>
     
-    <Style TargetType="Button">
+    <Style TargetType="Frame" x:Key="MainFrame"  BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+    </Style>
+
+    <Style TargetType="local:WarpiumControl">
+        <Setter Property="Margin" Value="2,5"/>
+        <Setter Property="BackgroundColor" Value="{StaticResource Warpium}"/>
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
+    </Style>
+
+    <Style TargetType="BoxView">
+        <Setter Property="HorizontalOptions" Value="Start" />
+    </Style>
+
+    <Style TargetType="Button" x:Key="BaseButton">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
         <Setter Property="CornerRadius" Value="8"/>
@@ -48,6 +68,7 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
+    <Style TargetType="Button" BasedOn="{StaticResource BaseButton}"/>
 
     <Style TargetType="Label">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
@@ -56,5 +77,5 @@
         <Setter Property="VerticalTextAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="14" />
     </Style>
-   
+
 </ResourceDictionary>

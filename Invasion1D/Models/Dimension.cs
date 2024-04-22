@@ -16,7 +16,7 @@
 		public void RemoveInteractiveObject(Interactive interactiveObj) =>
 			interactiveObjects.Remove(interactiveObj);
 
-		public override void Reset()
+		public void Reset()
 		{
 			interactiveObjects.Clear();
 			toDispose = false;

@@ -12,7 +12,7 @@ namespace Invasion1D
 		//
 		public Universe universe = null!;
 		public MainPage UI = null!;
-		public Random random = new();
+		public Random throwDice = new();
 
 		//state
 		bool isStarted = false;
@@ -47,6 +47,7 @@ namespace Invasion1D
 			cancelUpdate = new();
 
 			universe.Start();
+			UI.ShowStats(true);
 			UI.ShowControls(true);
 			Task.Run(Update);
 
@@ -71,7 +72,7 @@ namespace Invasion1D
 
 				try
 				{
-					await MainThread.InvokeOnMainThreadAsync(() =>
+					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
 					{
 						if (!UI.IsAnimating)
 						{
@@ -80,6 +81,7 @@ namespace Invasion1D
 						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
 					});
 					await Task.Delay(100, cancelUpdate.Token);
+					await uiTask;
 				}
 				catch (OperationCanceledException)
 				{
@@ -95,6 +97,7 @@ namespace Invasion1D
 		public void End()
 		{
 			CancelUpdate();
+			UI.UpdateView(GameColors.VoidColor);
 			UI.ShowText(text: "Game Over");
 			UI.ShowControls(false);
 		}
@@ -104,11 +107,18 @@ namespace Invasion1D
 			UI.ShowText(show: false);
 			universe.ResetDimentions();
 			UI.ClearMap();
+			UI.ClearWarpium();
 		}
 
 		private void FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
 		{
 			Debug.WriteLine(e.Exception.ToString());
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns>true for clockwise or false for !clockwise</returns>
+		public bool RandomDirection() => throwDice.Next(2) == 1;
 	}
 }

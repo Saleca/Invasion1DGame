@@ -6,7 +6,7 @@ namespace Invasion1D.Models
 	{
 		public Enemy(Dimension shape, double position, double speed) : base(shape, position, Colors.Red, speed)
 		{
-			direction = clockwise; //randomize
+			direction = ((App)Application.Current!).RandomDirection();
 		}
 
 		public override void Attack()

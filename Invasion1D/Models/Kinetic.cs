@@ -1,4 +1,5 @@
 ﻿using Invasion1D.Helpers;
+using System.Timers;
 
 namespace Invasion1D.Models
 {
@@ -11,7 +12,7 @@ namespace Invasion1D.Models
 		public bool direction;
 
 		//TODO:modify stepDistance and movementInterval when implementing framerate and delta time
-		protected double stepDistance = speed/10;
+		protected double stepDistance = speed / 10;
 		protected TimeSpan movementInterval = TimeSpan.FromMilliseconds(100);
 
 		public double DistanceFromTarget(Interactive target)
@@ -72,7 +73,8 @@ namespace Invasion1D.Models
 
 		public void StopMovement()
 		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
+			if (cancelMovement is not null &&
+				!cancelMovement.IsCancellationRequested)
 			{
 				cancelMovement.Cancel();
 				cancelMovement.Dispose();

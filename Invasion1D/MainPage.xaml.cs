@@ -1,13 +1,15 @@
-﻿using Invasion1D.Data;
+﻿using Invasion1D.Controls;
+using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
 using Microsoft.Maui.Controls.Shapes;
+using System;
 
 namespace Invasion1D
 {
 	public partial class MainPage : ContentPage
 	{
-		readonly bool debug = false;
+		readonly bool debug = true;
 
 		static App Game => ((App)Application.Current!);
 
@@ -17,7 +19,7 @@ namespace Invasion1D
 		bool isMapVisible = false;
 
 		readonly object locker = new();
-		bool isAnimating;
+		bool isAnimating = false;
 		public bool IsAnimating
 		{
 			get
@@ -38,11 +40,13 @@ namespace Invasion1D
 
 		public MainPage()
 		{
+			//SetShootCooldownTimer();
+
 			InitializeComponent();
 
 			if (debug)
 			{
-				Grid.SetRowSpan(StartKey, 2);
+				Grid.SetRowSpan(StartKey, 1);
 				MapModeKey.IsVisible = true;
 			}
 
@@ -52,12 +56,6 @@ namespace Invasion1D
 			{
 				frame = (Frame)Instance.Handler.PlatformView;
 			}*/
-		}
-
-
-		public void Initiate()
-		{
-			IsAnimating = false;
 		}
 
 		public void Draw()
@@ -83,26 +81,163 @@ namespace Invasion1D
 			TimeLabel.Text = time;
 		}
 
-		//make bar for health and vitalux
-		public void UpdateHealth(string health)
+		public void UpdateHealth(double progress)
 		{
-			HealthLabel.Text = health; //playerData.health.ToString();
+			double width = HealthProgressFrame.Width;
+			if (width == -1)
+			{
+				width = 1000;
+			}
+			HealthProgress.WidthRequest = width * progress;
 		}
 
-		public void UpdateVitaLux(string vitalux)
+		public void UpdateVitaLux(double progress)
 		{
-			VitaluxLabel.Text = vitalux; //playerData.vitalux.ToString();
+			double width = VitaluxProgressFrame.Width;
+			if (width == -1)
+			{
+				width = 1000;
+			}
+			VitaluxProgress.WidthRequest = width * progress;
 		}
 
-		public void UpdateWarpium(string warpium)
+		public void AddWarpium()
 		{
-			WarpiumLabel.Text = warpium; //playerData.warpium.ToString();
+			WarpiumContainer.Add(new WarpiumControl());
+		}
+		public void RemoveWarpium()
+		{
+			WarpiumContainer.RemoveAt(0);
+		}
+		public void ClearWarpium()
+		{
+			WarpiumContainer.Clear();
 		}
 
 		public void UpdateStartKeyText(string text)
 		{
 			StartKey.Text = text;
+		}
 
+		public void ShowShootKey(bool show)
+		{
+			if (show)
+			{
+				ShootKey.IsVisible = true;
+			}
+			else
+			{
+				ShootKey.IsVisible = false;
+			}
+		}
+		public void ShootCooldown(double progress)
+		{
+			ShootCooldownProgress.WidthRequest = ShootCooldownProgressFrame.Width * progress;
+		}
+
+		public void ShowWarpKey(bool show)
+		{
+			if (show)
+			{
+				WarpKey.IsVisible = true;
+			}
+			else
+			{
+				WarpKey.IsVisible = false;
+			}
+		}
+		public void WarpCooldown(double progress)
+		{
+			WarpCooldownProgress.WidthRequest = WarpCooldownProgressFrame.Width * progress;
+		}
+
+		public void AddToMap(Shape shape)
+		{
+			MapView.Children.Add(shape);
+		}
+
+		public void RemoveFromMap(Shape shape)
+		{
+			MapView.Children.Remove(shape);
+		}
+
+		public void ClearMap()
+		{
+			MapView.Children.Clear();
+		}
+
+		public void ShowText(bool show = true, string text = "")
+		{
+			if (show)
+			{
+				MainLabel.Text = text;
+				MainLabel.IsVisible = true;
+			}
+			else
+			{
+				MainLabel.IsVisible = false;
+				MainLabel.Text = "";
+			}
+		}
+
+		public void ShowControls(bool show)
+		{
+			if (show)
+			{
+				ControlsGrid.IsVisible = true;
+			}
+			else
+			{
+				ControlsGrid.IsVisible = false;
+			}
+		}
+
+		public void ShowStats(bool show)
+		{
+			if (show)
+			{
+				StatsGrid.IsVisible = true;
+			}
+			else
+			{
+				StatsGrid.IsVisible = false;
+			}
+		}
+
+		public void ChangeMapMode()
+		{
+			isMapVisible = !isMapVisible;
+			if (isMapVisible)
+			{
+				MapView.IsVisible = true;
+				Grid.SetColumn(PlayerView, 0);
+				Grid.SetColumnSpan(PlayerView, 1);
+				Grid.SetColumn(MapView, 1);
+				Grid.SetColumnSpan(MapView, 1);
+				MapView.Scale = 1;
+				MapView.TranslationX = 0;
+				MapView.TranslationY = 0;
+			}
+			else
+			{
+				MapView.IsVisible = false;
+				Grid.SetColumn(PlayerView, 0);
+				Grid.SetColumnSpan(PlayerView, 2);
+				Grid.SetColumn(MapView, 0);
+				Grid.SetColumnSpan(MapView, 2);
+			}
+		}
+
+		public void RunOnUIThread(Action action)
+		{
+			if (MainThread.IsMainThread)
+			{
+				action();
+			}
+			else
+			{
+				Dispatcher.Dispatch(action);
+			}
 		}
 
 		internal async Task WarpAnimation(Player playerData, Point start, Point end)
@@ -171,75 +306,10 @@ namespace Invasion1D
 			//frame.Focus();
 		}
 
-
-		public void AddToMap(Shape shape)
-		{
-			MapView.Children.Add(shape);
-		}
-
-		public void RemoveFromMap(Shape shape)
-		{
-			MapView.Children.Remove(shape);
-		}
-
-		public void ClearMap()
-		{
-			MapView.Children.Clear();
-		}
-
-		public void ShowText(bool show = true, string text = "")
-		{
-			if (show)
-			{
-				MainLabel.Text = text;
-				MainLabel.IsVisible = true;
-			}
-			else
-			{
-				MainLabel.IsVisible = false;
-				MainLabel.Text = "";
-			}
-		}
-
-		public void ShowControls(bool show)
-		{
-			if (show)
-			{
-				ControlsGrid.IsVisible = true;
-			}
-			else
-			{
-				ControlsGrid.IsVisible = false;
-			}
-		}
-
-		public void ChangeMapMode()
-		{
-			isMapVisible = !isMapVisible;
-			if (isMapVisible)
-			{
-				MapView.IsVisible = true;
-				Grid.SetColumn(PlayerView, 0);
-				Grid.SetColumnSpan(PlayerView, 1);
-				Grid.SetColumn(MapView, 1);
-				Grid.SetColumnSpan(MapView, 1);
-				MapView.Scale = 1;
-				MapView.TranslationX = 0;
-				MapView.TranslationY = 0;
-			}
-			else
-			{
-				MapView.IsVisible = false;
-				Grid.SetColumn(PlayerView, 0);
-				Grid.SetColumnSpan(PlayerView, 2);
-				Grid.SetColumn(MapView, 0);
-				Grid.SetColumnSpan(MapView, 2);
-			}
-		}
-
 		protected override void OnAppearing()
 		{
 			base.OnAppearing();
+
 			Window.Destroying += OnWindowDestroying;
 		}
 

@@ -1,70 +1,85 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Invasion1D.Controls"
              x:Class="Invasion1D.MainPage"
              Style="{StaticResource ContentPage}">
 
     <Grid RowDefinitions="2*,6*,2*">
-        <Grid 
-            RowDefinitions="*,*,*,*"
-            ColumnDefinitions="*,*,*"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            Margin="5">
-            <Label
-                Grid.Row="0"
+        <Grid
+            Grid.Row="0"
+            Grid.Column="0"
+            ColumnDefinitions="8*,*">
+            <Grid 
+                x:Name="StatsGrid"
                 Grid.Column="0"
-                Text="Time"/>
-            <Label
-                Grid.Row="1"
-                Grid.Column="0"
-                x:Name="TimeLabel"/>
+                RowDefinitions="*,*,*,*"
+                ColumnDefinitions="*,*"
+                HorizontalOptions="FillAndExpand"
+                VerticalOptions="FillAndExpand"
+                Margin="5"
+                IsVisible="false">
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="0"
+                    Text="Time"/>
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="0"
+                    x:Name="TimeLabel"/>
 
-            <Label
-                Grid.Row="0"
-                Grid.Column="1"
-                Text="Health"/>
-            <Label
-                Grid.Row="1"
-                Grid.Column="1"
-                x:Name="HealthLabel"/>
+                <Label
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     Text="Warpium"/>
+                <HorizontalStackLayout
+                    x:Name="WarpiumContainer"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalOptions="Center"/>
 
-            <Button
-                Grid.Row="0"
-                Grid.RowSpan="4"
-                Grid.Column="2"
-                Text="Start"
-                Clicked="StartClicked"
-                x:Name="StartKey"/>
+                <Label
+                    Grid.Row="2"
+                    Grid.Column="0"
+                    Text="Health"/>
+                <Frame
+                    x:Name="HealthProgressFrame"
+                    Grid.Row="3"
+                    Grid.Column="0">
+                    <BoxView 
+                        x:Name="HealthProgress"
+                        BackgroundColor="{StaticResource Health}"/>
+                </Frame>
 
-            <Button
-                Grid.Row="2"
-                Grid.RowSpan="2"
-                Grid.Column="2"
-                Text="Map"
-                Clicked="MapModeClicked"
-                x:Name="MapModeKey"
-                IsVisible="false"/>
+                <Label
+                     Grid.Row="2"
+                     Grid.Column="1"
+                     Text="Vitalux"/>
+                <Frame
+                     x:Name="VitaluxProgressFrame"
+                     Grid.Row="3"
+                     Grid.Column="1">
+                    <BoxView 
+                         x:Name="VitaluxProgress"
+                         BackgroundColor="{StaticResource Vitalux}"/>
+                </Frame>
+            </Grid>
+            <Grid Grid.Column="1"
+                  RowDefinitions="*,*">
+                <Button
+                    Grid.Row="0"
+                    Grid.RowSpan="2"
+                    Text="Start"
+                    Clicked="StartClicked"
+                    x:Name="StartKey"/>
 
-            <Label
-                Grid.Row="2"
-                Grid.Column="0"
-                TextColor="{StaticResource Vitalux}"
-                Text="Vitalux"/>
-            <Label
-                Grid.Row="3"
-                Grid.Column="0"
-                x:Name="VitaluxLabel"/>
-
-            <Label
-                Grid.Row="2"
-                Grid.Column="1"
-                TextColor="{StaticResource Warpium}"
-                Text="Warpium"/>
-            <Label
-                Grid.Row="3"
-                Grid.Column="1"
-                x:Name="WarpiumLabel"/>
+                <Button
+                    Grid.Row="1"
+                    Text="Map"
+                    Clicked="MapModeClicked"
+                    x:Name="MapModeKey"
+                    IsVisible="false"/>
+            </Grid>
         </Grid>
 
         <Grid 
@@ -76,6 +91,7 @@
             <Frame 
                 Grid.ColumnSpan="2"
                 BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                Style="{StaticResource MainFrame}"
                 x:Name="PlayerView">
             </Frame>
 
@@ -113,20 +129,35 @@
                 Pressed="PosPressed"
                 Released="PosReleased"
                 x:Name="PosKey"/>
-            <Button
+            <Grid 
                 Grid.Row="1"
-                Grid.Column="0"
-                TextColor="{StaticResource Vitalux}"
-                Text="Shoot"
-                Clicked="ShootClicked"
-                x:Name="ShootKey"/>
-            <Button
+                Grid.Column="0">
+                <Frame
+                    x:Name="ShootCooldownProgressFrame">
+                    <BoxView 
+                        x:Name="ShootCooldownProgress"
+                        BackgroundColor="{StaticResource Vitalux}"/>
+                </Frame>
+                <Button 
+                    x:Name="ShootKey"
+                    Text="Shoot"
+                    Clicked="ShootClicked"/>
+            </Grid>
+
+            <Grid 
                 Grid.Row="1"
-                Grid.Column="1"
-                TextColor="{StaticResource Warpium}"
-                Text="Warp"
-                Clicked="WarpClicked"
-                x:Name="WarpKey"/>
+                Grid.Column="1">
+                <Frame
+                    x:Name="WarpCooldownProgressFrame">
+                    <BoxView 
+                         x:Name="WarpCooldownProgress"
+                         BackgroundColor="{StaticResource Warpium}"/>
+                </Frame>
+                <Button
+                    x:Name="WarpKey"
+                    Text="Warp"
+                    Clicked="WarpClicked"/>
+            </Grid>
         </Grid>
     </Grid>
 </ContentPage>

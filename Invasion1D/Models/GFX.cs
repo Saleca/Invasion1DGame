@@ -1,9 +1,11 @@
 ﻿using Microsoft.Maui.Controls.Shapes;
+using System;
 
 namespace Invasion1D.Models
 {
 	public abstract class GFX(double strokeThickness, Color lightTheme, Color darkTheme)
 	{
+		static App Game => (App)Application.Current!;
 		public readonly double strokeThickness = strokeThickness;
 		public readonly Color lightTheme = lightTheme;
 		public readonly Color darkTheme = darkTheme;
@@ -18,11 +20,10 @@ namespace Invasion1D.Models
 			_ => darkTheme,
 		};
 
-		public abstract void Reset();
 
 		public virtual void Dispose()
 		{
-			((App)Application.Current!).UI.RemoveFromMap(body);
+			Game.UI.RunOnUIThread(() => Game.UI.RemoveFromMap(body));
 		}
 	}
 }

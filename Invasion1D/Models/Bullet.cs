@@ -7,22 +7,16 @@ namespace Invasion1D.Models
 		static App Game => (App)Application.Current!;
 
 		public static double Damage => 1;
-
-		public Bullet(Dimension shape, double position, bool direction) : base(shape, position, Colors.Gray, 20)
+		System.Timers.Timer cooldownTimer;
+		public Bullet(Dimension dimention, double position, bool direction) : base(dimention, position, Colors.Gray, 20)
 		{
 			this.direction = direction;
 
-			if (direction)
-			{
-				PositiveMove();
-			}
-			else
-			{
-				NegativeMove();
-			}
+			cooldownTimer = SetUpTimer(6000, () => TakeDamage(Damage));
+			cooldownTimer.Start();
 		}
 
-		public static void AddBullets(Bullet bullet)
+		public static void Create(Bullet bullet)
 		{
 			Game.UI.AddToMap(bullet.body);
 		}
