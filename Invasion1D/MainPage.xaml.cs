@@ -16,7 +16,7 @@ namespace Invasion1D
 		//TODO *1
 		//Frame? frame;
 
-		bool isMapVisible = false;
+		public bool isMapVisible = false;
 
 		readonly object locker = new();
 		bool isAnimating = false;
@@ -38,6 +38,9 @@ namespace Invasion1D
 			}
 		}
 
+		public Frame PlayerViewAccess => PlayerView;
+		public AbsoluteLayout MapViewAccess => MapView;
+
 		public MainPage()
 		{
 			//SetShootCooldownTimer();
@@ -49,6 +52,8 @@ namespace Invasion1D
 				Grid.SetRowSpan(StartKey, 1);
 				MapModeKey.IsVisible = true;
 			}
+
+
 
 			//TOTO *1
 			//get frame to focus allowing keyboard control
@@ -69,6 +74,20 @@ namespace Invasion1D
 					MapView.Add(interactiveObj.body);
 				}
 			}
+		}
+
+
+
+		public void ResetAnimation()
+		{
+			MapView.Scale = 1;
+			MapView.TranslationX = 0;
+			MapView.TranslationY = 0;
+			if (!isMapVisible)
+			{
+				MapView.IsVisible = false;
+			}
+			IsAnimating = false;
 		}
 
 		public void UpdateView(Color? color)
@@ -130,6 +149,7 @@ namespace Invasion1D
 				ShootKey.IsVisible = false;
 			}
 		}
+
 		public void ShootCooldown(double progress)
 		{
 			ShootCooldownProgress.WidthRequest = ShootCooldownProgressFrame.Width * progress;
@@ -238,72 +258,6 @@ namespace Invasion1D
 			{
 				Dispatcher.Dispatch(action);
 			}
-		}
-
-		internal async Task WarpAnimation(Player playerData, Point start, Point end)
-		{
-			double offset = playerData.Radius - playerData.strokeThickness,
-				mapOffsetX = PlayerView.Width / 2 - offset,
-				mapOffsetY = PlayerView.Height / 2 - offset,
-
-				startX = mapOffsetX - start.X,
-				startY = mapOffsetY - start.Y,
-				endX = mapOffsetX - end.X,
-				endY = mapOffsetY - end.Y;
-
-			double scale = default!,
-				endScaledX = default!,
-				endScaledY = default!,
-				midX = default!,
-				midY = default!;
-			if (!isMapVisible)
-			{
-				scale = 5;
-
-				MapView.Scale = scale;
-
-				double startScaledX = startX * scale,
-				startScaledY = startY * scale;
-
-				endScaledX = endX * scale;
-				endScaledY = endY * scale;
-
-				midX = GameMath.LinearInterpolation(startX, endX, .5);
-				midY = GameMath.LinearInterpolation(startY, endY, .5);
-
-				MapView.TranslationX = startScaledX;
-				MapView.TranslationY = startScaledY;
-
-				UpdateView(Colors.Transparent);
-				MapView.IsVisible = true;
-			}
-
-			IsAnimating = true;
-
-			Task<bool> translatePlayer = playerData.body.TranslateTo(end.X, end.Y, 4000, Easing.CubicInOut);
-
-			if (!isMapVisible)
-			{
-				Task<bool> translateOut = MapView.TranslateTo(midX, midY, 2000, Easing.CubicOut);
-				Task<bool> scaleOut = MapView.ScaleTo(1, 2000, Easing.CubicOut);
-				await Task.WhenAll(translateOut, scaleOut);
-
-				Task<bool> translateIn = MapView.TranslateTo(endScaledX, endScaledY, 2000, Easing.CubicIn);
-				Task<bool> scaleIn = MapView.ScaleTo(scale, 2000, Easing.CubicIn);
-				await Task.WhenAll(translateIn, scaleIn);
-			}
-
-			await translatePlayer;
-
-			IsAnimating = false;
-
-			if (!isMapVisible)
-			{
-				MapView.IsVisible = false;
-			}
-
-			//TODO *1
-			//frame.Focus();
 		}
 
 		protected override void OnAppearing()

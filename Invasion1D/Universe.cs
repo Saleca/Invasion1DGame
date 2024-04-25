@@ -54,6 +54,6 @@ namespace Invasion1D
 
 		public void StopPlayer() => playerData.StopMovement();
 		public void PlayerAttack() => playerData.Attack();
-		public void WarpPlayer() => playerData.WarpAsync();
+		public void WarpPlayer() => playerData.Warp();
 	}
 }

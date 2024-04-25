@@ -6,13 +6,26 @@ namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
+		const uint
+			warpAnimationLength = 4000,
+			halfAnimationLength = warpAnimationLength / 2;
+		const int
+			warpCooldownIntervalsLenght = 25;
+		const double
+			warpCooldownIntervalsCount = (double)warpAnimationLength / warpCooldownIntervalsLenght,
+			warpCooldownProgressIncrements = 1.0 / warpCooldownIntervalsCount;
+
 		static App Game => (App)Application.Current!;
 
-		public List<Dimension> visitedDimensions = [];
-		double shootCooldownProgress = 1,
+		public List<Dimension>
+			visitedDimensions = [];
+		double
+			shootCooldownProgress = 1,
 			warpCooldownProgress = 1;
-		protected System.Timers.Timer? shootCooldownTimer,
-									warpCooldownTimer;
+
+		protected System.Timers.Timer?
+			shootCooldownTimer,
+			warpCooldownTimer;
 
 		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
 		{
@@ -21,7 +34,7 @@ namespace Invasion1D.Models
 									reset: true,
 									onElapsed: () => OnShootCooldownElapsed(null, EventArgs.Empty));
 			warpCooldownTimer = SetUpTimer(
-									miliseconds: 10,
+									miliseconds: warpCooldownIntervalsLenght,
 									reset: true,
 									onElapsed: () => OnWarpCooldownElapsed(null, EventArgs.Empty));
 
@@ -32,7 +45,7 @@ namespace Invasion1D.Models
 			Game.UI.UpdateHealth(health);
 		}
 
-		public async void WarpAsync()
+		public void Warp()
 		{
 			if (warpium > 0)
 			{
@@ -55,26 +68,89 @@ namespace Invasion1D.Models
 				warpium--;
 				Game.UI.RemoveWarpium();
 
-				Game.UI.ShowWarpKey(false);
-				await Game.UI.WarpAnimation(this,
-					start: new(body.TranslationX, body.TranslationY),
-					end: new(Position.X, Position.Y));
-
-				//try to start and end cooldown with animation
-				ActivateWarpCooldown();
+				_ = WarpAnimation(start: new(body.TranslationX, body.TranslationY),
+							end: new(Position.X, Position.Y));
 			}
+		}
+
+		internal async Task WarpAnimation(Point start, Point end)
+		{
+			Game.UI.ShowWarpKey(false);
+			Game.UI.WarpCooldown(1);
+
+			double offset = Radius - strokeThickness,
+				mapOffsetX = Game.UI.PlayerViewAccess.Width / 2 - offset,
+				mapOffsetY = Game.UI.PlayerViewAccess.Height / 2 - offset,
+				startX = mapOffsetX - start.X,
+				startY = mapOffsetY - start.Y,
+				endX = mapOffsetX - end.X,
+				endY = mapOffsetY - end.Y;
+
+			double scale = default!,
+				endScaledX = default!,
+				endScaledY = default!,
+				midX = default!,
+				midY = default!;
+
+			if (!Game.UI.isMapVisible)
+			{
+				scale = 5;
+				Game.UI.MapViewAccess.Scale = scale;
+
+				double startScaledX = startX * scale,
+				startScaledY = startY * scale;
+				endScaledX = endX * scale;
+				endScaledY = endY * scale;
+
+				midX = GameMath.LinearInterpolation(startX, endX, .5);
+				midY = GameMath.LinearInterpolation(startY, endY, .5);
+
+
+				Game.UI.MapViewAccess.TranslationX = startScaledX;
+				Game.UI.MapViewAccess.TranslationY = startScaledY;
+
+				Game.UI.UpdateView(Colors.Transparent);
+				Game.UI.MapViewAccess.IsVisible = true;
+			}
+
+			Game.UI.IsAnimating = true;
+			Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, warpAnimationLength, Easing.CubicInOut);
+			ActivateWarpCooldown();
+
+			if (!Game.UI.isMapVisible)
+			{
+				Task<bool> translateOut = Game.UI.MapViewAccess.TranslateTo(midX, midY, halfAnimationLength, Easing.CubicOut);
+				Task<bool> scaleOut = Game.UI.MapViewAccess.ScaleTo(1, halfAnimationLength, Easing.CubicOut);
+				await Task.WhenAll(translateOut, scaleOut);
+
+				Task<bool> translateIn = Game.UI.MapViewAccess.TranslateTo(endScaledX, endScaledY, halfAnimationLength, Easing.CubicIn);
+				Task<bool> scaleIn = Game.UI.MapViewAccess.ScaleTo(scale, halfAnimationLength, Easing.CubicIn);
+				await Task.WhenAll(translateIn, scaleIn);
+
+			}
+
+			await translatePlayer;
+			Game.UI.IsAnimating = false;
+
+			if (!Game.UI.isMapVisible)
+			{
+				Game.UI.MapViewAccess.IsVisible = false;
+			}
+
+			//TODO *1
+			//frame.Focus();
 		}
 
 		void ActivateWarpCooldown()
 		{
 			warpCooldownProgress = 1;
-			Game.UI.WarpCooldown(shootCooldownProgress);
+			Game.UI.WarpCooldown(warpCooldownProgress);
 			warpCooldownTimer?.Start();
 		}
 
 		protected void OnWarpCooldownElapsed(object? sender, EventArgs e)
 		{
-			warpCooldownProgress -= .01;
+			warpCooldownProgress -= warpCooldownProgressIncrements;
 			Game.UI.RunOnUIThread(() => Game.UI.WarpCooldown(warpCooldownProgress));
 
 			if (warpCooldownProgress <= 0)

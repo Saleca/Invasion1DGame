@@ -105,6 +105,7 @@ namespace Invasion1D
 		public void Reset()
 		{
 			UI.ShowText(show: false);
+			UI.ResetAnimation();
 			universe.ResetDimentions();
 			UI.ClearMap();
 			UI.ClearWarpium();
