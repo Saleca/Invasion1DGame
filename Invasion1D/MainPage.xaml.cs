@@ -13,9 +13,6 @@ namespace Invasion1D
 
 		static App Game => ((App)Application.Current!);
 
-		//TODO *1
-		//Frame? frame;
-
 		public bool isMapVisible = false;
 
 		readonly object locker = new();
@@ -43,8 +40,6 @@ namespace Invasion1D
 
 		public MainPage()
 		{
-			//SetShootCooldownTimer();
-
 			InitializeComponent();
 
 			if (debug)
@@ -52,15 +47,6 @@ namespace Invasion1D
 				Grid.SetRowSpan(StartKey, 1);
 				MapModeKey.IsVisible = true;
 			}
-
-
-
-			//TOTO *1
-			//get frame to focus allowing keyboard control
-			/*if (Instance.Handler?.PlatformView is not null)
-			{
-				frame = (Frame)Instance.Handler.PlatformView;
-			}*/
 		}
 
 		public void Draw()
@@ -75,8 +61,6 @@ namespace Invasion1D
 				}
 			}
 		}
-
-
 
 		public void ResetAnimation()
 		{
