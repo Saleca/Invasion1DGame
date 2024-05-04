@@ -13,7 +13,6 @@ namespace Invasion1D.Models
 		public bool toDispose = false;
 		public Shape body = null!;
 
-
 		public Color DisplayColor() => Application.Current?.RequestedTheme switch
 		{
 			AppTheme.Dark => darkTheme,
@@ -34,5 +33,6 @@ namespace Invasion1D.Models
 		{
 			Game.UI.RunOnUIThread(() => Game.UI.RemoveFromMap(body));
 		}
+		
 	}
 }

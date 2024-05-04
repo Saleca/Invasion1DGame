@@ -89,9 +89,6 @@ namespace Invasion1D.Models
 
 		internal async Task WarpAnimation(Point start, Point end)
 		{
-			Game.UI.ShowWarpKey(false);
-			Game.UI.WarpCooldown(1);
-
 			double offset = Radius - strokeThickness,
 				mapOffsetX = Game.UI.PlayerViewAccess.Width / 2 - offset,
 				mapOffsetY = Game.UI.PlayerViewAccess.Height / 2 - offset,
@@ -158,34 +155,53 @@ namespace Invasion1D.Models
 		void ActivateWarpCooldown()
 		{
 			warpCooldownProgress = 1;
-			Game.UI.WarpCooldown(warpCooldownProgress);
-			Game.UI.ShowWarpProgress(true);
+			Game.UI.RunOnUIThread(() =>
+			{
+				Game.UI.ShowWarpKey(false);
+				Game.UI.WarpCooldown(warpCooldownProgress);
+				Game.UI.ShowWarpProgress(true);
+			});
 			warpCooldownTimer?.Start();
 		}
 
 		protected void OnWarpCooldownElapsed(object? sender, EventArgs e)
 		{
 			warpCooldownProgress -= warpCooldownProgressIncrements;
-			Game.UI.RunOnUIThread(() => Game.UI.WarpCooldown(warpCooldownProgress));
+
+			Game.UI.RunOnUIThread(() =>
+			{
+				if (disposed)
+				{
+					return;
+				}
+				Game.UI.WarpCooldown(warpCooldownProgress);
+			});
 
 			if (warpCooldownProgress <= 0)
 			{
 				warpCooldownTimer?.Stop();
-			
-				Game.UI.RunOnUIThread(() => { Game.UI.ShowWarpKey(true); Game.UI.ShowWarpProgress(false); }) ;
+
+				Game.UI.RunOnUIThread(() => { Game.UI.ShowWarpKey(true); Game.UI.ShowWarpProgress(false); });
 			}
 		}
 
 		public void ActivateWeaveCooldown()
 		{
 			weaveCooldownProgress = 1;
-			Game.UI.WeaveCooldown(warpCooldownProgress);
+			Game.UI.RunOnUIThread(() => Game.UI.WeaveCooldown(warpCooldownProgress));
 			weaveCooldownTimer?.Start();
 		}
 		protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
 		{
 			weaveCooldownProgress -= .0001;
-			Game.UI.RunOnUIThread(() => Game.UI.WeaveCooldown(weaveCooldownProgress));
+			Game.UI.RunOnUIThread(() =>
+			{
+				if (disposed)
+				{
+					return;
+				}
+				Game.UI.WeaveCooldown(weaveCooldownProgress);
+			});
 
 			if (weaveCooldownProgress <= 0)
 			{
@@ -224,95 +240,86 @@ namespace Invasion1D.Models
 
 				ActivateShootCooldown();
 			}
-
 		}
 
 		void ActivateShootCooldown()
 		{
-			Game.UI.ShowShootKey(false);
 			shootCooldownProgress = 1;
-			Game.UI.ShowShootProgress(true);
-			Game.UI.ShootCooldown(shootCooldownProgress);
+			Game.UI.RunOnUIThread(() =>
+			{
+				Game.UI.ShowShootKey(false);
+				Game.UI.ShowShootProgress(true);
+				Game.UI.ShootCooldown(shootCooldownProgress);
+			});
 			shootCooldownTimer?.Start();
 		}
 
 		protected void OnShootCooldownElapsed(object? sender, EventArgs e)
 		{
 			shootCooldownProgress -= .01;
-			Game.UI.RunOnUIThread(() => Game.UI.ShootCooldown(shootCooldownProgress));
+			Game.UI.RunOnUIThread(() =>
+			{
+				if (disposed)
+				{
+					return;
+				}
+				Game.UI.ShootCooldown(shootCooldownProgress);
+			});
 
 			if (shootCooldownProgress <= 0)
 			{
 				shootCooldownTimer?.Stop();
 				Game.UI.RunOnUIThread(() => { Game.UI.ShowShootKey(true); Game.UI.ShowShootProgress(false); });
-
 			}
 		}
 
-		protected override async Task MoveAsync(bool direction)
+		public override void Move()
 		{
-			this.direction = direction;
 			List<Type> ignore = [typeof(Player)];
 
-			while (!cancelMovement.IsCancellationRequested)
+			Interactive? target = FindInteractive(
+				closestTargetDistance: out double distanceFromTarget,
+				ignoreTypes: [.. ignore]);
+
+			double tryStep = stepDistance;
+			if (distanceFromTarget < tryStep)
 			{
-				try
+				if (target is Item item)
 				{
-					Interactive? target = FindInteractive(
-						closestTargetDistance: out double distanceFromTarget,
-						ignoreTypes: [.. ignore]);
-
-					double tryStep = stepDistance;
-					if (distanceFromTarget < tryStep)
+					if (item.Power(this))
 					{
-						if (target is Item item)
+						switch (item)
 						{
-							if (item.Power(this))
-							{
-								switch (item)
-								{
-									case Vitalux:
-										Game.UI.UpdateVitaLux(vitalux);
-										break;
-									case Warpium:
-										Game.UI.AddWarpium();
-										break;
-								}
-							}
-						}
-						else
-						{
-							tryStep = distanceFromTarget;
-							StopMovement();
+							case Vitalux:
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+								break;
+							case Warpium:
+								Game.UI.RunOnUIThread(Game.UI.AddWarpium);
+								break;
+							case Health:
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
+								break;
+							case Weave:
+								ActivateWeaveCooldown();
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+								break;
 						}
 					}
-
-					if (direction)
-					{
-						PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
-					}
-					else
-					{
-						PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
-					}
-
-					body.TranslationX = Position.X;
-					body.TranslationY = Position.Y;
-
-					try
-					{
-						await Task.Delay(movementInterval, cancelMovement.Token);
-					}
-					catch (OperationCanceledException)
-					{
-						break;
-					}
 				}
-				catch (Exception ex)
+				else
 				{
-					Debug.WriteLine($"An error occurred: {ex.Message}");
-					break;
+					tryStep = distanceFromTarget;
+					StopMovement();
 				}
+			}
+
+			if (direction)
+			{
+				PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
+			}
+			else
+			{
+				PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
 			}
 		}
 
@@ -325,7 +332,7 @@ namespace Invasion1D.Models
 				return;
 			}
 
-			Dispose();
+			toDispose = true;
 			Game.End();
 		}
 	}

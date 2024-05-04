@@ -4,6 +4,7 @@ namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
+		App Game => (App)App.Current!;
 		public Enemy(
 			Dimension shape,
 			double position,
@@ -30,71 +31,47 @@ namespace Invasion1D.Models
 				return;
 			}
 
-			StopMovement();
-			Dispose();
+			Game.universe.enemyCount--;
+			toDispose = true;
 		}
 
-		protected override async Task MoveAsync(bool direction)
+		public override void Move()
 		{
-			this.direction = direction;
 			List<Type> ignore = [];
 
-			while (!cancelMovement.IsCancellationRequested)
+			Interactive? target = FindInteractive(out double distanceFromTarget, ignoreTypes: [.. ignore]);
+			double tryStep = stepDistance;
+			if (distanceFromTarget < tryStep)
 			{
-				try
+				if (target is Item item)
 				{
-					Interactive? target = FindInteractive(out double distanceFromTarget, ignoreTypes: [.. ignore]);
-					double tryStep = stepDistance;
-					if (distanceFromTarget < tryStep)
+					if (!item.Power(this))
 					{
-						if (target is Item item)
+						switch (item)
 						{
-							if (!item.Power(this))
-							{
-								switch (item)
-								{
-									case Vitalux:
-										ignore.Add(typeof(Vitalux));
-										break;
-									case Warpium:
-										ignore.Add(typeof(Warpium));
-										break;
-								}
-							}
-						}
-						else
-						{
-							tryStep = distanceFromTarget;
-							StopMovement();
+							case Vitalux:
+								ignore.Add(typeof(Vitalux));
+								break;
+							case Warpium:
+								ignore.Add(typeof(Warpium));
+								break;
 						}
 					}
-
-					if (direction)
-					{
-						PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
-					}
-					else
-					{
-						PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
-					}
-
-					body.TranslationX = Position.X;
-					body.TranslationY = Position.Y;
-
-					try
-					{
-						await Task.Delay(movementInterval, cancelMovement.Token);
-					}
-					catch (OperationCanceledException)
-					{
-						break;
-					}
 				}
-				catch (Exception ex)
+				else
 				{
-					Debug.WriteLine($"An error occurred: {ex.Message}");
-					break;
+					tryStep = distanceFromTarget;
+					StopMovement();
 				}
+			}
+
+			if (direction)
+			{
+				PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
+			}
+			else
+			{
+				PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
 			}
 		}
 	}

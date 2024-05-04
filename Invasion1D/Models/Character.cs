@@ -61,18 +61,9 @@
 			if (weave)
 				return false;
 
-			vitalux += weaveAttackCost;
-			if (vitalux > 1)
-			{
-				vitalux = 1;
-			}
-			Game.UI.UpdateVitaLux(vitalux);
-
+			vitalux = 1;
 			weave = true;
-			if (this is Player player)
-			{
-				player.ActivateWeaveCooldown();
-			}
+			//activate cooldown on character to affect enemy if enemy has access to items
 
 			return true;
 		}

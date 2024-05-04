@@ -5,6 +5,8 @@ namespace Invasion1D.Models
 {
 	public abstract class Interactive : GFX, ICircular
 	{
+		protected bool disposed = false;
+
 		public double Radius { get; init; }
 		public Point Position { get; set; }
 
@@ -80,6 +82,7 @@ namespace Invasion1D.Models
 					}
 				}
 			}
+			disposed = true;
 
 			base.Dispose();
 			CurrentDimension.RemoveInteractiveObject(this);

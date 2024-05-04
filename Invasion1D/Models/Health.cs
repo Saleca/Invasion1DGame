@@ -24,7 +24,7 @@ namespace Invasion1D.Models
 
 			if (amount <= 0)
 			{
-				Dispose();
+				toDispose = true;
 			}
 
 			if (amount < startAmount)

@@ -13,13 +13,17 @@ namespace Invasion1D
 		public readonly List<Dimension> dimensions = [];
 		public Player playerData = null!;
 
-		//TODO
-		//check if better use datetime and span to display time
+		public int
+			initialEnemyCount,
+			enemyCount;
+
 		public Stopwatch stopwatch = null!;
 
 		public void Initiate()
 		{
 			_ = new Seed();
+			initialEnemyCount = enemyCount = dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).Count();
+
 			double pp = .9f;
 			playerData = new((Circular)dimensions[0], pp, 10);
 

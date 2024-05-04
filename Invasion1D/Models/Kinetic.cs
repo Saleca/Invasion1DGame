@@ -6,10 +6,11 @@ namespace Invasion1D.Models
 	public abstract class Kinetic(Dimension dimension, double position, Color color, double speed) : Interactive(dimension, position, color)
 	{
 		public const bool clockwise = true;
-		protected CancellationTokenSource cancelMovement = null!;
 
 		public double speed = speed;
-		public bool direction;
+		public bool
+			direction,
+			isMoving = false;
 
 		//TODO:modify stepDistance and movementInterval when implementing framerate and delta time
 		protected double stepDistance = speed / 10;
@@ -53,35 +54,28 @@ namespace Invasion1D.Models
 
 		public void NegativeMove()
 		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
-			{
-				StopMovement();
-			}
-			cancelMovement = new();
-			_ = MoveAsync(!clockwise);
+			isMoving = true;
+			direction = !clockwise;
 		}
 
 		public void PositiveMove()
 		{
-			if (cancelMovement is not null && !cancelMovement.IsCancellationRequested)
-			{
-				StopMovement();
-			}
-			cancelMovement = new();
-			_ = MoveAsync(clockwise);
+			isMoving = true;
+			direction = clockwise;
 		}
 
 		public void StopMovement()
 		{
-			if (cancelMovement is not null &&
-				!cancelMovement.IsCancellationRequested)
-			{
-				cancelMovement.Cancel();
-				cancelMovement.Dispose();
-			}
+			isMoving = false;
 		}
 
-		protected abstract Task MoveAsync(bool direction);
+		public abstract void Move();
+
+		public void UpdateUI()
+		{
+			body.TranslationX = Position.X;
+			body.TranslationY = Position.Y;
+		}
 
 		public abstract void TakeDamage(double damage);
 	}

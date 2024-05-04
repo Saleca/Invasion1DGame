@@ -17,7 +17,7 @@ namespace Invasion1D.Models
 		public override bool Power(Character character)
 		{
 			character.AddWarpium();
-			Dispose();
+			toDispose = true;
 			return true;
 		}
 	}

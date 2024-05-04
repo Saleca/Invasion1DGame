@@ -18,6 +18,8 @@ namespace Invasion1D
 		bool isStarted = false;
 		CancellationTokenSource cancelUpdate = null!;
 
+		List<Kinetic> objectsToUpdateUI = [];
+
 		public App()
 		{
 			InitializeComponent();
@@ -53,27 +55,28 @@ namespace Invasion1D
 
 			isStarted = true;
 		}
-				
+
 		async Task Update()
 		{
 			while (!cancelUpdate.IsCancellationRequested)
 			{
-				//TODO
-				//automate enemies
-
 				try
 				{
-					int enemyCount = universe.dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).Count();
+					UpdateGameObjects();
+					ManageDisposedGameObjects();
 
 					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
 					{
+						UpdateGameObjectsUI();
 						if (!UI.IsAnimating)
 						{
 							UI.UpdateView(universe.playerData.GetView());
 						}
 						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
-						UI.UpdateEnemies($"{enemyCount}/9");
+						UI.UpdateEnemies($"{universe.enemyCount}/{universe.initialEnemyCount}");
 					});
+					//TODO:
+					//measure current frame compute time and delay only the difference between prefered framerate time and compute time
 					await Task.Delay(100, cancelUpdate.Token);
 					await uiTask;
 				}
@@ -87,6 +90,59 @@ namespace Invasion1D
 					break;
 				}
 			}
+		}
+
+		private void ManageDisposedGameObjects()
+		{
+			List<Interactive> interactiveObjectsToDispose = [];
+			foreach (var dimension in universe.dimensions)
+			{
+				foreach (var interactiveObject in dimension.interactiveObjects)
+				{
+					if (interactiveObject.toDispose)
+					{
+						interactiveObjectsToDispose.Add(interactiveObject);
+					}
+				}
+			}
+			int toDisposeCount = interactiveObjectsToDispose.Count;
+			for (int i = 0; i < toDisposeCount; i++)
+			{
+				if (objectsToUpdateUI.Contains(interactiveObjectsToDispose[0]))
+				{
+					objectsToUpdateUI.Remove((Kinetic)interactiveObjectsToDispose[0]);
+				}
+				interactiveObjectsToDispose[0].Dispose();
+			}
+		}
+
+		private void UpdateGameObjects()
+		{
+			foreach (var dimension in universe.dimensions)
+			{
+				foreach (var interactiveObject in dimension.interactiveObjects)
+				{
+					if (interactiveObject is not Kinetic kineticObject)
+					{
+						continue;
+					}
+
+					if (kineticObject.isMoving)
+					{
+						kineticObject.Move();
+						objectsToUpdateUI.Add(kineticObject);
+					}
+				}
+			}
+		}
+
+		void UpdateGameObjectsUI()
+		{
+			foreach (var kineticObject in objectsToUpdateUI)
+			{
+				kineticObject.UpdateUI();
+			}
+			objectsToUpdateUI = [];
 		}
 
 		public void CancelUpdate()
