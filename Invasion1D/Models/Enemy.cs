@@ -71,11 +71,11 @@ namespace Invasion1D.Models
 
 					if (direction)
 					{
-						PercentageInShape += CurrentDimention.GetPercentageFromDistance(tryStep);
+						PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
 					}
 					else
 					{
-						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(tryStep);
+						PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
 					}
 
 					body.TranslationX = Position.X;

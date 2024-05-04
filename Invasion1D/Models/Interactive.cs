@@ -10,15 +10,15 @@ namespace Invasion1D.Models
 
 		internal double sizePercentage;
 
-		private Dimension currentDimention = null!;
-		public Dimension CurrentDimention
+		private Dimension currentDimension = null!;
+		public Dimension CurrentDimension
 		{
-			get => currentDimention;
+			get => currentDimension;
 			set
 			{
-				currentDimention = value;
-				CurrentDimention.AddInteractiveObject(this);
-				sizePercentage = CurrentDimention.GetPercentageFromDistance(Radius * 2);
+				currentDimension = value;
+				CurrentDimension.AddInteractiveObject(this);
+				sizePercentage = CurrentDimension.GetPercentageFromDistance(Radius * 2);
 			}
 		}
 
@@ -29,14 +29,14 @@ namespace Invasion1D.Models
 			set
 			{
 				percentageInShape = (value + 1) % 1;
-				Position = CurrentDimention.GetPositionInShape(this);
+				Position = CurrentDimension.GetPositionInShape(this);
 			}
 		}
 
 		public Interactive(Dimension dimension, double positionPercentage, Color color) : base(0, color, color)
 		{
 			Radius = 5;
-			CurrentDimention = dimension;
+			CurrentDimension = dimension;
 			PercentageInShape = positionPercentage;
 
 			body = new Ellipse()
@@ -82,7 +82,7 @@ namespace Invasion1D.Models
 			}
 
 			base.Dispose();
-			CurrentDimention.RemoveInteractiveObject(this);
+			CurrentDimension.RemoveInteractiveObject(this);
 		}
 	}
 }

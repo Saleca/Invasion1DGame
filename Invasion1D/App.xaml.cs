@@ -53,16 +53,7 @@ namespace Invasion1D
 
 			isStarted = true;
 		}
-
-		public void CancelUpdate()
-		{
-			if (cancelUpdate is null || cancelUpdate.IsCancellationRequested)
-				return;
-
-			cancelUpdate.Cancel();
-			cancelUpdate.Dispose();
-		}
-
+				
 		async Task Update()
 		{
 			while (!cancelUpdate.IsCancellationRequested)
@@ -97,11 +88,22 @@ namespace Invasion1D
 				}
 			}
 		}
+
+		public void CancelUpdate()
+		{
+			if (cancelUpdate is null || cancelUpdate.IsCancellationRequested)
+				return;
+
+			cancelUpdate.Cancel();
+			cancelUpdate.Dispose();
+		}
+
 		public void Stop()
 		{
 			CancelUpdate();
 			UI.ClearCoolDownButtons();
 		}
+
 		public void End()
 		{
 			Stop();
@@ -115,7 +117,7 @@ namespace Invasion1D
 		{
 			UI.ShowText(false);
 			UI.ResetAnimation();
-			universe.ResetDimentions();
+			universe.ResetDimensions();
 			UI.ClearMap();
 			UI.ClearWarpium();
 			UI.ClearWeave();

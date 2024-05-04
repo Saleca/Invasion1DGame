@@ -5,10 +5,10 @@
 		public readonly List<Interactive> interactiveObjects = [];
 
 		//TODO
-		//public event EventHandler? ColapsedDimention;
+		//public event EventHandler? ColapsedDimension;
 		//public async void TeleportAsync(object? sender, EventArgs args)
-		//dimension.ColapsedDimention += (player)TeleportAsync;
-		//ColapsedDimention?.Invoke(this, EventArgs.Empty);
+		//dimension.ColapsedDimension += (player)TeleportAsync;
+		//ColapsedDimension?.Invoke(this, EventArgs.Empty);
 
 		public void AddInteractiveObject(Interactive interactiveObj) =>
 			interactiveObjects.Add(interactiveObj);

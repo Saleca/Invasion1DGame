@@ -35,9 +35,20 @@ namespace Invasion1D
 			stopwatch = Stopwatch.StartNew();
 		}
 
-		public void ResetDimentions()
+		public void ResetDimensions()
 		{
-			dimensions.Clear();
+			int dimensionsCount = dimensions.Count;
+			for (int i = 0; i < dimensionsCount; i++)
+			{
+				Dimension dimension = dimensions[0];
+				int dimensioninteractiveObjectsCount = dimension.interactiveObjects.Count;
+				for (int ii = 0; ii < dimensioninteractiveObjectsCount; ii++)
+				{
+					Interactive interactiveObject = dimension.interactiveObjects[0];
+					interactiveObject.Dispose();
+				}
+				dimension.Dispose();
+			}
 		}
 
 		public void PlayerMove(bool dir)

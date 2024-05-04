@@ -18,7 +18,7 @@ namespace Invasion1D.Models
 		public double DistanceFromTarget(Interactive target)
 		{
 			//double characterOffset = Radius + target.Radius;
-			double distance = CurrentDimention.GetDistanceBetweenPointsOnShape(PercentageInShape, target.PercentageInShape, direction);
+			double distance = CurrentDimension.GetDistanceBetweenPointsOnShape(PercentageInShape, target.PercentageInShape, direction);
 			distance -= Radius * 2;
 			return distance;
 		}
@@ -28,7 +28,7 @@ namespace Invasion1D.Models
 			Interactive? closestTarget = null;
 			closestTargetDistance = double.MaxValue;
 
-			foreach (var target in CurrentDimention.interactiveObjects)
+			foreach (var target in CurrentDimension.interactiveObjects)
 			{
 				if (ignoreTypes.Any(t => target.GetType() == t)
 					|| ReferenceEquals(target, ignoreInstance))

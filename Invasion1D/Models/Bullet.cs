@@ -10,7 +10,7 @@ namespace Invasion1D.Models
 		public double damage;
 		bool weave;
 		System.Timers.Timer? cooldownTimer;
-		public Bullet(Dimension dimention, double position, bool direction, bool weave, Color color) : base(dimention, position, color, 20)
+		public Bullet(Dimension dimension, double position, bool direction, bool weave, Color color) : base(dimension, position, color, 20)
 		{
 			this.direction = direction;
 			this.weave = weave;
@@ -61,11 +61,11 @@ namespace Invasion1D.Models
 
 					if (direction)
 					{
-						PercentageInShape += CurrentDimention.GetPercentageFromDistance(stepDistance);
+						PercentageInShape += CurrentDimension.GetPercentageFromDistance(stepDistance);
 					}
 					else
 					{
-						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(stepDistance);
+						PercentageInShape -= CurrentDimension.GetPercentageFromDistance(stepDistance);
 					}
 
 					body.TranslationX = Position.X;

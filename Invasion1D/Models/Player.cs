@@ -57,28 +57,27 @@ namespace Invasion1D.Models
 			Game.UI.AddWarpium();
 			Game.UI.UpdateVitaLux(vitalux);
 			Game.UI.UpdateHealth(health);
-
 		}
 
 		public void Warp()
 		{
 			if (warpium > 0)
 			{
-				visitedDimensions.Add(CurrentDimention);
+				visitedDimensions.Add(CurrentDimension);
 
 				if (visitedDimensions.Count == Game.universe.dimensions.Count)
 					visitedDimensions.Clear();
 
-				var unvisitedDimentions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
+				var unvisitedDimensions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
 
-				Dimension cd = CurrentDimention;
-				CurrentDimention = unvisitedDimentions[Game.throwDice.Next(unvisitedDimentions.Length)];
+				Dimension cd = CurrentDimension;
+				CurrentDimension = unvisitedDimensions[Game.throwDice.Next(unvisitedDimensions.Length)];
 				cd.interactiveObjects.Remove(this);
 
 				do
 				{
 					PercentageInShape = Game.throwDice.NextDouble();
-				} while (CurrentDimention.CheckOverlap(this));
+				} while (CurrentDimension.CheckOverlap(this));
 
 				warpium--;
 				Game.UI.RemoveWarpium();
@@ -203,7 +202,7 @@ namespace Invasion1D.Models
 				vitalux -= currentAttackCost;
 				Game.UI.UpdateVitaLux(vitalux);
 
-				Bullet bullet = new(dimention: CurrentDimention,
+				Bullet bullet = new(dimension: CurrentDimension,
 						position: direction ?
 							GameMath.AddPercentage(PercentageInShape, sizePercentage) :
 							GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
@@ -290,11 +289,11 @@ namespace Invasion1D.Models
 
 					if (direction)
 					{
-						PercentageInShape += CurrentDimention.GetPercentageFromDistance(tryStep);
+						PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
 					}
 					else
 					{
-						PercentageInShape -= CurrentDimention.GetPercentageFromDistance(tryStep);
+						PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
 					}
 
 					body.TranslationX = Position.X;
