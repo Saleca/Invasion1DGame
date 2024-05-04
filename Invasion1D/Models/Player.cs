@@ -21,13 +21,23 @@ namespace Invasion1D.Models
 			visitedDimensions = [];
 		double
 			shootCooldownProgress = 1,
-			warpCooldownProgress = 1;
+			warpCooldownProgress = 1,
+			weaveCooldownProgress = 1;
 
 		protected System.Timers.Timer?
 			shootCooldownTimer,
-			warpCooldownTimer;
+			warpCooldownTimer,
+			weaveCooldownTimer;
 
-		public Player(Dimension dimension, double position, double speed) : base(dimension, position, Colors.Green, speed)
+		public Player(
+			Dimension dimension,
+			double position,
+			double speed) :
+				base(
+					dimension,
+					position,
+					GetResourcesColor(nameof(Player))!,
+					speed)
 		{
 			shootCooldownTimer = SetUpTimer(
 									miliseconds: 10,
@@ -37,12 +47,17 @@ namespace Invasion1D.Models
 									miliseconds: warpCooldownIntervalsLenght,
 									reset: true,
 									onElapsed: () => OnWarpCooldownElapsed(null, EventArgs.Empty));
+			weaveCooldownTimer = SetUpTimer(
+									miliseconds: 10,
+									reset: true,
+									onElapsed: () => OnWeaveCooldownElapsed(null, EventArgs.Empty));
 
 			direction = Game.RandomDirection();
 
 			Game.UI.AddWarpium();
 			Game.UI.UpdateVitaLux(vitalux);
 			Game.UI.UpdateHealth(health);
+
 		}
 
 		public void Warp()
@@ -145,6 +160,7 @@ namespace Invasion1D.Models
 		{
 			warpCooldownProgress = 1;
 			Game.UI.WarpCooldown(warpCooldownProgress);
+			Game.UI.ShowWarpProgress(true);
 			warpCooldownTimer?.Start();
 		}
 
@@ -156,22 +172,45 @@ namespace Invasion1D.Models
 			if (warpCooldownProgress <= 0)
 			{
 				warpCooldownTimer?.Stop();
-				Game.UI.RunOnUIThread(() => Game.UI.ShowWarpKey(true));
+			
+				Game.UI.RunOnUIThread(() => { Game.UI.ShowWarpKey(true); Game.UI.ShowWarpProgress(false); }) ;
+			}
+		}
+
+		public void ActivateWeaveCooldown()
+		{
+			weaveCooldownProgress = 1;
+			Game.UI.WeaveCooldown(warpCooldownProgress);
+			weaveCooldownTimer?.Start();
+		}
+		protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
+		{
+			weaveCooldownProgress -= .0001;
+			Game.UI.RunOnUIThread(() => Game.UI.WeaveCooldown(weaveCooldownProgress));
+
+			if (weaveCooldownProgress <= 0)
+			{
+				weaveCooldownTimer?.Stop();
+				weave = false;
 			}
 		}
 
 		public override void Attack()
 		{
-			if (vitalux >= attackCost)
+			double currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+			if (vitalux >= currentAttackCost)
 			{
-				vitalux -= attackCost;
+				vitalux -= currentAttackCost;
 				Game.UI.UpdateVitaLux(vitalux);
 
 				Bullet bullet = new(dimention: CurrentDimention,
 						position: direction ?
 							GameMath.AddPercentage(PercentageInShape, sizePercentage) :
 							GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
-						direction: direction);
+						direction: direction,
+						weave: weave,
+						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
+						);
 
 				Bullet.Create(bullet);
 
@@ -193,6 +232,7 @@ namespace Invasion1D.Models
 		{
 			Game.UI.ShowShootKey(false);
 			shootCooldownProgress = 1;
+			Game.UI.ShowShootProgress(true);
 			Game.UI.ShootCooldown(shootCooldownProgress);
 			shootCooldownTimer?.Start();
 		}
@@ -205,7 +245,8 @@ namespace Invasion1D.Models
 			if (shootCooldownProgress <= 0)
 			{
 				shootCooldownTimer?.Stop();
-				Game.UI.RunOnUIThread(() => Game.UI.ShowShootKey(true));
+				Game.UI.RunOnUIThread(() => { Game.UI.ShowShootKey(true); Game.UI.ShowShootProgress(false); });
+
 			}
 		}
 
@@ -280,11 +321,13 @@ namespace Invasion1D.Models
 		{
 			health -= damage;
 			Game.UI.UpdateHealth(health);
-			if (health <= 0)
+			if (health > 0)
 			{
-				Dispose();
-				Game.End();
+				return;
 			}
+
+			Dispose();
+			Game.End();
 		}
 	}
 }

@@ -23,11 +23,14 @@ namespace Invasion1D.Data
 			_ = new Enemy(c2, .98f, 10);
 			_ = new Warpium(c2, .2f);
 			_ = new Vitalux(c2, .55f);
+			_ = new Health(c2, .05f);
 
 			_ = new Enemy(c3, .05f, 10);
-			_ = new Enemy(c3, .70f, 10);
+			_ = new Enemy(c3, .7f, 10);
 			_ = new Warpium(c3, .3f);
+			_ = new Health(c3, .4f);
 			_ = new Vitalux(c3, .55f);
+			_ = new Weave(c3, .85f);
 
 			Linear
 				l1 = new(new(90, 75), new(300, 50)),
@@ -36,13 +39,14 @@ namespace Invasion1D.Data
 
 			_ = new Enemy(l1, .25f, 10);
 			_ = new Warpium(l1, .7f);
+			_ = new Health(l1, .05f);
 
 			_ = new Enemy(l2, .15f, 10);
 			_ = new Warpium(l2, .5f);
 
 			_ = new Enemy(l3, .75f, 10);
 			_ = new Warpium(l3, .3f);
-
+			_ = new Health(l3, .5f);
 		}
 	}
 }

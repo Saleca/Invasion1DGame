@@ -13,6 +13,7 @@ namespace Invasion1D.Models
 		public bool toDispose = false;
 		public Shape body = null!;
 
+
 		public Color DisplayColor() => Application.Current?.RequestedTheme switch
 		{
 			AppTheme.Dark => darkTheme,
@@ -20,6 +21,14 @@ namespace Invasion1D.Models
 			_ => darkTheme,
 		};
 
+		public static Color? GetResourcesColor(string color)
+		{
+			if (Game.Resources.TryGetValue(color, out object? colorvalue))
+			{
+				return (Color)colorvalue;
+			}
+			return null;
+		}
 
 		public virtual void Dispose()
 		{

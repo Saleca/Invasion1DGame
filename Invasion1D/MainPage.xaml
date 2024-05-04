@@ -14,7 +14,7 @@
                 x:Name="StatsGrid"
                 Grid.Column="0"
                 RowDefinitions="*,*,*,*"
-                ColumnDefinitions="*,*"
+                ColumnDefinitions="*,*,*"
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand"
                 Margin="5"
@@ -63,6 +63,30 @@
                          x:Name="VitaluxProgress"
                          BackgroundColor="{StaticResource Vitalux}"/>
                 </Frame>
+
+                <Label
+                    Grid.Row="0"
+                    Grid.Column="2"
+                    Text="Enemies"/>
+                <Label
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    x:Name="EnemiesLabel"/>
+
+                <Label
+                     Grid.Row="2"
+                     Grid.Column="2"
+                     Text="Weave"/>
+                
+                <Frame
+                    x:Name="WeaveCooldownProgressFrame"
+                    Grid.Row="3"
+                    Grid.Column="2">
+                    <BoxView 
+                         x:Name="WeaveCooldownProgress"
+                         BackgroundColor="{StaticResource Weave}"/>
+                </Frame>
+
             </Grid>
             <Grid Grid.Column="1"
                   RowDefinitions="*,*">
@@ -133,7 +157,8 @@
                 Grid.Row="1"
                 Grid.Column="0">
                 <Frame
-                    x:Name="ShootCooldownProgressFrame">
+                    x:Name="ShootCooldownProgressFrame"
+                    IsVisible="false">
                     <BoxView 
                         x:Name="ShootCooldownProgress"
                         BackgroundColor="{StaticResource Vitalux}"/>
@@ -148,7 +173,8 @@
                 Grid.Row="1"
                 Grid.Column="1">
                 <Frame
-                    x:Name="WarpCooldownProgressFrame">
+                    x:Name="WarpCooldownProgressFrame"
+                    IsVisible="false">
                     <BoxView 
                          x:Name="WarpCooldownProgress"
                          BackgroundColor="{StaticResource Warpium}"/>

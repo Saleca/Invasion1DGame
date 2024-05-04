@@ -83,6 +83,10 @@ namespace Invasion1D
 		{
 			TimeLabel.Text = time;
 		}
+		public void UpdateEnemies(string enemies)
+		{
+			EnemiesLabel.Text = enemies;
+		}
 
 		public void UpdateHealth(double progress)
 		{
@@ -134,9 +138,26 @@ namespace Invasion1D
 			}
 		}
 
+		public void ShowShootProgress(bool show)
+		{
+			if (show)
+			{
+				ShootCooldownProgressFrame.IsVisible = true;
+			}
+			else
+			{
+				ShootCooldownProgressFrame.IsVisible = false;
+			}
+		}
 		public void ShootCooldown(double progress)
 		{
 			ShootCooldownProgress.WidthRequest = ShootCooldownProgressFrame.Width * progress;
+		}
+		public void ClearShootColldown()
+		{
+			ShowShootKey(true);
+			ShowShootProgress(false);
+			ShootCooldown(0);
 		}
 
 		public void ShowWarpKey(bool show)
@@ -150,9 +171,40 @@ namespace Invasion1D
 				WarpKey.IsVisible = false;
 			}
 		}
+		public void ShowWarpProgress(bool show)
+		{
+			if (show)
+			{
+				WarpCooldownProgressFrame.IsVisible = true;
+			}
+			else
+			{
+				WarpCooldownProgressFrame.IsVisible = false;
+			}
+		}
 		public void WarpCooldown(double progress)
 		{
 			WarpCooldownProgress.WidthRequest = WarpCooldownProgressFrame.Width * progress;
+		}
+		public void ClearWarpColldown()
+		{
+			ShowWarpKey(true);
+			ShowWarpProgress(false);
+			WarpCooldown(0);
+		}
+		public void ClearCoolDownButtons()
+		{
+			ClearShootColldown();
+			ClearWarpColldown();
+		}
+
+		public void WeaveCooldown(double progress)
+		{
+			WeaveCooldownProgress.WidthRequest = WeaveCooldownProgressFrame.Width * progress;
+		}
+		public void ClearWeave()
+		{
+			WeaveCooldown(0);
 		}
 
 		public void AddToMap(Shape shape)

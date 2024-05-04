@@ -4,7 +4,15 @@ namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
-		public Enemy(Dimension shape, double position, double speed) : base(shape, position, Colors.Red, speed)
+		public Enemy(
+			Dimension shape,
+			double position,
+			double speed) :
+				base(
+					shape,
+					position,
+					GetResourcesColor(nameof(Enemy))!,
+					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
 		}
@@ -17,11 +25,13 @@ namespace Invasion1D.Models
 		public override void TakeDamage(double damage)
 		{
 			health -= damage;
-			if (health <= 0)
+			if (health > 0)
 			{
-				StopMovement();
-				Dispose();
+				return;
 			}
+
+			StopMovement();
+			Dispose();
 		}
 
 		protected override async Task MoveAsync(bool direction)

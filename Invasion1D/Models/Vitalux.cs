@@ -6,9 +6,17 @@ using System.Threading.Tasks;
 
 namespace Invasion1D.Models
 {
-	internal class Vitalux(Dimension dimension, double position) : Item(dimension, position, Colors.Yellow)
+	internal class Vitalux(
+		Dimension dimension, 
+		double position) : 
+			Item(
+				dimension, 
+				position, 
+				GetResourcesColor(nameof(Vitalux))!)
 	{
-		double amount = 1;
+		static App Game => (App)App.Current!;
+		double amount = Game.throwDice.Next(3) switch { 0 => .5, 1 => .75, _ => 1 };
+
 		public override bool Power(Character character)
 		{
 			double startAmount = amount;

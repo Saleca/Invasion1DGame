@@ -35,7 +35,7 @@ namespace Invasion1D
 		{
 			if (isStarted)
 			{
-				CancelUpdate();
+				Stop();
 				Reset();
 			}
 			else
@@ -72,6 +72,8 @@ namespace Invasion1D
 
 				try
 				{
+					int enemyCount = universe.dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).Count();
+
 					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
 					{
 						if (!UI.IsAnimating)
@@ -79,6 +81,7 @@ namespace Invasion1D
 							UI.UpdateView(universe.playerData.GetView());
 						}
 						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
+						UI.UpdateEnemies($"{enemyCount}/9");
 					});
 					await Task.Delay(100, cancelUpdate.Token);
 					await uiTask;
@@ -94,9 +97,15 @@ namespace Invasion1D
 				}
 			}
 		}
-		public void End()
+		public void Stop()
 		{
 			CancelUpdate();
+			UI.ClearCoolDownButtons();
+		}
+		public void End()
+		{
+			Stop();
+
 			UI.UpdateView(GameColors.VoidColor);
 			UI.ShowText(text: "Game Over");
 			UI.ShowControls(false);
@@ -104,11 +113,12 @@ namespace Invasion1D
 
 		public void Reset()
 		{
-			UI.ShowText(show: false);
+			UI.ShowText(false);
 			UI.ResetAnimation();
 			universe.ResetDimentions();
 			UI.ClearMap();
 			UI.ClearWarpium();
+			UI.ClearWeave();
 		}
 
 		private void FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)

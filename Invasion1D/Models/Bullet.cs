@@ -6,14 +6,26 @@ namespace Invasion1D.Models
 	{
 		static App Game => (App)Application.Current!;
 
-		public static double Damage => 1;
-		System.Timers.Timer cooldownTimer;
-		public Bullet(Dimension dimention, double position, bool direction) : base(dimention, position, Colors.Gray, 20)
+		public double condition = 1;
+		public double damage;
+		bool weave;
+		System.Timers.Timer? cooldownTimer;
+		public Bullet(Dimension dimention, double position, bool direction, bool weave, Color color) : base(dimention, position, color, 20)
 		{
 			this.direction = direction;
-
-			cooldownTimer = SetUpTimer(6000, () => TakeDamage(Damage));
-			cooldownTimer.Start();
+			this.weave = weave;
+			if(weave)
+			{
+				damage = .5;
+				condition = .5;
+			}
+			else
+			{
+				damage = 1;
+				condition = 1;
+				cooldownTimer = SetUpTimer(6000, () => TakeDamage(damage));
+				cooldownTimer.Start();
+			}
 		}
 
 		public static void Create(Bullet bullet)
@@ -24,19 +36,27 @@ namespace Invasion1D.Models
 		protected override async Task MoveAsync(bool direction)
 		{
 			this.direction = direction;
-			List<Type> ignore = [typeof(Vitalux), typeof(Warpium)];
+			List<Type> ignore = [typeof(Vitalux), typeof(Warpium), typeof(Health), typeof(Weave)];
 
 			while (!cancelMovement.IsCancellationRequested)
 			{
 				try
 				{
 					Kinetic? target = FindInteractive(out double distanceFromTarget, this, [.. ignore]) as Kinetic;
-
+					
 					if (distanceFromTarget < stepDistance)
 					{
-						target?.TakeDamage(Damage);
-						TakeDamage(Damage);
-						return;
+						target?.TakeDamage(damage);
+						double damageReceived = damage;
+						if (target is Bullet bullet)
+						{
+							damageReceived = bullet.damage;
+						}
+						TakeDamage(damageReceived);
+						if (condition <= 0)
+						{
+							return;
+						}
 					}
 
 					if (direction)
@@ -70,6 +90,12 @@ namespace Invasion1D.Models
 
 		public override void TakeDamage(double damage)
 		{
+			condition -= damage;
+			if (condition > 0)
+			{
+				return;
+			}
+
 			StopMovement();
 			Dispose();
 		}

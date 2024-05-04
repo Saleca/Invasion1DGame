@@ -8,7 +8,7 @@
 
     <Color x:Key="Vitalux">#ff0</Color>
     <Color x:Key="Warpium">#0ff</Color>
-    <Color x:Key="Heal">#f0f</Color>
+    <Color x:Key="Weave">#f0f</Color>
     <Color x:Key="Health">#f00</Color>
     <Color x:Key="Enemy">#00f</Color>
     <Color x:Key="Player">#0f0</Color>
