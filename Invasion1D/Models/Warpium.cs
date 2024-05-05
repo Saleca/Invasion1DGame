@@ -8,7 +8,7 @@ namespace Invasion1D.Models
 {
 	public class Warpium(
 		Dimension dimension,
-		double position) : 
+		float position) : 
 			Item(
 				dimension,
 				position, 

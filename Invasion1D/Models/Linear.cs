@@ -6,13 +6,11 @@ namespace Invasion1D.Models
 {
 	public class Linear : Dimension
 	{
-		public Point StartPosition { get; init; }
-		public Point EndPosition { get; init; }
-		public double Length { get; init; }
+		public PointF StartPosition { get; init; }
+		public PointF EndPosition { get; init; }
+		public float Length { get; init; }
 
-		//calculate length of line
-
-		public Linear(Point startPosition, Point endPosition) : base()
+		public Linear(PointF startPosition, PointF endPosition) : base()
 		{
 			StartPosition = startPosition;
 			EndPosition = endPosition;
@@ -33,17 +31,17 @@ namespace Invasion1D.Models
 			((App)Application.Current!).universe.dimensions.Add(this);
 		}
 
-		public override Point GetPositionInShape(double positionPercentage, double halfSize)
+		public override PointF GetPositionInShape(float positionPercentage, float halfSize)
 		{
-			Point position = GameMath.GetPositionInLine(this, positionPercentage);
+			PointF position = GameMath.GetPositionInLine(this, positionPercentage);
 			position.X -= halfSize;
 			position.Y -= halfSize;
 			return position;
 		}
 
-		public override double GetDistanceBetweenPointsOnShape(double positionA, double positionB, bool direction)
+		public override float GetDistanceBetweenPointsOnShape(float positionA, float positionB, bool direction)
 		{
-			double percentageDistance;
+			float percentageDistance;
 			if (direction) // positive
 			{
 				percentageDistance = (positionB - positionA + 1) % 1;
@@ -56,8 +54,8 @@ namespace Invasion1D.Models
 			return GetDistanceFromPercentage(percentageDistance);
 		}
 
-		public override double GetPercentageFromDistance(double distance) => distance / Length;
+		public override float GetPercentageFromDistance(float distance) => distance / Length;
 
-		public override double GetDistanceFromPercentage(double percentage) => percentage * Length;
+		public override float GetDistanceFromPercentage(float percentage) => percentage * Length;
 	}
 }

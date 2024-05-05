@@ -21,13 +21,13 @@
 			return new Color(red, green, blue);
 		}
 
-		internal static Color? CalculateView(double distance, Color? color)
+		internal static Color? CalculateView(float distance, Color? color)
 		{
 			if (color is null) return null;
 
 			Color? viewColor = null;
 
-			double
+			float
 				minDistance = 0,
 				maxDistance = 50;
 

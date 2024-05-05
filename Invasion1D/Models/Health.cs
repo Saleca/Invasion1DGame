@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Invasion1D.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,18 +9,24 @@ namespace Invasion1D.Models
 {
 	internal class Health(
 		Dimension dimension,
-		double position) :
+		float position) :
 			Item(
 				dimension,
 				position,
 				GetResourcesColor(nameof(Health))!)
 	{
 		static App Game => (App)App.Current!;
-		double amount = Game.throwDice.Next(3) switch { 0 => .5, 1 => .75, _ => 1 };
+
+		float amount = Game.throwDice.Next(3) switch 
+		{ 
+			0 => Stats.minScoreItem,
+			1 => Stats.mediumScoreItem,
+			_ => Stats.maxScoreItem 
+		};
 
 		public override bool Power(Character character)
 		{
-			double startAmount = amount;
+			float startAmount = amount;
 			character.AddHealth(amount, out amount);
 
 			if (amount <= 0)

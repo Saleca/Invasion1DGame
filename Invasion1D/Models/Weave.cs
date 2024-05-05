@@ -8,7 +8,7 @@ namespace Invasion1D.Models
 {
 	internal class Weave(
 		Dimension dimension,
-		double position) :
+		float position) :
 			Item(
 				dimension,
 				position,

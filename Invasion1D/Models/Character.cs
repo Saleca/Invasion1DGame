@@ -1,12 +1,12 @@
 ﻿namespace Invasion1D.Models
 {
-	public abstract class Character(Dimension dimension, double position, Color color, double speed) : Kinetic(dimension, position, color, speed)
+	public abstract class Character(Dimension dimension, float position, Color color, float speed) : Kinetic(dimension, position, color, speed)
 	{
-		public double
+		public float
 			health = 1,
 			vitalux = 1,
-			vitaAttackCost = .25,
-			weaveAttackCost = .50;
+			vitaAttackCost = 0.25f,
+			weaveAttackCost = 0.50f;
 
 		public int
 			warpium = 1;
@@ -19,7 +19,7 @@
 		/// </summary>
 		public abstract void Attack();
 
-		public void AddVitalux(double amount, out double remaining)
+		public void AddVitalux(float amount, out float remaining)
 		{
 			remaining = amount;
 			if (vitalux >= 1) return;
@@ -36,7 +36,7 @@
 			}
 		}
 
-		public void AddHealth(double amount, out double remaining)
+		public void AddHealth(float amount, out float remaining)
 		{
 			remaining = amount;
 			if (health >= 1) return;

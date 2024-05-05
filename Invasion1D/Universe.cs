@@ -1,7 +1,5 @@
 ﻿using Invasion1D.Data;
-using Invasion1D.Helpers;
 using Invasion1D.Models;
-using Microsoft.Maui.Controls.Shapes;
 using System.Diagnostics;
 
 namespace Invasion1D
@@ -31,10 +29,10 @@ namespace Invasion1D
 		{
 			_ = new Seed();
 
-			enemies = dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).ToList();
+			enemies = dimensions.SelectMany(dimension => dimension.interactiveObjects.OfType<Enemy>()).ToList();
 			initialEnemyCount = enemies.Count;
 
-			double pp = .9f;
+			float pp = .9f;
 			player = new((Circular)dimensions[0], pp, 10);
 
 			Game.UI.UpdateView(player.GetView());

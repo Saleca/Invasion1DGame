@@ -88,7 +88,7 @@ namespace Invasion1D
 			EnemiesLabel.Text = enemies;
 		}
 
-		public void UpdateHealth(double progress)
+		public void UpdateHealth(float progress)
 		{
 			double width = HealthProgressFrame.Width;
 			if (width == -1)
@@ -98,7 +98,7 @@ namespace Invasion1D
 			HealthProgress.WidthRequest = width * progress;
 		}
 
-		public void UpdateVitaLux(double progress)
+		public void UpdateVitaLux(float progress)
 		{
 			double width = VitaluxProgressFrame.Width;
 			if (width == -1)
@@ -149,7 +149,7 @@ namespace Invasion1D
 				ShootCooldownProgressFrame.IsVisible = false;
 			}
 		}
-		public void ShootCooldown(double progress)
+		public void ShootCooldown(float progress)
 		{
 			ShootCooldownProgress.WidthRequest = ShootCooldownProgressFrame.Width * progress;
 		}
@@ -182,7 +182,7 @@ namespace Invasion1D
 				WarpCooldownProgressFrame.IsVisible = false;
 			}
 		}
-		public void WarpCooldown(double progress)
+		public void WarpCooldown(float progress)
 		{
 			WarpCooldownProgress.WidthRequest = WarpCooldownProgressFrame.Width * progress;
 		}
@@ -198,7 +198,7 @@ namespace Invasion1D
 			ClearWarpColldown();
 		}
 
-		public void WeaveCooldown(double progress)
+		public void WeaveCooldown(float progress)
 		{
 			WeaveCooldownProgress.WidthRequest = WeaveCooldownProgressFrame.Width * progress;
 		}
@@ -209,7 +209,7 @@ namespace Invasion1D
 
 		public void AddToMap(Shape shape)
 		{
-			Game.UI.RunOnUIThread(()=>MapView.Children.Add(shape));
+			Game.UI.RunOnUIThread(() => MapView.Children.Add(shape));
 		}
 
 		public void RemoveFromMap(Shape shape)

@@ -1,7 +1,5 @@
 ﻿using Invasion1D.Helpers;
 using Invasion1D.Models;
-using Microsoft.Maui.Primitives;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace Invasion1D
@@ -157,11 +155,14 @@ namespace Invasion1D
 
 			foreach (var dimension in universe.dimensions)
 			{
-				foreach (var interactiveObject in dimension.interactiveObjects)
+				lock (dimension.interactiveObjects)
 				{
-					if (interactiveObject.toDispose)
+					foreach (var interactiveObject in dimension.interactiveObjects)
 					{
-						interactiveObjectsToDispose.Add(interactiveObject);
+						if (interactiveObject.toDispose)
+						{
+							interactiveObjectsToDispose.Add(interactiveObject);
+						}
 					}
 				}
 			}

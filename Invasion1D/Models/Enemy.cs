@@ -1,4 +1,5 @@
-﻿using Invasion1D.Helpers;
+﻿using Invasion1D.Data;
+using Invasion1D.Helpers;
 using System.Diagnostics;
 
 namespace Invasion1D.Models
@@ -8,16 +9,14 @@ namespace Invasion1D.Models
 		App Game => (App)App.Current!;
 
 		System.Timers.Timer
-			actionTimer,
-			shootCooldownTimer;
+			reactionTimer;
 
-		bool shootCooldown = false;
 		Interactive? targetInSight;
 
 		public Enemy(
 			Dimension shape,
-			double position,
-			double speed) :
+			float position,
+			float speed) :
 				base(
 					shape,
 					position,
@@ -25,22 +24,21 @@ namespace Invasion1D.Models
 					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
-			shootCooldownTimer = SetUpTimer(1000, () => OnElapsedShootCooldownTimer(null, EventArgs.Empty));
-			actionTimer = SetUpTimer(Game.throwDice.Next(1000, 3000), () => OnElapsedActionTimer(null, EventArgs.Empty));
+			reactionTimer = SetUpTimer(Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), () => OnElapsedReactionTimer(null, EventArgs.Empty));
 		}
 
 		public void Start()
 		{
-			actionTimer.Start();
+			reactionTimer.Start();
 		}
 		public void Stop()
 		{
-			actionTimer.Stop();
+			reactionTimer.Stop();
 		}
 
 		public override void Attack()
 		{
-			double currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+			float currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
 			if (vitalux >= currentAttackCost)
 			{
 				vitalux -= currentAttackCost;
@@ -64,8 +62,6 @@ namespace Invasion1D.Models
 				{
 					bullet.NegativeMove();
 				}
-
-				ActivateShootCooldownTimer();
 			}
 		}
 
@@ -76,7 +72,7 @@ namespace Invasion1D.Models
 			if (health == 1) ignore.Add(typeof(Health));
 			if (weave) ignore.Add(typeof(Weave));
 
-			Interactive? target = FindInteractive(out double distanceFromTarget, this, ignoreTypes: [.. ignore]);
+			Interactive? target = FindInteractive(out float distanceFromTarget, this, ignoreTypes: [.. ignore]);
 
 			if (target is Enemy)
 			{
@@ -89,8 +85,8 @@ namespace Invasion1D.Models
 				targetInSight = target;
 			}
 
-			double tryStep = stepDistance;
-			if (distanceFromTarget < tryStep)
+			float step = stepDistance;
+			if (distanceFromTarget < step)
 			{
 				if (target is Item item)
 				{
@@ -98,33 +94,22 @@ namespace Invasion1D.Models
 				}
 				else
 				{
-					tryStep = distanceFromTarget;
+					step = distanceFromTarget;
 					StopMovement();
 				}
 			}
 
 			if (direction)
 			{
-				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(tryStep));
+				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(step));
 			}
 			else
 			{
-				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(tryStep));
+				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(step));
 			}
 		}
 
-		void ActivateShootCooldownTimer()
-		{
-			shootCooldown = true;
-			shootCooldownTimer.Start();
-		}
-		private void OnElapsedShootCooldownTimer(object? sender, EventArgs e)
-		{
-			shootCooldown = false;
-		}
-
-
-		private void OnElapsedActionTimer(object? sender, EventArgs e)
+		private void OnElapsedReactionTimer(object? sender, EventArgs e)
 		{
 			if (targetInSight is null)
 			{
@@ -151,7 +136,6 @@ namespace Invasion1D.Models
 							MoveToTarget();
 							break;
 						case 1:
-							if(!shootCooldown)
 							Attack();
 							break;
 					}
@@ -161,13 +145,12 @@ namespace Invasion1D.Models
 					MoveToTarget();
 				}
 			}
-			RestartActionTimer();
+			RestartReactionTimer();
 		}
 
-		void RestartActionTimer()
+		void RestartReactionTimer()
 		{
-			//actionTimer.Interval = Game.throwDice.Next(1000, 3000);
-			actionTimer.Start();
+			reactionTimer.Start();
 		}
 
 		void MoveToTarget()
@@ -182,7 +165,7 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void TakeDamage(double damage)
+		public override void TakeDamage(float damage)
 		{
 			health -= damage;
 			if (health > 0)

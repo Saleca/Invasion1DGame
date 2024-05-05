@@ -4,18 +4,18 @@ namespace Invasion1D.Models
 {
 	public class Circular : Dimension, ICircular
 	{
-		const double TwoPI = 2 * Math.PI;
+		const float TwoPI = 2 * MathF.PI;
 
-		public Point Position { get; set; }
-		public double Radius { get; init; }
+		public PointF Position { get; set; }
+		public float Size { get; init; }
 
-		public Circular(Point position, double radius) : base()
+		public Circular(PointF position, float radius) : base()
 		{
 			Position = position;
-			Radius = radius;
+			Size = radius;
 
-			double circleDiameter = Radius * 2;
-			double circleOffset = Radius - strokeThickness;
+			float circleDiameter = Size * 2;
+			float circleOffset = Size - strokeThickness;
 			body = new Ellipse()
 			{
 				StrokeThickness = strokeThickness,
@@ -32,13 +32,13 @@ namespace Invasion1D.Models
 			((App)Application.Current!).universe.dimensions.Add(this);
 		}
 
-		public override Point GetPositionInShape(double positionPercentage, double halfSize)
+		public override PointF GetPositionInShape(float positionPercentage, float halfSize)
 		{
-			double angle = positionPercentage * TwoPI;
-			double offset = Radius - strokeThickness / 2;
+			float angle = positionPercentage * TwoPI;
+			float offset = Size - strokeThickness / 2;
 			return new(
-				(offset * Math.Cos(angle)) + Position.X + strokeThickness - halfSize,
-				(offset * Math.Sin(angle)) + Position.Y + strokeThickness - halfSize);
+				(offset * MathF.Cos(angle)) + Position.X + strokeThickness - halfSize,
+				(offset * MathF.Sin(angle)) + Position.Y + strokeThickness - halfSize);
 		}
 
 		/// <summary>
@@ -48,9 +48,9 @@ namespace Invasion1D.Models
 		/// <param name="angleB"></param>
 		/// <param name="direction">direction that character is looking</param>
 		/// <returns>arc length between two points</returns>
-		public override double GetDistanceBetweenPointsOnShape(double angleA, double angleB, bool direction)
+		public override float GetDistanceBetweenPointsOnShape(float angleA, float angleB, bool direction)
 		{
-			double angleDiff;
+			float angleDiff;
 			if (direction) // Clockwise
 			{
 				angleDiff = (angleB - angleA + 1) % 1;
@@ -68,13 +68,13 @@ namespace Invasion1D.Models
 		/// </summary>
 		/// <param name="distance">arc length</param>
 		/// <returns>angle of arc length</returns>
-		public override double GetPercentageFromDistance(double distance) => distance / Radius / TwoPI;
+		public override float GetPercentageFromDistance(float distance) => distance / Size / TwoPI;
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="percentage">angle from 0 to 1</param>
 		/// <returns>arc length of the angle</returns>
-		public override double GetDistanceFromPercentage(double percentage) => percentage * Radius * TwoPI;
+		public override float GetDistanceFromPercentage(float percentage) => percentage * Size * TwoPI;
 	}
 }

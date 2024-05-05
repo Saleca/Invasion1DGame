@@ -6,7 +6,7 @@ namespace Invasion1D.Helpers
 {
 	internal static class Geometry
 	{
-		internal static Path DrawCurvedLink(Point start, IEnumerable<Point> segments, Brush brush, int strokeThickness)
+		internal static Path DrawCurvedLink(PointF start, IEnumerable<Point> segments, Brush brush, int strokeThickness)
 		{
 			PathGeometry connectorGeometry = new()
 			{

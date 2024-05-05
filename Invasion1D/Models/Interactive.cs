@@ -1,4 +1,5 @@
-﻿using Microsoft.Maui.Controls.Shapes;
+﻿using Invasion1D.Data;
+using Microsoft.Maui.Controls.Shapes;
 using System.Timers;
 
 namespace Invasion1D.Models
@@ -7,15 +8,15 @@ namespace Invasion1D.Models
 	{
 		protected bool disposed = false;
 
-		public double Radius { get; init; }
-		public Point Position { get; set; }
+		public float Size { get; init; }
+		public PointF Position { get; set; }
 
-		public double sizePercentage;
+		public float sizePercentage;
 
 		public Dimension currentDimension = null!;
 
-		double positionPercentage;
-		public double PositionPercentage
+		float positionPercentage;
+		public float PositionPercentage
 		{
 			get => positionPercentage;
 			set => positionPercentage = (value + 1) % 1;
@@ -23,9 +24,9 @@ namespace Invasion1D.Models
 
 		List<System.Timers.Timer?> timers = [];
 
-		public Interactive(Dimension dimension, double positionPercentage, Color color) : base(0, color, color)
+		public Interactive(Dimension dimension, float positionPercentage, Color color) : base(0, color, color)
 		{
-			Radius = 5;
+			Size = Stats.interactiveObjectSize;
 
 			GoToDimension(dimension, positionPercentage);
 
@@ -34,8 +35,8 @@ namespace Invasion1D.Models
 				StrokeThickness = strokeThickness,
 				Margin = 0,
 
-				WidthRequest = Radius * 2,
-				HeightRequest = Radius * 2,
+				WidthRequest = Size,
+				HeightRequest = Size,
 
 				TranslationX = Position.X,
 				TranslationY = Position.Y,
@@ -45,24 +46,24 @@ namespace Invasion1D.Models
 			body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
 		}
 
-		public void GoToDimension(Dimension dimension, double positionPercentage)
+		public void GoToDimension(Dimension dimension, float positionPercentage)
 		{
 			currentDimension = dimension;
 			dimension.AddInteractiveObject(this);
-			sizePercentage = dimension.GetPercentageFromDistance(Radius * 2);
+			sizePercentage = dimension.GetPercentageFromDistance(Size);
 
 			PositionPercentage = positionPercentage;
-			Position = dimension.GetPositionInShape(this.positionPercentage, Radius);
+			Position = dimension.GetPositionInShape(this.positionPercentage, Size / 2);
 		}
 
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="offsetPercentage">positive values move clockwise</param>
-		public void MovePositionByPercentage(double offsetPercentage)
+		public void MovePositionByPercentage(float offsetPercentage)
 		{
 			PositionPercentage += offsetPercentage;
-			Position = currentDimension.GetPositionInShape(positionPercentage, Radius);
+			Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
 		}
 
 		protected System.Timers.Timer SetUpTimer(int miliseconds, Action onElapsed, bool reset = false)

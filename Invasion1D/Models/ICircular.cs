@@ -2,7 +2,7 @@
 {
 	public interface ICircular
 	{
-		public Point Position { get; set; }
-		public double Radius { get; init; }
+		public PointF Position { get; set; }
+		public float Size { get; init; }
 	}
 }

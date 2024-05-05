@@ -4,15 +4,28 @@
 	{
 		public readonly List<Interactive> interactiveObjects = [];
 
-		public void AddInteractiveObject(Interactive interactiveObj) =>
-			interactiveObjects.Add(interactiveObj);
+		public void AddInteractiveObject(Interactive interactiveObj)
+		{
+			lock (interactiveObjects)
+			{
+				interactiveObjects.Add(interactiveObj);
+			}
+		}
 
-		public void RemoveInteractiveObject(Interactive interactiveObj) =>
-			interactiveObjects.Remove(interactiveObj);
+		public void RemoveInteractiveObject(Interactive interactiveObj)
+		{
+			lock (interactiveObjects)
+			{
+				interactiveObjects.Remove(interactiveObj);
+			}
+		}
 
 		public void Reset()
 		{
-			interactiveObjects.Clear();
+			lock (interactiveObjects)
+			{
+				interactiveObjects.Clear();
+			}
 			toDispose = false;
 		}
 
@@ -22,11 +35,10 @@
 			((App)Application.Current!).universe.dimensions.Remove(this);
 		}
 
-		public abstract Point GetPositionInShape(double positionPercentage, double halfSize);
-		public abstract double GetDistanceBetweenPointsOnShape(double positionA, double positionB, bool clockwise);
-		public abstract double GetPercentageFromDistance(double distance);
-		public abstract double GetDistanceFromPercentage(double percentage);
-
+		public abstract PointF GetPositionInShape(float positionPercentage, float halfSize);
+		public abstract float GetDistanceBetweenPointsOnShape(float positionA, float positionB, bool clockwise);
+		public abstract float GetPercentageFromDistance(float distance);
+		public abstract float GetDistanceFromPercentage(float percentage);
 
 		/// <summary>
 		/// 
@@ -34,10 +46,10 @@
 		/// <param name="position"></param>
 		/// <param name="halfSize"></param>
 		/// <returns>true if available</returns>
-		public bool CheckIfPositionIsAvailable(double positionPercentage, double halfSize, out Point? position)
+		public bool CheckIfPositionIsAvailable(float positionPercentage, float halfSize, out PointF? position)
 		{
 			position = null;
-			var sizePercentage = GetPercentageFromDistance(halfSize);
+			float sizePercentage = GetPercentageFromDistance(halfSize);
 			if (CheckOverlap(sizePercentage, positionPercentage))
 			{
 				return false;
@@ -52,23 +64,25 @@
 		/// <param name="halfSizePercentage"></param>
 		/// <param name="position"></param>
 		/// <returns>true if overlap</returns>
-		public bool CheckOverlap(double halfSizePercentage, double position)
+		public bool CheckOverlap(float halfSizePercentage, float position)
 		{
-			double start1 = position - halfSizePercentage;
-			double end1 = position + halfSizePercentage;
+			float start1 = position - halfSizePercentage;
+			float end1 = position + halfSizePercentage;
 
-			foreach (var obj in interactiveObjects)
+			lock (interactiveObjects)
 			{
-				double halfSize = obj.sizePercentage / 2;
-				double start2 = obj.PositionPercentage - halfSize;
-				double end2 = obj.PositionPercentage + halfSize;
-
-				if (start1 < end2 && start2 < end1)
+				foreach (var obj in interactiveObjects)
 				{
-					return true;
+					float halfSize = obj.sizePercentage / 2;
+					float start2 = obj.PositionPercentage - halfSize;
+					float end2 = obj.PositionPercentage + halfSize;
+
+					if (start1 < end2 && start2 < end1)
+					{
+						return true;
+					}
 				}
 			}
-
 			return false;
 		}
 	}

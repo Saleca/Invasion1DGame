@@ -3,10 +3,10 @@ using System;
 
 namespace Invasion1D.Models
 {
-	public abstract class GFX(double strokeThickness, Color lightTheme, Color darkTheme)
+	public abstract class GFX(float strokeThickness, Color lightTheme, Color darkTheme)
 	{
 		static App Game => (App)Application.Current!;
-		public readonly double strokeThickness = strokeThickness;
+		public readonly float strokeThickness = strokeThickness;
 		public readonly Color lightTheme = lightTheme;
 		public readonly Color darkTheme = darkTheme;
 

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using Invasion1D.Data;
+using System.Diagnostics;
 
 namespace Invasion1D.Models
 {
@@ -6,25 +7,24 @@ namespace Invasion1D.Models
 	{
 		static App Game => (App)Application.Current!;
 
-		public double condition = 1;
-		public double damage;
+		public float condition;
+		public float damage;
 		bool weave;
 		System.Timers.Timer? cooldownTimer;
 
-		public Bullet(Dimension dimension, double position, bool direction, bool weave, Color color) : base(dimension, position, color, 20)
+		public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color) : base(dimension, position, color, Stats.bulletSpeed)
 		{
 			this.direction = direction;
 			this.weave = weave;
 			if (weave)
 			{
-				damage = .5;
-				condition = .5;
+				damage = condition = Stats.weaveAttackDamage;
 			}
 			else
 			{
-				damage = 1;
-				condition = 1;
-				cooldownTimer = SetUpTimer(6000, () => TakeDamage(damage));
+				damage = condition = Stats.regularAttackDamage;
+
+				cooldownTimer = SetUpTimer(Stats.bulletDuration, () => TakeDamage(damage));
 				cooldownTimer.Start();
 			}
 			Game.universe.bullets.Add(this);
@@ -39,12 +39,12 @@ namespace Invasion1D.Models
 		{
 			List<Type> ignore = [typeof(Vitalux), typeof(Warpium), typeof(Health), typeof(Weave)];
 
-			Kinetic? target = FindInteractive(out double distanceFromTarget, this, [.. ignore]) as Kinetic;
+			Kinetic? target = FindInteractive(out float distanceFromTarget, this, [.. ignore]) as Kinetic;
 
 			if (distanceFromTarget < stepDistance)
 			{
 				target?.TakeDamage(damage);
-				double damageReceived = damage;
+				float damageReceived = damage;
 				if (target is Bullet bullet)
 				{
 					damageReceived = bullet.damage;
@@ -66,7 +66,7 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void TakeDamage(double damage)
+		public override void TakeDamage(float damage)
 		{
 			condition -= damage;
 			if (condition > 0)

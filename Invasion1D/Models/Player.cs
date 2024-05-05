@@ -1,4 +1,5 @@
-﻿using Invasion1D.Helpers;
+﻿using Invasion1D.Data;
+using Invasion1D.Helpers;
 using System.Diagnostics;
 using System.Timers;
 
@@ -13,9 +14,9 @@ namespace Invasion1D.Models
 		const int
 			warpCooldownIntervalsLenght = 25;
 
-		const double
-			warpCooldownIntervalsCount = (double)warpAnimationLength / warpCooldownIntervalsLenght,
-			warpCooldownProgressIncrements = 1.0 / warpCooldownIntervalsCount;
+		const float
+			warpCooldownIntervalsCount = warpAnimationLength / warpCooldownIntervalsLenght,
+			warpCooldownProgressIncrements = 1.0f / warpCooldownIntervalsCount;
 
 		static App Game => (App)Application.Current!;
 
@@ -23,9 +24,9 @@ namespace Invasion1D.Models
 			visitedDimensions = [];
 
 		Dimension? travelingToDimension;
-		double positionPercentageForNewDimention;
+		float positionPercentageForNewDimention;
 
-		double
+		float
 			shootCooldownProgress = 1,
 			warpCooldownProgress = 1,
 			weaveCooldownProgress = 1;
@@ -37,8 +38,8 @@ namespace Invasion1D.Models
 
 		public Player(
 			Dimension dimension,
-			double position,
-			double speed) :
+			float position,
+			float speed) :
 				base(
 					dimension,
 					position,
@@ -76,41 +77,42 @@ namespace Invasion1D.Models
 
 				visitedDimensions.Add(currentDimension);
 
-				var unvisitedDimensions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
+				Dimension[] unvisitedDimensions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
 
 				travelingToDimension = unvisitedDimensions[Game.throwDice.Next(unvisitedDimensions.Length)];
 
 				bool newPositionFound;
-				Point? newPosition;
+				PointF? newPosition;
 				do
 				{
-					positionPercentageForNewDimention = Game.throwDice.NextDouble();
+					positionPercentageForNewDimention = Game.throwDice.NextSingle();
 					newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
 						positionPercentage: positionPercentageForNewDimention,
-						halfSize: Radius,
+						halfSize: Size/2,
 						position: out newPosition);
 				} while (!newPositionFound);
 
 				warpium--;
 				Game.UI.RemoveWarpium();
 
-				currentDimension.interactiveObjects.Remove(this);
-				_ = WarpAnimation(start: new(body.TranslationX, body.TranslationY),
+				currentDimension.RemoveInteractiveObject(this);
+
+				_ = WarpAnimation(start: new((float)body.TranslationX, (float)body.TranslationY),
 							end: newPosition!.Value);
 			}
 		}
 
-		internal async Task WarpAnimation(Point start, Point end)
+		internal async Task WarpAnimation(PointF start, PointF end)
 		{
-			double offset = Radius - strokeThickness,
-				mapOffsetX = Game.UI.PlayerViewAccess.Width / 2 - offset,
-				mapOffsetY = Game.UI.PlayerViewAccess.Height / 2 - offset,
+			float offset = Size - strokeThickness,
+				mapOffsetX = (float)Game.UI.PlayerViewAccess.Width / 2 - offset,
+				mapOffsetY = (float)Game.UI.PlayerViewAccess.Height / 2 - offset,
 				startX = mapOffsetX - start.X,
 				startY = mapOffsetY - start.Y,
 				endX = mapOffsetX - end.X,
 				endY = mapOffsetY - end.Y;
 
-			double scale = default!,
+			float scale = default!,
 				endScaledX = default!,
 				endScaledY = default!,
 				midX = default!,
@@ -121,14 +123,13 @@ namespace Invasion1D.Models
 				scale = 5;
 				Game.UI.MapViewAccess.Scale = scale;
 
-				double startScaledX = startX * scale,
+				float startScaledX = startX * scale,
 				startScaledY = startY * scale;
 				endScaledX = endX * scale;
 				endScaledY = endY * scale;
 
-				midX = GameMath.LinearInterpolation(startX, endX, .5);
-				midY = GameMath.LinearInterpolation(startY, endY, .5);
-
+				midX = GameMath.LinearInterpolation(startX, endX, 0.5f);
+				midY = GameMath.LinearInterpolation(startY, endY, 0.5f);
 
 				Game.UI.MapViewAccess.TranslationX = startScaledX;
 				Game.UI.MapViewAccess.TranslationY = startScaledY;
@@ -167,7 +168,7 @@ namespace Invasion1D.Models
 
 		public override void Attack()
 		{
-			double currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+			float currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
 			if (vitalux >= currentAttackCost)
 			{
 				vitalux -= currentAttackCost;
@@ -205,11 +206,11 @@ namespace Invasion1D.Models
 			if (weave) ignore.Add(typeof(Weave));
 
 			Interactive? target = FindInteractive(
-			closestTargetDistance: out double distanceFromTarget,
+			closestTargetDistance: out float distanceFromTarget,
 			ignoreTypes: [.. ignore]);
 
-			double tryStep = stepDistance;
-			if (distanceFromTarget < tryStep)
+			float step = stepDistance;
+			if (distanceFromTarget < step)
 			{
 				if (target is Item item)
 				{
@@ -235,18 +236,18 @@ namespace Invasion1D.Models
 				}
 				else
 				{
-					tryStep = distanceFromTarget;
+					step = distanceFromTarget;
 					StopMovement();
 				}
 			}
 
 			if (direction)
 			{
-				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(tryStep));
+				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(step));
 			}
 			else
 			{
-				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(tryStep));
+				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(step));
 			}
 		}
 
@@ -291,7 +292,7 @@ namespace Invasion1D.Models
 		}
 		protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
 		{
-			weaveCooldownProgress -= .0001;
+			weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
 			Game.UI.RunOnUIThread(() =>
 			{
 				if (disposed)
@@ -322,7 +323,7 @@ namespace Invasion1D.Models
 
 		protected void OnShootCooldownElapsed(object? sender, EventArgs e)
 		{
-			shootCooldownProgress -= .01;
+			shootCooldownProgress -= Stats.shotCoolDownIncrement;
 			Game.UI.RunOnUIThread(() =>
 			{
 				if (disposed)
@@ -339,7 +340,7 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void TakeDamage(double damage)
+		public override void TakeDamage(float damage)
 		{
 			health -= damage;
 
