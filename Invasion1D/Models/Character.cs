@@ -2,7 +2,6 @@
 {
 	public abstract class Character(Dimension dimension, double position, Color color, double speed) : Kinetic(dimension, position, color, speed)
 	{
-		static App Game => (App)App.Current!;
 		public double
 			health = 1,
 			vitalux = 1,
@@ -63,7 +62,8 @@
 
 			vitalux = 1;
 			weave = true;
-			//activate cooldown on character to affect enemy if enemy has access to items
+			//TODO:
+			//activate cooldown on character to affect enemy
 
 			return true;
 		}

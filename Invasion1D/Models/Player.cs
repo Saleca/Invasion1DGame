@@ -9,8 +9,10 @@ namespace Invasion1D.Models
 		const uint
 			warpAnimationLength = 4000,
 			halfAnimationLength = warpAnimationLength / 2;
+
 		const int
 			warpCooldownIntervalsLenght = 25;
+
 		const double
 			warpCooldownIntervalsCount = (double)warpAnimationLength / warpCooldownIntervalsLenght,
 			warpCooldownProgressIncrements = 1.0 / warpCooldownIntervalsCount;
@@ -19,6 +21,10 @@ namespace Invasion1D.Models
 
 		public List<Dimension>
 			visitedDimensions = [];
+
+		Dimension? travelingToDimension;
+		double positionPercentageForNewDimention;
+
 		double
 			shootCooldownProgress = 1,
 			warpCooldownProgress = 1,
@@ -63,27 +69,34 @@ namespace Invasion1D.Models
 		{
 			if (warpium > 0)
 			{
-				visitedDimensions.Add(CurrentDimension);
-
-				if (visitedDimensions.Count == Game.universe.dimensions.Count)
+				if (visitedDimensions.Count == Game.universe.dimensions.Count - 1)
+				{
 					visitedDimensions.Clear();
+				}
+
+				visitedDimensions.Add(currentDimension);
 
 				var unvisitedDimensions = Game.universe.dimensions.Except(visitedDimensions).ToArray();
 
-				Dimension cd = CurrentDimension;
-				CurrentDimension = unvisitedDimensions[Game.throwDice.Next(unvisitedDimensions.Length)];
-				cd.interactiveObjects.Remove(this);
+				travelingToDimension = unvisitedDimensions[Game.throwDice.Next(unvisitedDimensions.Length)];
 
+				bool newPositionFound;
+				Point? newPosition;
 				do
 				{
-					PercentageInShape = Game.throwDice.NextDouble();
-				} while (CurrentDimension.CheckOverlap(this));
+					positionPercentageForNewDimention = Game.throwDice.NextDouble();
+					newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
+						positionPercentage: positionPercentageForNewDimention,
+						halfSize: Radius,
+						position: out newPosition);
+				} while (!newPositionFound);
 
 				warpium--;
 				Game.UI.RemoveWarpium();
 
+				currentDimension.interactiveObjects.Remove(this);
 				_ = WarpAnimation(start: new(body.TranslationX, body.TranslationY),
-							end: new(Position.X, Position.Y));
+							end: newPosition!.Value);
 			}
 		}
 
@@ -148,8 +161,93 @@ namespace Invasion1D.Models
 				Game.UI.MapViewAccess.IsVisible = false;
 			}
 
-			//TODO *1
-			//frame.Focus();
+			GoToDimension(travelingToDimension!, positionPercentageForNewDimention);
+			travelingToDimension = null;
+		}
+
+		public override void Attack()
+		{
+			double currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+			if (vitalux >= currentAttackCost)
+			{
+				vitalux -= currentAttackCost;
+				Game.UI.UpdateVitaLux(vitalux);
+
+				Bullet bullet = new(dimension: currentDimension,
+						position: direction ?
+							GameMath.AddPercentage(PositionPercentage, sizePercentage) :
+							GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
+						direction: direction,
+						weave: weave,
+						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
+						);
+
+				Bullet.AddToUI(bullet);
+
+				if (direction)
+				{
+					bullet.PositiveMove();
+				}
+				else
+				{
+					bullet.NegativeMove();
+				}
+
+				ActivateShootCooldown();
+			}
+		}
+
+		public override void Move()
+		{
+			List<Type> ignore = [typeof(Player)];
+			if (vitalux == 1) ignore.Add(typeof(Vitalux));
+			if (health == 1) ignore.Add(typeof(Health));
+			if (weave) ignore.Add(typeof(Weave));
+
+			Interactive? target = FindInteractive(
+			closestTargetDistance: out double distanceFromTarget,
+			ignoreTypes: [.. ignore]);
+
+			double tryStep = stepDistance;
+			if (distanceFromTarget < tryStep)
+			{
+				if (target is Item item)
+				{
+					if (item.Power(this))
+					{
+						switch (item)
+						{
+							case Vitalux:
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+								break;
+							case Warpium:
+								Game.UI.RunOnUIThread(Game.UI.AddWarpium);
+								break;
+							case Health:
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
+								break;
+							case Weave:
+								ActivateWeaveCooldown();
+								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+								break;
+						}
+					}
+				}
+				else
+				{
+					tryStep = distanceFromTarget;
+					StopMovement();
+				}
+			}
+
+			if (direction)
+			{
+				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(tryStep));
+			}
+			else
+			{
+				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(tryStep));
+			}
 		}
 
 		void ActivateWarpCooldown()
@@ -210,38 +308,6 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void Attack()
-		{
-			double currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
-			if (vitalux >= currentAttackCost)
-			{
-				vitalux -= currentAttackCost;
-				Game.UI.UpdateVitaLux(vitalux);
-
-				Bullet bullet = new(dimension: CurrentDimension,
-						position: direction ?
-							GameMath.AddPercentage(PercentageInShape, sizePercentage) :
-							GameMath.SubtractPercentage(PercentageInShape, sizePercentage),
-						direction: direction,
-						weave: weave,
-						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
-						);
-
-				Bullet.Create(bullet);
-
-				if (direction)
-				{
-					bullet.PositiveMove();
-				}
-				else
-				{
-					bullet.NegativeMove();
-				}
-
-				ActivateShootCooldown();
-			}
-		}
-
 		void ActivateShootCooldown()
 		{
 			shootCooldownProgress = 1;
@@ -273,60 +339,11 @@ namespace Invasion1D.Models
 			}
 		}
 
-		public override void Move()
-		{
-			List<Type> ignore = [typeof(Player)];
-
-			Interactive? target = FindInteractive(
-				closestTargetDistance: out double distanceFromTarget,
-				ignoreTypes: [.. ignore]);
-
-			double tryStep = stepDistance;
-			if (distanceFromTarget < tryStep)
-			{
-				if (target is Item item)
-				{
-					if (item.Power(this))
-					{
-						switch (item)
-						{
-							case Vitalux:
-								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
-								break;
-							case Warpium:
-								Game.UI.RunOnUIThread(Game.UI.AddWarpium);
-								break;
-							case Health:
-								Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
-								break;
-							case Weave:
-								ActivateWeaveCooldown();
-								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
-								break;
-						}
-					}
-				}
-				else
-				{
-					tryStep = distanceFromTarget;
-					StopMovement();
-				}
-			}
-
-			if (direction)
-			{
-				PercentageInShape += CurrentDimension.GetPercentageFromDistance(tryStep);
-			}
-			else
-			{
-				PercentageInShape -= CurrentDimension.GetPercentageFromDistance(tryStep);
-			}
-		}
-
 		public override void TakeDamage(double damage)
 		{
 			health -= damage;
-			Game.UI.UpdateHealth(health);
+
+			Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
 			if (health > 0)
 			{
 				return;

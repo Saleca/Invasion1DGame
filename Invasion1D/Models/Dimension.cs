@@ -4,12 +4,6 @@
 	{
 		public readonly List<Interactive> interactiveObjects = [];
 
-		//TODO
-		//public event EventHandler? ColapsedDimension;
-		//public async void TeleportAsync(object? sender, EventArgs args)
-		//dimension.ColapsedDimension += (player)TeleportAsync;
-		//ColapsedDimension?.Invoke(this, EventArgs.Empty);
-
 		public void AddInteractiveObject(Interactive interactiveObj) =>
 			interactiveObjects.Add(interactiveObj);
 
@@ -28,25 +22,46 @@
 			((App)Application.Current!).universe.dimensions.Remove(this);
 		}
 
-		public abstract Point GetPositionInShape(Interactive interactive);
+		public abstract Point GetPositionInShape(double positionPercentage, double halfSize);
 		public abstract double GetDistanceBetweenPointsOnShape(double positionA, double positionB, bool clockwise);
 		public abstract double GetPercentageFromDistance(double distance);
 		public abstract double GetDistanceFromPercentage(double percentage);
 
-		public bool CheckOverlap(Interactive interactive)
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="position"></param>
+		/// <param name="halfSize"></param>
+		/// <returns>true if available</returns>
+		public bool CheckIfPositionIsAvailable(double positionPercentage, double halfSize, out Point? position)
 		{
-			double halfSize = interactive.sizePercentage / 2;
-			double start1 = interactive.PercentageInShape - halfSize;
-			double end1 = interactive.PercentageInShape + halfSize;
+			position = null;
+			var sizePercentage = GetPercentageFromDistance(halfSize);
+			if (CheckOverlap(sizePercentage, positionPercentage))
+			{
+				return false;
+			}
+			position = GetPositionInShape(positionPercentage, halfSize);
+			return true;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="halfSizePercentage"></param>
+		/// <param name="position"></param>
+		/// <returns>true if overlap</returns>
+		public bool CheckOverlap(double halfSizePercentage, double position)
+		{
+			double start1 = position - halfSizePercentage;
+			double end1 = position + halfSizePercentage;
 
 			foreach (var obj in interactiveObjects)
 			{
-				if (obj == interactive)
-					continue;
-
-				double halfSize2 = obj.sizePercentage / 2;
-				double start2 = obj.PercentageInShape - halfSize2;
-				double end2 = obj.PercentageInShape + halfSize2;
+				double halfSize = obj.sizePercentage / 2;
+				double start2 = obj.PositionPercentage - halfSize;
+				double end2 = obj.PositionPercentage + halfSize;
 
 				if (start1 < end2 && start2 < end1)
 				{

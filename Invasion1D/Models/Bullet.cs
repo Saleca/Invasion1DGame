@@ -27,9 +27,10 @@ namespace Invasion1D.Models
 				cooldownTimer = SetUpTimer(6000, () => TakeDamage(damage));
 				cooldownTimer.Start();
 			}
+			Game.universe.bullets.Add(this);
 		}
 
-		public static void Create(Bullet bullet)
+		public static void AddToUI(Bullet bullet)
 		{
 			Game.UI.AddToMap(bullet.body);
 		}
@@ -57,11 +58,11 @@ namespace Invasion1D.Models
 
 			if (direction)
 			{
-				PercentageInShape += CurrentDimension.GetPercentageFromDistance(stepDistance);
+				MovePositionByPercentage(currentDimension.GetPercentageFromDistance(stepDistance));
 			}
 			else
 			{
-				PercentageInShape -= CurrentDimension.GetPercentageFromDistance(stepDistance);
+				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(stepDistance));
 			}
 		}
 

@@ -209,7 +209,7 @@ namespace Invasion1D
 
 		public void AddToMap(Shape shape)
 		{
-			MapView.Children.Add(shape);
+			Game.UI.RunOnUIThread(()=>MapView.Children.Add(shape));
 		}
 
 		public void RemoveFromMap(Shape shape)
@@ -308,14 +308,14 @@ namespace Invasion1D
 			Game.CancelUpdate();
 		}
 
-		private void NegPressed(object sender, EventArgs e) => Game.universe.PlayerMove(false);
-		private void NegReleased(object sender, EventArgs e) => Game.universe.StopPlayer();
+		private void NegPressed(object sender, EventArgs e) => Game.universe.player.NegativeMove();
+		private void NegReleased(object sender, EventArgs e) => Game.universe.player.StopMovement();
 
-		private void PosPressed(object sender, EventArgs e) => Game.universe.PlayerMove(true);
-		private void PosReleased(object sender, EventArgs e) => Game.universe.StopPlayer();
+		private void PosPressed(object sender, EventArgs e) => Game.universe.player.PositiveMove();
+		private void PosReleased(object sender, EventArgs e) => Game.universe.player.StopMovement();
 
-		private void ShootClicked(object sender, EventArgs e) => Game.universe.PlayerAttack();
-		private void WarpClicked(object sender, EventArgs e) => Game.universe.WarpPlayer();
+		private void ShootClicked(object sender, EventArgs e) => Game.universe.player.Attack();
+		private void WarpClicked(object sender, EventArgs e) => Game.universe.player.Warp();
 		private void StartClicked(object sender, EventArgs e) => Game.Start();
 		private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
 	}

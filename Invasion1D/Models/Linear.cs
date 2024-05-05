@@ -33,11 +33,11 @@ namespace Invasion1D.Models
 			((App)Application.Current!).universe.dimensions.Add(this);
 		}
 
-		public override Point GetPositionInShape(Interactive mobileShape)
+		public override Point GetPositionInShape(double positionPercentage, double halfSize)
 		{
-			Point position = GameMath.GetPositionInLine(this, mobileShape.PercentageInShape);
-			position.X -= mobileShape.Radius;
-			position.Y -= mobileShape.Radius;
+			Point position = GameMath.GetPositionInLine(this, positionPercentage);
+			position.X -= halfSize;
+			position.Y -= halfSize;
 			return position;
 		}
 

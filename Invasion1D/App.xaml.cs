@@ -1,5 +1,7 @@
 ﻿using Invasion1D.Helpers;
 using Invasion1D.Models;
+using Microsoft.Maui.Primitives;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 
 namespace Invasion1D
@@ -37,7 +39,6 @@ namespace Invasion1D
 		{
 			if (isStarted)
 			{
-				Stop();
 				Reset();
 			}
 			else
@@ -46,13 +47,16 @@ namespace Invasion1D
 			}
 			universe = new();
 			universe.Initiate();
+
+			//TODO
+			//select shape on map to start player on that shape
+
+			UI.ShowStats(true);
+			UI.ShowControls(true);
 			cancelUpdate = new();
 
 			universe.Start();
-			UI.ShowStats(true);
-			UI.ShowControls(true);
 			Task.Run(Update);
-
 			isStarted = true;
 		}
 
@@ -62,18 +66,18 @@ namespace Invasion1D
 			{
 				try
 				{
-					UpdateGameObjects();
+					UpdateGameObjectMovement();
 					ManageDisposedGameObjects();
 
 					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
 					{
-						UpdateGameObjectsUI();
+						UpdateGameObjectsInUI();
 						if (!UI.IsAnimating)
 						{
-							UI.UpdateView(universe.playerData.GetView());
+							UI.UpdateView(universe.player.GetView());
 						}
 						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
-						UI.UpdateEnemies($"{universe.enemyCount}/{universe.initialEnemyCount}");
+						UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
 					});
 					//TODO:
 					//measure current frame compute time and delay only the difference between prefered framerate time and compute time
@@ -92,9 +96,65 @@ namespace Invasion1D
 			}
 		}
 
+		public void Stop()
+		{
+			CancelUpdate();
+			UI.RunOnUIThread(() => UI.ClearCoolDownButtons());
+			universe.Stop();
+		}
+
+		public void End()
+		{
+			Stop();
+
+			UI.RunOnUIThread(() =>
+			{
+				UI.UpdateView(GameColors.VoidColor);
+				UI.ShowText(text: "Game Over");
+				UI.ShowControls(false);
+			});
+		}
+
+		public void Reset()
+		{
+			Stop();
+
+			UI.ShowText(false);
+			UI.ResetAnimation();
+			universe.ResetDimensions();
+			UI.ClearMap();
+			UI.ClearWarpium();
+			UI.ClearWeave();
+		}
+
+		private void UpdateGameObjectMovement()
+		{
+			foreach (var enemy in universe.enemies)
+			{
+				if (enemy.isMoving)
+				{
+					enemy.Move();
+					objectsToUpdateUI.Add(enemy);
+				}
+			}
+
+			foreach (var bullet in universe.bullets)
+			{
+				bullet.Move();
+				objectsToUpdateUI.Add(bullet);
+			}
+
+			if (universe.player.isMoving)
+			{
+				universe.player.Move();
+				objectsToUpdateUI.Add(universe.player);
+			}
+		}
+
 		private void ManageDisposedGameObjects()
 		{
 			List<Interactive> interactiveObjectsToDispose = [];
+
 			foreach (var dimension in universe.dimensions)
 			{
 				foreach (var interactiveObject in dimension.interactiveObjects)
@@ -105,38 +165,30 @@ namespace Invasion1D
 					}
 				}
 			}
+
 			int toDisposeCount = interactiveObjectsToDispose.Count;
 			for (int i = 0; i < toDisposeCount; i++)
 			{
-				if (objectsToUpdateUI.Contains(interactiveObjectsToDispose[0]))
+				Interactive interactiveObjectToDispose = interactiveObjectsToDispose[0];
+				if (objectsToUpdateUI.Contains(interactiveObjectToDispose))
 				{
-					objectsToUpdateUI.Remove((Kinetic)interactiveObjectsToDispose[0]);
+					objectsToUpdateUI.Remove((Kinetic)interactiveObjectToDispose);
 				}
-				interactiveObjectsToDispose[0].Dispose();
+
+				switch (interactiveObjectToDispose)
+				{
+					case Bullet bullet:
+						universe.bullets.Remove(bullet);
+						break;
+					case Enemy enemy:
+						universe.enemies.Remove(enemy);
+						break;
+				}
+				interactiveObjectToDispose.Dispose();
 			}
 		}
 
-		private void UpdateGameObjects()
-		{
-			foreach (var dimension in universe.dimensions)
-			{
-				foreach (var interactiveObject in dimension.interactiveObjects)
-				{
-					if (interactiveObject is not Kinetic kineticObject)
-					{
-						continue;
-					}
-
-					if (kineticObject.isMoving)
-					{
-						kineticObject.Move();
-						objectsToUpdateUI.Add(kineticObject);
-					}
-				}
-			}
-		}
-
-		void UpdateGameObjectsUI()
+		void UpdateGameObjectsInUI()
 		{
 			foreach (var kineticObject in objectsToUpdateUI)
 			{
@@ -152,31 +204,6 @@ namespace Invasion1D
 
 			cancelUpdate.Cancel();
 			cancelUpdate.Dispose();
-		}
-
-		public void Stop()
-		{
-			CancelUpdate();
-			UI.ClearCoolDownButtons();
-		}
-
-		public void End()
-		{
-			Stop();
-
-			UI.UpdateView(GameColors.VoidColor);
-			UI.ShowText(text: "Game Over");
-			UI.ShowControls(false);
-		}
-
-		public void Reset()
-		{
-			UI.ShowText(false);
-			UI.ResetAnimation();
-			universe.ResetDimensions();
-			UI.ClearMap();
-			UI.ClearWarpium();
-			UI.ClearWeave();
 		}
 
 		private void FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)

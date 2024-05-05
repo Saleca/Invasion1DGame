@@ -10,36 +10,24 @@ namespace Invasion1D.Models
 		public double Radius { get; init; }
 		public Point Position { get; set; }
 
-		internal double sizePercentage;
+		public double sizePercentage;
 
-		private Dimension currentDimension = null!;
-		public Dimension CurrentDimension
+		public Dimension currentDimension = null!;
+
+		double positionPercentage;
+		public double PositionPercentage
 		{
-			get => currentDimension;
-			set
-			{
-				currentDimension = value;
-				CurrentDimension.AddInteractiveObject(this);
-				sizePercentage = CurrentDimension.GetPercentageFromDistance(Radius * 2);
-			}
+			get => positionPercentage;
+			set => positionPercentage = (value + 1) % 1;
 		}
 
-		double percentageInShape;
-		public double PercentageInShape
-		{
-			get => percentageInShape;
-			set
-			{
-				percentageInShape = (value + 1) % 1;
-				Position = CurrentDimension.GetPositionInShape(this);
-			}
-		}
+		List<System.Timers.Timer?> timers = [];
 
 		public Interactive(Dimension dimension, double positionPercentage, Color color) : base(0, color, color)
 		{
 			Radius = 5;
-			CurrentDimension = dimension;
-			PercentageInShape = positionPercentage;
+
+			GoToDimension(dimension, positionPercentage);
 
 			body = new Ellipse()
 			{
@@ -57,7 +45,25 @@ namespace Invasion1D.Models
 			body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
 		}
 
-		List<System.Timers.Timer?> timers = [];
+		public void GoToDimension(Dimension dimension, double positionPercentage)
+		{
+			currentDimension = dimension;
+			dimension.AddInteractiveObject(this);
+			sizePercentage = dimension.GetPercentageFromDistance(Radius * 2);
+
+			PositionPercentage = positionPercentage;
+			Position = dimension.GetPositionInShape(this.positionPercentage, Radius);
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="offsetPercentage">positive values move clockwise</param>
+		public void MovePositionByPercentage(double offsetPercentage)
+		{
+			PositionPercentage += offsetPercentage;
+			Position = currentDimension.GetPositionInShape(positionPercentage, Radius);
+		}
 
 		protected System.Timers.Timer SetUpTimer(int miliseconds, Action onElapsed, bool reset = false)
 		{
@@ -85,7 +91,7 @@ namespace Invasion1D.Models
 			disposed = true;
 
 			base.Dispose();
-			CurrentDimension.RemoveInteractiveObject(this);
+			currentDimension.RemoveInteractiveObject(this);
 		}
 	}
 }

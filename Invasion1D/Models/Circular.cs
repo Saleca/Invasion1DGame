@@ -32,13 +32,13 @@ namespace Invasion1D.Models
 			((App)Application.Current!).universe.dimensions.Add(this);
 		}
 
-		public override Point GetPositionInShape(Interactive physicalShape)
+		public override Point GetPositionInShape(double positionPercentage, double halfSize)
 		{
-			double angle = physicalShape.PercentageInShape * TwoPI;
+			double angle = positionPercentage * TwoPI;
 			double offset = Radius - strokeThickness / 2;
 			return new(
-				(offset * Math.Cos(angle)) + Position.X + strokeThickness - physicalShape.Radius,
-				(offset * Math.Sin(angle)) + Position.Y + strokeThickness - physicalShape.Radius);
+				(offset * Math.Cos(angle)) + Position.X + strokeThickness - halfSize,
+				(offset * Math.Sin(angle)) + Position.Y + strokeThickness - halfSize);
 		}
 
 		/// <summary>

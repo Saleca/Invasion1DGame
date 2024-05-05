@@ -8,35 +8,48 @@ namespace Invasion1D
 {
 	public class Universe
 	{
-		static App Game => ((App)Application.Current!);
+		static App Game => 
+			((App)Application.Current!);
 
-		public readonly List<Dimension> dimensions = [];
-		public Player playerData = null!;
+		public readonly List<Dimension> 
+			dimensions = [];
+
+		public Player
+			player = null!;
+		public List<Enemy> 
+			enemies = [];
+		public List<Bullet> 
+			bullets = [];
 
 		public int
-			initialEnemyCount,
-			enemyCount;
+			initialEnemyCount;
 
-		public Stopwatch stopwatch = null!;
+		public Stopwatch 
+			stopwatch = null!;
 
 		public void Initiate()
 		{
 			_ = new Seed();
-			initialEnemyCount = enemyCount = dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).Count();
+
+			enemies = dimensions.SelectMany(d => d.interactiveObjects.OfType<Enemy>()).ToList();
+			initialEnemyCount = enemies.Count;
 
 			double pp = .9f;
-			playerData = new((Circular)dimensions[0], pp, 10);
+			player = new((Circular)dimensions[0], pp, 10);
 
-			//TODO
-			//select shape on map to start player on that shape
-
-			Game.UI.UpdateView(playerData.GetView());
+			Game.UI.UpdateView(player.GetView());
 			Game.UI.Draw();
 		}
 
 		public void Start()
 		{
+			enemies.AsParallel().ForAll(enemy => enemy.Start());
 			stopwatch = Stopwatch.StartNew();
+		}
+		public void Stop()
+		{
+			stopwatch.Stop();
+			enemies.AsParallel().ForAll(enemy => enemy.Stop());
 		}
 
 		public void ResetDimensions()
@@ -54,21 +67,5 @@ namespace Invasion1D
 				dimension.Dispose();
 			}
 		}
-
-		public void PlayerMove(bool dir)
-		{
-			if (dir)
-			{
-				playerData.PositiveMove();
-			}
-			else
-			{
-				playerData.NegativeMove();
-			}
-		}
-
-		public void StopPlayer() => playerData.StopMovement();
-		public void PlayerAttack() => playerData.Attack();
-		public void WarpPlayer() => playerData.Warp();
 	}
 }
