@@ -1,18 +1,18 @@
-﻿using Timer = System.Timers.Timer;
-
-namespace Invasion1D.Controls
+﻿namespace Invasion1D.Controls
 {
 	public class InvertedProgressBar
 		: ContentView
 	{
-		static App Game =>
+		protected static App Game =>
 			(App)App.Current!;
 
-		readonly Timer? timer;
 		readonly BoxView progressBar;
 		readonly Frame progressBarContainer;
 
 		float progress;
+		/// <summary>
+		/// Progress is a value from 0 to 1, should be set in UI thread
+		/// </summary>
 		public float Progress
 		{
 			get => progress;
@@ -31,25 +31,11 @@ namespace Invasion1D.Controls
 			}
 		}
 
-		int? interval;
-		public int? Interval
-		{
-			get => interval;
-			set
-			{
-				interval = value;
-				if (timer != null)
-				{
-					timer.Interval = value ?? 0;
-				}
-			}
-		}
-
-		public float? Increment { get; set; }
-		public bool? Cancel { get; set; }
-		public EventHandler CooldownCompleted = null!;
-
-		public InvertedProgressBar(Color color, int? interval = null, float? increment = null)
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="color">Color of the progress bar</param>
+		public InvertedProgressBar(Color color)
 		{
 			progressBar = new()
 			{
@@ -64,50 +50,6 @@ namespace Invasion1D.Controls
 			Content = progressBarContainer;
 
 			Progress = 0;
-
-			if (interval != null && increment != null)
-			{
-				Cancel = false;
-				Interval = interval;
-				Increment = increment;
-				timer = new(interval.Value);
-				timer.Elapsed += (s, e) => OnCooldownElapsed(null, EventArgs.Empty);
-			}
-		}
-
-		public void ActivateCooldown()
-		{
-			if (timer != null)
-			{
-				Game.UI.RunOnUIThread(() => Progress = 1);
-				timer.Start();
-			}
-		}
-
-		protected void OnCooldownElapsed(object? sender, EventArgs e)
-		{
-			if (timer != null && Increment != null && Cancel != null)
-			{
-				Game.UI.RunOnUIThread(() =>
-				{
-					if (Cancel.Value)
-					{
-						return;
-					}
-					Progress -= Increment.Value;
-				});
-
-				if (Progress <= 0)
-				{
-					timer.Stop();
-					CooldownCompleted?.Invoke(this, EventArgs.Empty);
-				}
-			}
-		}
-
-		public void Dispose()
-		{
-			timer?.Dispose();
 		}
 	}
 }

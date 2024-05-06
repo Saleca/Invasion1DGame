@@ -45,7 +45,8 @@ namespace Invasion1D
 
 		public InvertedProgressBar
 			HealthProgressBar = null!,
-			VitaluxProgressBar = null!,
+			VitaluxProgressBar = null!;
+		public InvertedCooldownProgressBar
 			WeaveCooldownProgressBar = null!,
 			ShootCooldownProgressBar = null!,
 			WarpCooldownProgressBar = null!;
@@ -70,15 +71,15 @@ namespace Invasion1D
 				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!);
 
 			WeaveCooldownProgressBarContainer.Content = WeaveCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Weave))!, Stats.smoothIncrementIntervalMS, Stats.weaveCoolDownIncrement);
+				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Weave))!, Stats.smoothIncrementIntervalMS, Stats.weaveCoolDownIncrement);
 			WeaveCooldownProgressBar.CooldownCompleted += WeaveCooldownCompleted;
 
 			ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
+				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
 			ShootCooldownProgressBar.CooldownCompleted += ShootCooldownCompleted;
 
 			WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Warpium))!, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
+				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Warpium))!, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
 			WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
 		}
 
