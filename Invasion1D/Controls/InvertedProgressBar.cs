@@ -27,11 +27,9 @@ namespace Invasion1D.Controls
 					width = 1000;
 				}
 
-				Game.UI.RunOnUIThread(() => progressBar.WidthRequest = width * value);
+				progressBar.WidthRequest = width * value;
 			}
 		}
-
-		public Action<float> UpdateUI { get; set; }
 
 		int? interval;
 		public int? Interval
@@ -51,7 +49,7 @@ namespace Invasion1D.Controls
 		public bool? Cancel { get; set; }
 		public EventHandler CooldownCompleted = null!;
 
-		public InvertedProgressBar(Color color, Action<float> updateUI, int? interval = null, float? increment = null)
+		public InvertedProgressBar(Color color, int? interval = null, float? increment = null)
 		{
 			progressBar = new()
 			{
@@ -66,7 +64,6 @@ namespace Invasion1D.Controls
 			Content = progressBarContainer;
 
 			Progress = 0;
-			UpdateUI = updateUI;
 
 			if (interval != null && increment != null)
 			{
@@ -76,16 +73,13 @@ namespace Invasion1D.Controls
 				timer = new(interval.Value);
 				timer.Elapsed += (s, e) => OnCooldownElapsed(null, EventArgs.Empty);
 			}
-
-
 		}
 
 		public void ActivateCooldown()
 		{
 			if (timer != null)
 			{
-				Progress = 1;
-				Game.UI.RunOnUIThread(() => UpdateUI(Progress));
+				Game.UI.RunOnUIThread(() => Progress = 1);
 				timer.Start();
 			}
 		}
@@ -94,14 +88,13 @@ namespace Invasion1D.Controls
 		{
 			if (timer != null && Increment != null && Cancel != null)
 			{
-				Progress -= Increment.Value;
 				Game.UI.RunOnUIThread(() =>
 				{
 					if (Cancel.Value)
 					{
 						return;
 					}
-					UpdateUI(Progress);
+					Progress -= Increment.Value;
 				});
 
 				if (Progress <= 0)

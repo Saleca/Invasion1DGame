@@ -64,21 +64,21 @@ namespace Invasion1D
 		public void Initiate()
 		{
 			HealthProgressBarContainer.Content = HealthProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Health))!, UpdateHealth);
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Health))!);
 
 			VitaluxProgressBarContainer.Content = VitaluxProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, UpdateVitaLux);
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!);
 
 			WeaveCooldownProgressBarContainer.Content = WeaveCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Weave))!, WeaveCooldown, Stats.smoothIncrementIntervalMS, Stats.weaveCoolDownIncrement);
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Weave))!, Stats.smoothIncrementIntervalMS, Stats.weaveCoolDownIncrement);
 			WeaveCooldownProgressBar.CooldownCompleted += WeaveCooldownCompleted;
 
 			ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, ShootCooldown, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
 			ShootCooldownProgressBar.CooldownCompleted += ShootCooldownCompleted;
 
 			WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
-				new InvertedProgressBar(GameColors.GetFromResources(nameof(Warpium))!, WarpCooldown, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Warpium))!, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
 			WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
 		}
 
@@ -125,7 +125,6 @@ namespace Invasion1D
 		public void UpdateVitaLux(float progress) => VitaluxProgressBar.Progress = progress;
 
 		public void ActivateShootCooldown() => ShootCooldownProgressBar.ActivateCooldown();
-		public void ShootCooldown(float progress) => ShootCooldownProgressBar.Progress = progress;
 		public void ShootCooldownCompleted(object? sender, EventArgs e) => ShowShootKey(true);
 		public void ShowShootKey(bool show)
 		{
@@ -141,7 +140,7 @@ namespace Invasion1D
 		public void ClearShootColldown()
 		{
 			ShowShootKey(true);
-			ShootCooldown(0);
+			ShootCooldownProgressBar.Progress = 0;
 		}
 
 		public void ActivateWarpCooldown()
@@ -150,7 +149,6 @@ namespace Invasion1D
 			WarpCooldownProgressBar.ActivateCooldown();
 
 		}
-		public void WarpCooldown(float progress) => WarpCooldownProgressBar.Progress = progress;
 		public void WarpCooldownCompleted(object? sender, EventArgs e) => RunOnUIThread(() => ShowWarpKey(true));
 		public void ShowWarpKey(bool show)
 		{
@@ -166,7 +164,7 @@ namespace Invasion1D
 		public void ClearWarpColldown()
 		{
 			ShowWarpKey(true);
-			WarpCooldown(0);
+			WarpCooldownProgressBar.Progress = 0;
 		}
 		public void ClearCoolDownButtons()
 		{
@@ -175,13 +173,12 @@ namespace Invasion1D
 		}
 
 		//weave needs refactoring, timer needs to be on character, to be used by enemy, progress update should come from player 
-		public void ActivateWeaveCooldown() => WeaveCooldownProgressBar.ActivateCooldown();
-		public void WeaveCooldown(float progress) => WeaveCooldownProgressBar.Progress = progress;
-		public void WeaveCooldownCompleted(object? sender, EventArgs e) => Game.universe.player.SetWeave(false);
-		public void ClearWeave()
-		{
-			WeaveCooldown(0);
-		}
+		public void ActivateWeaveCooldown() =>
+			WeaveCooldownProgressBar.ActivateCooldown();
+		public void WeaveCooldownCompleted(object? sender, EventArgs e) =>
+			Game.universe.player.SetWeave(false);
+		public void ClearWeave() =>
+			WeaveCooldownProgressBar.Progress = 0;
 
 		public void AddWarpium()
 		{

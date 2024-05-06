@@ -34,6 +34,7 @@ namespace Invasion1D
 
 			float pp = .9f;
 			player = new((Circular)dimensions[0], pp, 10);
+			_ = new Weave((Circular)dimensions[0], 0);
 
 			Game.UI.UpdateView(player.GetView());
 			Game.UI.Draw();

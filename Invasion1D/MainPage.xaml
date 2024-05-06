@@ -71,7 +71,7 @@
                      Grid.Column="2"
                      Text="Weave"/>
 
-                <Frame
+                <ContentView
                     x:Name="WeaveCooldownProgressBarContainer"
                     Grid.Row="3"
                     Grid.Column="2"/>
@@ -146,8 +146,7 @@
                 Grid.Row="1"
                 Grid.Column="0">
                 <ContentView
-                    x:Name="ShootCooldownProgressBarContainer"
-                    IsVisible="false"/>
+                    x:Name="ShootCooldownProgressBarContainer"/>
                 <Button 
                     x:Name="ShootKey"
                     Text="Shoot"
@@ -158,8 +157,7 @@
                 Grid.Row="1"
                 Grid.Column="1">
                 <ContentView
-                    x:Name="WarpCooldownProgressBarContainer"
-                    IsVisible="false"/>
+                    x:Name="WarpCooldownProgressBarContainer"/>
                 <Button
                     x:Name="WarpKey"
                     Text="Warp"
