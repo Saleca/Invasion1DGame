@@ -7,18 +7,25 @@ namespace Invasion1D
 	public partial class App : Application
 	{
 		//diagnostics
-		readonly bool debugExceptions = false;
+		readonly bool
+			debugExceptions = false;
 
 		//
-		public Universe universe = null!;
-		public MainPage UI = null!;
-		public Random throwDice = new();
+		public Universe
+			universe = null!;
+		public MainPage
+			UI = null!;
+		public Random
+			throwDice = new();
 
 		//state
-		bool isStarted = false;
-		CancellationTokenSource cancelUpdate = null!;
+		bool
+			isStarted = false;
+		CancellationTokenSource
+			cancelUpdate = null!;
 
-		List<Kinetic> objectsToUpdateUI = [];
+		List<Kinetic>
+			objectsToUpdateUI = [];
 
 		public App()
 		{
@@ -64,7 +71,7 @@ namespace Invasion1D
 			{
 				try
 				{
-					UpdateGameObjectMovement();
+					UpdateGameObjects();
 					ManageDisposedGameObjects();
 
 					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
@@ -125,10 +132,14 @@ namespace Invasion1D
 			UI.ClearWeave();
 		}
 
-		private void UpdateGameObjectMovement()
+		private void UpdateGameObjects()
 		{
 			foreach (var enemy in universe.enemies)
 			{
+				if (enemy.toReact)
+				{
+					enemy.React();
+				}
 				if (enemy.isMoving)
 				{
 					enemy.Move();

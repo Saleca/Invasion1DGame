@@ -6,12 +6,17 @@ namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
-		App Game => (App)App.Current!;
+		static App Game =>
+			(App)App.Current!;
 
-		System.Timers.Timer
+		readonly System.Timers.Timer
 			reactionTimer;
 
-		Interactive? targetInSight;
+		public bool
+			toReact = false;
+
+		Interactive?
+			targetInSight;
 
 		public Enemy(
 			Dimension shape,
@@ -24,16 +29,18 @@ namespace Invasion1D.Models
 					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
-			reactionTimer = SetUpTimer(Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), () => OnElapsedReactionTimer(null, EventArgs.Empty));
+			reactionTimer = SetUpTimer(Enemy.Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), () => OnElapsedReactionTimer(null, EventArgs.Empty));
 		}
 
 		public void Start()
 		{
 			reactionTimer.Start();
+			toReact = false;
 		}
 		public void Stop()
 		{
 			reactionTimer.Stop();
+			toReact = false;
 		}
 
 		public override void Attack()
@@ -109,11 +116,11 @@ namespace Invasion1D.Models
 			}
 		}
 
-		private void OnElapsedReactionTimer(object? sender, EventArgs e)
+		public void React()
 		{
 			if (targetInSight is null)
 			{
-				switch (Game.throwDice.Next(3))
+				switch (Enemy.Game.throwDice.Next(3))
 				{
 					case 0:
 						PositiveMove();
@@ -130,7 +137,7 @@ namespace Invasion1D.Models
 			{
 				if (targetInSight is Player)
 				{
-					switch (Game.throwDice.Next(2))
+					switch (Enemy.Game.throwDice.Next(2))
 					{
 						case 0:
 							MoveToTarget();
@@ -146,6 +153,12 @@ namespace Invasion1D.Models
 				}
 			}
 			RestartReactionTimer();
+			toReact = false;
+		}
+
+		private void OnElapsedReactionTimer(object? sender, EventArgs e)
+		{
+			toReact = true;
 		}
 
 		void RestartReactionTimer()

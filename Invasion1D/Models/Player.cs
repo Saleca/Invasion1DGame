@@ -1,24 +1,12 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
-using System.Diagnostics;
-using System.Timers;
 
 namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
-		const uint
-			warpAnimationLength = 4000,
-			halfAnimationLength = warpAnimationLength / 2;
-
-		const int
-			warpCooldownIntervalsLenght = 25;
-
-		const float
-			warpCooldownIntervalsCount = warpAnimationLength / warpCooldownIntervalsLenght,
-			warpCooldownProgressIncrements = 1.0f / warpCooldownIntervalsCount;
-
-		static App Game => (App)Application.Current!;
+		static App Game =>
+			(App)Application.Current!;
 
 		public List<Dimension>
 			visitedDimensions = [];
@@ -47,15 +35,15 @@ namespace Invasion1D.Models
 					speed)
 		{
 			shootCooldownTimer = SetUpTimer(
-									miliseconds: 10,
+									miliseconds: Stats.smoothIncrementIntervalMS,
 									reset: true,
 									onElapsed: () => OnShootCooldownElapsed(null, EventArgs.Empty));
 			warpCooldownTimer = SetUpTimer(
-									miliseconds: warpCooldownIntervalsLenght,
+									miliseconds: Stats.warpIncrementIntervalMS,
 									reset: true,
 									onElapsed: () => OnWarpCooldownElapsed(null, EventArgs.Empty));
 			weaveCooldownTimer = SetUpTimer(
-									miliseconds: 10,
+									miliseconds: Stats.smoothIncrementIntervalMS,
 									reset: true,
 									onElapsed: () => OnWeaveCooldownElapsed(null, EventArgs.Empty));
 
@@ -88,7 +76,7 @@ namespace Invasion1D.Models
 					positionPercentageForNewDimention = Game.throwDice.NextSingle();
 					newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
 						positionPercentage: positionPercentageForNewDimention,
-						halfSize: Size/2,
+						halfSize: Size / 2,
 						position: out newPosition);
 				} while (!newPositionFound);
 
@@ -139,17 +127,17 @@ namespace Invasion1D.Models
 			}
 
 			Game.UI.IsAnimating = true;
-			Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, warpAnimationLength, Easing.CubicInOut);
+			Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
 			ActivateWarpCooldown();
 
 			if (!Game.UI.isMapVisible)
 			{
-				Task<bool> translateOut = Game.UI.MapViewAccess.TranslateTo(midX, midY, halfAnimationLength, Easing.CubicOut);
-				Task<bool> scaleOut = Game.UI.MapViewAccess.ScaleTo(1, halfAnimationLength, Easing.CubicOut);
+				Task<bool> translateOut = Game.UI.MapViewAccess.TranslateTo(midX, midY, Stats.halfAnimationDurationMS, Easing.CubicOut);
+				Task<bool> scaleOut = Game.UI.MapViewAccess.ScaleTo(1, Stats.halfAnimationDurationMS, Easing.CubicOut);
 				await Task.WhenAll(translateOut, scaleOut);
 
-				Task<bool> translateIn = Game.UI.MapViewAccess.TranslateTo(endScaledX, endScaledY, halfAnimationLength, Easing.CubicIn);
-				Task<bool> scaleIn = Game.UI.MapViewAccess.ScaleTo(scale, halfAnimationLength, Easing.CubicIn);
+				Task<bool> translateIn = Game.UI.MapViewAccess.TranslateTo(endScaledX, endScaledY, Stats.halfAnimationDurationMS, Easing.CubicIn);
+				Task<bool> scaleIn = Game.UI.MapViewAccess.ScaleTo(scale, Stats.halfAnimationDurationMS, Easing.CubicIn);
 				await Task.WhenAll(translateIn, scaleIn);
 
 			}
@@ -265,7 +253,7 @@ namespace Invasion1D.Models
 
 		protected void OnWarpCooldownElapsed(object? sender, EventArgs e)
 		{
-			warpCooldownProgress -= warpCooldownProgressIncrements;
+			warpCooldownProgress -= Stats.warpCooldownProgressIncrements;
 
 			Game.UI.RunOnUIThread(() =>
 			{

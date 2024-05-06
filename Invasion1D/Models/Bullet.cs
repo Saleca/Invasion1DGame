@@ -1,16 +1,22 @@
 ﻿using Invasion1D.Data;
-using System.Diagnostics;
 
 namespace Invasion1D.Models
 {
 	public class Bullet : Kinetic
 	{
-		static App Game => (App)Application.Current!;
+		static App Game =>
+			(App)Application.Current!;
 
-		public float condition;
-		public float damage;
-		bool weave;
-		System.Timers.Timer? cooldownTimer;
+		public float
+			condition;
+		public float
+			damage;
+
+		readonly bool
+			weave;
+
+		readonly System.Timers.Timer?
+			cooldownTimer;
 
 		public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color) : base(dimension, position, color, Stats.bulletSpeed)
 		{
