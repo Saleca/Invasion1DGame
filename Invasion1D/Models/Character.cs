@@ -13,6 +13,8 @@
 
 		public bool
 			weave = false;
+		//temporary
+		public void SetWeave(bool weave) => this.weave = weave;
 
 		/// <summary>
 		/// uses vitalux to inflict damage

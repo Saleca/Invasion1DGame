@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Invasion1D.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,7 +13,7 @@ namespace Invasion1D.Models
 			Item(
 				dimension,
 				position,
-				GetResourcesColor(nameof(Weave))!)
+				GameColors.GetFromResources(nameof(Weave))!)
 	{
 		public override bool Power(Character character)
 		{

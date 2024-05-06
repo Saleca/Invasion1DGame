@@ -22,7 +22,7 @@ namespace Invasion1D.Models
 			set => positionPercentage = (value + 1) % 1;
 		}
 
-		List<System.Timers.Timer?> timers = [];
+		readonly List<System.Timers.Timer?> timers = [];
 
 		public Interactive(Dimension dimension, float positionPercentage, Color color) : base(0, color, color)
 		{

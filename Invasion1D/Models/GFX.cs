@@ -20,15 +20,6 @@ namespace Invasion1D.Models
 			_ => darkTheme,
 		};
 
-		public static Color? GetResourcesColor(string color)
-		{
-			if (Game.Resources.TryGetValue(color, out object? colorvalue))
-			{
-				return (Color)colorvalue;
-			}
-			return null;
-		}
-
 		public virtual void Dispose()
 		{
 			Game.UI.RunOnUIThread(() => Game.UI.RemoveFromMap(body));

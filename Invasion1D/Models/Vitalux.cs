@@ -1,4 +1,5 @@
 ﻿using Invasion1D.Data;
+using Invasion1D.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,7 +14,7 @@ namespace Invasion1D.Models
 			Item(
 				dimension,
 				position,
-				GetResourcesColor(nameof(Vitalux))!)
+				GameColors.GetFromResources(nameof(Vitalux))!)
 	{
 		static App Game => (App)App.Current!;
 		float amount = Game.throwDice.Next(3) switch

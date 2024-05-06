@@ -1,6 +1,5 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
-using System.Diagnostics;
 
 namespace Invasion1D.Models
 {
@@ -25,7 +24,7 @@ namespace Invasion1D.Models
 				base(
 					shape,
 					position,
-					GetResourcesColor(nameof(Enemy))!,
+					GameColors.GetFromResources(nameof(Enemy))!,
 					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
@@ -56,7 +55,7 @@ namespace Invasion1D.Models
 							GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
 						direction: direction,
 						weave: weave,
-						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
+						color: GameColors.GetFromResources(weave ? nameof(Weave) : nameof(Vitalux))!
 						);
 
 				Bullet.AddToUI(bullet);

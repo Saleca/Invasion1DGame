@@ -42,27 +42,20 @@
                     Grid.Row="2"
                     Grid.Column="0"
                     Text="Health"/>
-                <Frame
-                    x:Name="HealthProgressFrame"
+                <ContentView
+                    x:Name="HealthProgressBarContainer"
                     Grid.Row="3"
-                    Grid.Column="0">
-                    <BoxView 
-                        x:Name="HealthProgress"
-                        BackgroundColor="{StaticResource Health}"/>
-                </Frame>
+                    Grid.Column="0"/>
 
                 <Label
                      Grid.Row="2"
                      Grid.Column="1"
                      Text="Vitalux"/>
-                <Frame
-                     x:Name="VitaluxProgressFrame"
+                <ContentView
+                     x:Name="VitaluxProgressBarContainer"
                      Grid.Row="3"
-                     Grid.Column="1">
-                    <BoxView 
-                         x:Name="VitaluxProgress"
-                         BackgroundColor="{StaticResource Vitalux}"/>
-                </Frame>
+                     Grid.Column="1"/>
+
 
                 <Label
                     Grid.Row="0"
@@ -77,15 +70,11 @@
                      Grid.Row="2"
                      Grid.Column="2"
                      Text="Weave"/>
-                
+
                 <Frame
-                    x:Name="WeaveCooldownProgressFrame"
+                    x:Name="WeaveCooldownProgressBarContainer"
                     Grid.Row="3"
-                    Grid.Column="2">
-                    <BoxView 
-                         x:Name="WeaveCooldownProgress"
-                         BackgroundColor="{StaticResource Weave}"/>
-                </Frame>
+                    Grid.Column="2"/>
 
             </Grid>
             <Grid Grid.Column="1"
@@ -156,13 +145,9 @@
             <Grid 
                 Grid.Row="1"
                 Grid.Column="0">
-                <Frame
-                    x:Name="ShootCooldownProgressFrame"
-                    IsVisible="false">
-                    <BoxView 
-                        x:Name="ShootCooldownProgress"
-                        BackgroundColor="{StaticResource Vitalux}"/>
-                </Frame>
+                <ContentView
+                    x:Name="ShootCooldownProgressBarContainer"
+                    IsVisible="false"/>
                 <Button 
                     x:Name="ShootKey"
                     Text="Shoot"
@@ -172,13 +157,9 @@
             <Grid 
                 Grid.Row="1"
                 Grid.Column="1">
-                <Frame
-                    x:Name="WarpCooldownProgressFrame"
-                    IsVisible="false">
-                    <BoxView 
-                         x:Name="WarpCooldownProgress"
-                         BackgroundColor="{StaticResource Warpium}"/>
-                </Frame>
+                <ContentView
+                    x:Name="WarpCooldownProgressBarContainer"
+                    IsVisible="false"/>
                 <Button
                     x:Name="WarpKey"
                     Text="Warp"
