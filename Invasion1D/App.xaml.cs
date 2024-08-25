@@ -10,7 +10,7 @@ namespace Invasion1D
 		readonly bool
 			debugExceptions = false;
 
-		//
+		//Global variables
 		public Universe
 			universe = null!;
 		public MainPage
@@ -23,7 +23,6 @@ namespace Invasion1D
 			isStarted = false;
 		CancellationTokenSource
 			cancelUpdate = null!;
-
 		List<Kinetic>
 			objectsToUpdateUI = [];
 
@@ -48,6 +47,7 @@ namespace Invasion1D
 			}
 			else
 			{
+				UI.Initiate();
 				UI.UpdateStartKeyText("Restart");
 			}
 			universe = new();
@@ -84,6 +84,7 @@ namespace Invasion1D
 						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
 						UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
 					});
+
 					//TODO:
 					//measure current frame compute time and delay only the difference between prefered framerate time and compute time
 					await Task.Delay(100, cancelUpdate.Token);

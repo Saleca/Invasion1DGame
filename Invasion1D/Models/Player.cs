@@ -5,24 +5,11 @@ namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
-		static App Game =>
-			(App)Application.Current!;
-
 		public List<Dimension>
 			visitedDimensions = [];
 
 		Dimension? travelingToDimension;
 		float positionPercentageForNewDimention;
-
-		float
-			shootCooldownProgress = 1,
-			warpCooldownProgress = 1,
-			weaveCooldownProgress = 1;
-
-		protected System.Timers.Timer?
-			shootCooldownTimer,
-			warpCooldownTimer,
-			weaveCooldownTimer;
 
 		public Player(
 			Dimension dimension,
@@ -31,22 +18,9 @@ namespace Invasion1D.Models
 				base(
 					dimension,
 					position,
-					GetResourcesColor(nameof(Player))!,
+					GameColors.GetFromResources(nameof(Player))!,
 					speed)
 		{
-			shootCooldownTimer = SetUpTimer(
-									miliseconds: Stats.smoothIncrementIntervalMS,
-									reset: true,
-									onElapsed: () => OnShootCooldownElapsed(null, EventArgs.Empty));
-			warpCooldownTimer = SetUpTimer(
-									miliseconds: Stats.warpIncrementIntervalMS,
-									reset: true,
-									onElapsed: () => OnWarpCooldownElapsed(null, EventArgs.Empty));
-			weaveCooldownTimer = SetUpTimer(
-									miliseconds: Stats.smoothIncrementIntervalMS,
-									reset: true,
-									onElapsed: () => OnWeaveCooldownElapsed(null, EventArgs.Empty));
-
 			direction = Game.RandomDirection();
 
 			Game.UI.AddWarpium();
@@ -128,7 +102,7 @@ namespace Invasion1D.Models
 
 			Game.UI.IsAnimating = true;
 			Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
-			ActivateWarpCooldown();
+			Game.UI.ActivateWarpCooldown();
 
 			if (!Game.UI.isMapVisible)
 			{
@@ -168,7 +142,7 @@ namespace Invasion1D.Models
 							GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
 						direction: direction,
 						weave: weave,
-						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
+						color: GameColors.GetFromResources(weave ? nameof(Weave) : nameof(Vitalux))!
 						);
 
 				Bullet.AddToUI(bullet);
@@ -182,7 +156,7 @@ namespace Invasion1D.Models
 					bullet.NegativeMove();
 				}
 
-				ActivateShootCooldown();
+				Game.UI.ActivateShootCooldown();
 			}
 		}
 
@@ -216,7 +190,6 @@ namespace Invasion1D.Models
 								Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
 								break;
 							case Weave:
-								ActivateWeaveCooldown();
 								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
 								break;
 						}
@@ -236,95 +209,6 @@ namespace Invasion1D.Models
 			else
 			{
 				MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(step));
-			}
-		}
-
-		void ActivateWarpCooldown()
-		{
-			warpCooldownProgress = 1;
-			Game.UI.RunOnUIThread(() =>
-			{
-				Game.UI.ShowWarpKey(false);
-				Game.UI.WarpCooldown(warpCooldownProgress);
-				Game.UI.ShowWarpProgress(true);
-			});
-			warpCooldownTimer?.Start();
-		}
-
-		protected void OnWarpCooldownElapsed(object? sender, EventArgs e)
-		{
-			warpCooldownProgress -= Stats.warpCooldownProgressIncrements;
-
-			Game.UI.RunOnUIThread(() =>
-			{
-				if (disposed)
-				{
-					return;
-				}
-				Game.UI.WarpCooldown(warpCooldownProgress);
-			});
-
-			if (warpCooldownProgress <= 0)
-			{
-				warpCooldownTimer?.Stop();
-
-				Game.UI.RunOnUIThread(() => { Game.UI.ShowWarpKey(true); Game.UI.ShowWarpProgress(false); });
-			}
-		}
-
-		public void ActivateWeaveCooldown()
-		{
-			weaveCooldownProgress = 1;
-			Game.UI.RunOnUIThread(() => Game.UI.WeaveCooldown(warpCooldownProgress));
-			weaveCooldownTimer?.Start();
-		}
-		protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
-		{
-			weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
-			Game.UI.RunOnUIThread(() =>
-			{
-				if (disposed)
-				{
-					return;
-				}
-				Game.UI.WeaveCooldown(weaveCooldownProgress);
-			});
-
-			if (weaveCooldownProgress <= 0)
-			{
-				weaveCooldownTimer?.Stop();
-				weave = false;
-			}
-		}
-
-		void ActivateShootCooldown()
-		{
-			shootCooldownProgress = 1;
-			Game.UI.RunOnUIThread(() =>
-			{
-				Game.UI.ShowShootKey(false);
-				Game.UI.ShowShootProgress(true);
-				Game.UI.ShootCooldown(shootCooldownProgress);
-			});
-			shootCooldownTimer?.Start();
-		}
-
-		protected void OnShootCooldownElapsed(object? sender, EventArgs e)
-		{
-			shootCooldownProgress -= Stats.shotCoolDownIncrement;
-			Game.UI.RunOnUIThread(() =>
-			{
-				if (disposed)
-				{
-					return;
-				}
-				Game.UI.ShootCooldown(shootCooldownProgress);
-			});
-
-			if (shootCooldownProgress <= 0)
-			{
-				shootCooldownTimer?.Stop();
-				Game.UI.RunOnUIThread(() => { Game.UI.ShowShootKey(true); Game.UI.ShowShootProgress(false); });
 			}
 		}
 

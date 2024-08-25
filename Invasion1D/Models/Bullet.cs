@@ -4,9 +4,6 @@ namespace Invasion1D.Models
 {
 	public class Bullet : Kinetic
 	{
-		static App Game =>
-			(App)Application.Current!;
-
 		public float
 			condition;
 		public float
@@ -30,7 +27,7 @@ namespace Invasion1D.Models
 			{
 				damage = condition = Stats.regularAttackDamage;
 
-				cooldownTimer = SetUpTimer(Stats.bulletDuration, () => TakeDamage(damage));
+				cooldownTimer = SetUpTimer(Stats.bulletDuration, (o, e) => TakeDamage(damage));
 				cooldownTimer.Start();
 			}
 			Game.universe.bullets.Add(this);

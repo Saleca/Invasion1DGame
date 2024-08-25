@@ -8,11 +8,14 @@ namespace Invasion1D
 {
 	public partial class MainPage : ContentPage
 	{
-		readonly bool debug = true;
+		readonly bool
+			debug = true;
 
-		static App Game => ((App)Application.Current!);
+		static App Game =>
+			((App)Application.Current!);
 
-		public bool isMapVisible = false;
+		public bool
+			isMapVisible = false;
 
 		readonly object locker = new();
 		bool isAnimating = false;
@@ -34,8 +37,18 @@ namespace Invasion1D
 			}
 		}
 
-		public Frame PlayerViewAccess => PlayerView;
-		public AbsoluteLayout MapViewAccess => MapView;
+		public Frame
+			PlayerViewAccess => PlayerView;
+		public AbsoluteLayout
+			MapViewAccess => MapView;
+
+		public InvertedProgressBar
+			HealthProgressBar = null!,
+			VitaluxProgressBar = null!,
+			WeaveProgressBar = null!;
+		public InvertedCooldownProgressBar
+			ShootCooldownProgressBar = null!,
+			WarpCooldownProgressBar = null!;
 
 		public MainPage()
 		{
@@ -46,6 +59,26 @@ namespace Invasion1D
 				Grid.SetRowSpan(StartKey, 1);
 				MapModeKey.IsVisible = true;
 			}
+		}
+
+		public void Initiate()
+		{
+			HealthProgressBarContainer.Content = HealthProgressBar =
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Health))!);
+
+			VitaluxProgressBarContainer.Content = VitaluxProgressBar =
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!);
+
+			WeaveCooldownProgressBarContainer.Content = WeaveProgressBar =
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Weave))!);
+
+			ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
+				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
+			ShootCooldownProgressBar.CooldownCompleted += ShootCooldownCompleted;
+
+			WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
+				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Warpium))!, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
+			WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
 		}
 
 		public void Draw()
@@ -87,25 +120,60 @@ namespace Invasion1D
 			EnemiesLabel.Text = enemies;
 		}
 
-		public void UpdateHealth(float progress)
+		public void UpdateHealth(float progress) => HealthProgressBar.Progress = progress;
+		public void UpdateVitaLux(float progress) => VitaluxProgressBar.Progress = progress;
+		public void UpdateWeave(float progress) => WeaveProgressBar.Progress = progress;
+
+		public void ActivateShootCooldown() => ShootCooldownProgressBar.ActivateCooldown();
+		public void ShootCooldownCompleted(object? sender, EventArgs e) => ShowShootKey(true);
+		public void ShowShootKey(bool show)
 		{
-			double width = HealthProgressFrame.Width;
-			if (width == -1)
+			if (show)
 			{
-				width = 1000;
+				ShootKey.IsVisible = true;
 			}
-			HealthProgress.WidthRequest = width * progress;
+			else
+			{
+				ShootKey.IsVisible = false;
+			}
+		}
+		public void ClearShootColldown()
+		{
+			ShowShootKey(true);
+			ShootCooldownProgressBar.Progress = 0;
 		}
 
-		public void UpdateVitaLux(float progress)
+		public void ActivateWarpCooldown()
 		{
-			double width = VitaluxProgressFrame.Width;
-			if (width == -1)
-			{
-				width = 1000;
-			}
-			VitaluxProgress.WidthRequest = width * progress;
+			ShowWarpKey(false);
+			WarpCooldownProgressBar.ActivateCooldown();
+
 		}
+		public void WarpCooldownCompleted(object? sender, EventArgs e) => RunOnUIThread(() => ShowWarpKey(true));
+		public void ShowWarpKey(bool show)
+		{
+			if (show)
+			{
+				WarpKey.IsVisible = true;
+			}
+			else
+			{
+				WarpKey.IsVisible = false;
+			}
+		}
+		public void ClearWarpColldown()
+		{
+			ShowWarpKey(true);
+			WarpCooldownProgressBar.Progress = 0;
+		}
+		public void ClearCoolDownButtons()
+		{
+			ClearShootColldown();
+			ClearWarpColldown();
+		}
+
+		public void ClearWeave() =>
+			WeaveProgressBar.Progress = 0;
 
 		public void AddWarpium()
 		{
@@ -123,87 +191,6 @@ namespace Invasion1D
 		public void UpdateStartKeyText(string text)
 		{
 			StartKey.Text = text;
-		}
-
-		public void ShowShootKey(bool show)
-		{
-			if (show)
-			{
-				ShootKey.IsVisible = true;
-			}
-			else
-			{
-				ShootKey.IsVisible = false;
-			}
-		}
-
-		public void ShowShootProgress(bool show)
-		{
-			if (show)
-			{
-				ShootCooldownProgressFrame.IsVisible = true;
-			}
-			else
-			{
-				ShootCooldownProgressFrame.IsVisible = false;
-			}
-		}
-		public void ShootCooldown(float progress)
-		{
-			ShootCooldownProgress.WidthRequest = ShootCooldownProgressFrame.Width * progress;
-		}
-		public void ClearShootColldown()
-		{
-			ShowShootKey(true);
-			ShowShootProgress(false);
-			ShootCooldown(0);
-		}
-
-		public void ShowWarpKey(bool show)
-		{
-			if (show)
-			{
-				WarpKey.IsVisible = true;
-			}
-			else
-			{
-				WarpKey.IsVisible = false;
-			}
-		}
-		public void ShowWarpProgress(bool show)
-		{
-			if (show)
-			{
-				WarpCooldownProgressFrame.IsVisible = true;
-			}
-			else
-			{
-				WarpCooldownProgressFrame.IsVisible = false;
-			}
-		}
-		public void WarpCooldown(float progress)
-		{
-			WarpCooldownProgress.WidthRequest = WarpCooldownProgressFrame.Width * progress;
-		}
-		public void ClearWarpColldown()
-		{
-			ShowWarpKey(true);
-			ShowWarpProgress(false);
-			WarpCooldown(0);
-		}
-		public void ClearCoolDownButtons()
-		{
-			ClearShootColldown();
-			ClearWarpColldown();
-		}
-
-		public void WeaveCooldown(float progress)
-		{
-			WeaveCooldownProgress.WidthRequest = WeaveCooldownProgressFrame.Width * progress;
-		}
-		public void ClearWeave()
-		{
-			WeaveCooldown(0);
 		}
 
 		public void AddToMap(Shape shape)

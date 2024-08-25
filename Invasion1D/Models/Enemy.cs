@@ -1,14 +1,10 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
-using System.Diagnostics;
 
 namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
-		static App Game =>
-			(App)App.Current!;
-
 		readonly System.Timers.Timer
 			reactionTimer;
 
@@ -25,11 +21,11 @@ namespace Invasion1D.Models
 				base(
 					shape,
 					position,
-					GetResourcesColor(nameof(Enemy))!,
+					GameColors.GetFromResources(nameof(Enemy))!,
 					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
-			reactionTimer = SetUpTimer(Enemy.Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), () => OnElapsedReactionTimer(null, EventArgs.Empty));
+			reactionTimer = SetUpTimer(Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), OnElapsedReactionTimer);
 		}
 
 		public void Start()
@@ -56,7 +52,7 @@ namespace Invasion1D.Models
 							GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
 						direction: direction,
 						weave: weave,
-						color: GetResourcesColor(weave ? nameof(Weave) : nameof(Vitalux))!
+						color: GameColors.GetFromResources(weave ? nameof(Weave) : nameof(Vitalux))!
 						);
 
 				Bullet.AddToUI(bullet);

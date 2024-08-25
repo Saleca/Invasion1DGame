@@ -5,7 +5,7 @@ namespace Invasion1D.Models
 {
 	public abstract class GFX(float strokeThickness, Color lightTheme, Color darkTheme)
 	{
-		static App Game => (App)Application.Current!;
+		protected static App Game => (App)Application.Current!;
 		public readonly float strokeThickness = strokeThickness;
 		public readonly Color lightTheme = lightTheme;
 		public readonly Color darkTheme = darkTheme;
@@ -19,15 +19,6 @@ namespace Invasion1D.Models
 			AppTheme.Light => lightTheme,
 			_ => darkTheme,
 		};
-
-		public static Color? GetResourcesColor(string color)
-		{
-			if (Game.Resources.TryGetValue(color, out object? colorvalue))
-			{
-				return (Color)colorvalue;
-			}
-			return null;
-		}
 
 		public virtual void Dispose()
 		{

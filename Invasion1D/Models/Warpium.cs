@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Invasion1D.Helpers;
 
 namespace Invasion1D.Models
 {
 	public class Warpium(
 		Dimension dimension,
-		float position) : 
+		float position) :
 			Item(
 				dimension,
-				position, 
-				GetResourcesColor(nameof(Warpium))!)
+				position,
+				GameColors.GetFromResources(nameof(Warpium))!)
 	{
 		public override bool Power(Character character)
 		{

@@ -15,10 +15,7 @@
 
 			minScoreItem = 0.5f,
 			mediumScoreItem = 0.75f,
-			maxScoreItem = 1.0f,
-
-			weaveCoolDownIncrement = .0001f,
-			shotCoolDownIncrement = .01f;
+			maxScoreItem = 1.0f;
 
 		//Kinetic
 
@@ -47,18 +44,17 @@
 			warpIncrementIntervalMS = 25;
 
 		public const float
-			warpCooldownTotalIncrementCount = warpAnimationDurationMS / warpIncrementIntervalMS,
-			warpCooldownProgressIncrements = 1.0f / warpCooldownTotalIncrementCount;
+			warpCooldownIncrementCount = warpAnimationDurationMS / warpIncrementIntervalMS,
+			warpCooldownIncrements = 1.0f / warpCooldownIncrementCount;
 
 		//UI
 
 		public const int
-			smoothIncrementIntervalMS = 10;
+			smoothIncrementIntervalMS = 10; //try 20 and try it on warp as well
+		public const float
+			weaveCoolDownIncrement = .0001f,
+			shotCoolDownIncrement = .01f;
 
-		//automation : enemies/items to space ratio
-
-		//items respawn rate
-
-		//timers interval
+		//automation : enemies/items to space ratio, items respawn rate
 	}
 }

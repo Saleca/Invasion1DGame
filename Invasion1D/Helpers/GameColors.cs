@@ -45,5 +45,14 @@
 			AppTheme.Light => Colors.White,
 			_ => Colors.Black,
 		};
+
+		public static Color? GetFromResources(string color)
+		{
+			if (App.Current!.Resources.TryGetValue(color, out object? colorvalue))
+			{
+				return (Color)colorvalue;
+			}
+			return null;
+		}
 	}
 }
