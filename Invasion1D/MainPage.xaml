@@ -6,6 +6,8 @@
              Style="{StaticResource ContentPage}">
 
     <Grid RowDefinitions="2*,6*,2*">
+        
+
         <Grid
             Grid.Row="0"
             Grid.Column="0"
@@ -119,11 +121,6 @@
                 x:Name="PlayerView">
             </Frame>
 
-            <Label 
-                Grid.ColumnSpan="2"
-                x:Name="MainLabel"
-                IsVisible="false"/>
-
             <AbsoluteLayout
                 Grid.ColumnSpan="2"
                 IsVisible="false"
@@ -185,5 +182,10 @@
                     Clicked="WarpClicked"/>
             </Grid>
         </Grid>
+        
+        <Label 
+            Grid.RowSpan="3"
+            x:Name="MainLabel"
+            IsVisible="false"/>
     </Grid>
 </ContentPage>

@@ -3,7 +3,6 @@ using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
 using Microsoft.Maui.Controls.Shapes;
-using System;
 
 namespace Invasion1D
 {
