@@ -4,230 +4,249 @@ using System.Diagnostics;
 
 namespace Invasion1D
 {
-	public partial class App : Application
-	{
-		//diagnostics
-		readonly bool
-			debugExceptions = false;
+    public partial class App : Application
+    {
+        //diagnostics
+        readonly bool
+            debugExceptions = false;
 
-		//Global variables
-		public Universe
-			universe = null!;
-		public MainPage
-			UI = null!;
-		public Random
-			throwDice = new();
+        //Global variables
+        public Universe
+            universe = null!;
+        public MainPage
+            UI = null!;
+        public Random
+            throwDice = new();
 
-		//state
-		bool
-			isStarted = false;
-		CancellationTokenSource
-			cancelUpdate = null!;
-		List<Kinetic>
-			objectsToUpdateUI = [];
+        //state
+        bool
+            isStarted = false,
+            isPaused = false;
+        CancellationTokenSource
+            cancelUpdate = null!;
+        List<Kinetic>
+            objectsToUpdateUI = [];
 
-		public App()
-		{
-			InitializeComponent();
+        public bool IsPaused => isPaused;
+        public App()
+        {
+            InitializeComponent();
 
-			UI = new();
-			MainPage = UI;
+            UI = new();
+            MainPage = UI;
 
-			if (debugExceptions)
-			{
-				AppDomain.CurrentDomain.FirstChanceException += FirstChanceException;
-			}
-		}
+            if (debugExceptions)
+            {
+                AppDomain.CurrentDomain.FirstChanceException += FirstChanceException;
+            }
+        }
 
-		public void Start()
-		{
-			if (isStarted)
-			{
-				Reset();
-			}
-			else
-			{
-				UI.Initiate();
-				UI.UpdateStartKeyText("Restart");
-			}
-			universe = new();
-			universe.Initiate();
+        public void Start()
+        {
+            if (isStarted)
+            {
+                Reset();
+            }
+            else
+            {
+                UI.Initiate();
+                UI.UpdateStartKeyText("Restart");
+            }
+            universe = new();
+            universe.Initiate();
 
-			//TODO
-			//select shape on map to start player on that shape
+            //TODO
+            //select shape on map to start player on that shape
 
-			UI.ShowStats(true);
-			UI.ShowControls(true);
-			cancelUpdate = new();
+            UI.ShowStats(true);
+            UI.ShowControls(true);
+            cancelUpdate = new();
 
-			universe.Start();
-			Task.Run(Update);
-			isStarted = true;
-		}
+            universe.Start();
+            Task.Run(Update);
 
-		async Task Update()
-		{
-			while (!cancelUpdate.IsCancellationRequested)
-			{
-				try
-				{
-					UpdateGameObjects();
-					ManageDisposedGameObjects();
+            UI.ShowPauseButton(true);
+            isStarted = true;
+        }
 
-					Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
-					{
-						UpdateGameObjectsInUI();
-						if (!UI.IsAnimating)
-						{
-							UI.UpdateView(universe.player.GetView());
-						}
-						UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
-						UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
-					});
+        async Task Update()
+        {
+            //add !isPaused 
+            while (!cancelUpdate.IsCancellationRequested)
+            {
+                try
+                {
+                    UpdateGameObjects();
+                    ManageDisposedGameObjects();
 
-					//TODO:
-					//measure current frame compute time and delay only the difference between prefered framerate time and compute time
-					await Task.Delay(100, cancelUpdate.Token);
-					await uiTask;
-				}
-				catch (OperationCanceledException)
-				{
-					break;
-				}
-				catch (Exception ex)
-				{
-					Debug.WriteLine($"An error occurred: {ex.Message}");
-					break;
-				}
-			}
-		}
+                    Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
+                    {
+                        UpdateGameObjectsInUI();
+                        if (!UI.IsAnimating)
+                        {
+                            UI.UpdateView(universe.player.GetView());
+                        }
+                        UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
+                        UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
+                    });
 
-		public void Stop()
-		{
-			CancelUpdate();
-			UI.RunOnUIThread(() => UI.ClearCoolDownButtons());
-			universe.Stop();
-		}
+                    //TODO:
+                    //measure current frame compute time and delay only the difference between prefered framerate time and compute time
+                    await Task.Delay(100, cancelUpdate.Token);
+                    await uiTask;
+                }
+                catch (OperationCanceledException)
+                {
+                    break;
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"An error occurred: {ex.Message}");
+                    break;
+                }
+            }
+        }
 
-		public void End()
-		{
-			Stop();
+        public void Pause(bool pause)
+        {
+            isPaused = pause;
+            /*foreach (var enemy in universe.enemies)
+            {
+                enemy.Pause(IsPaused);
+            }
+            foreach (var bullet in universe.bullets)
+            {
+                bullet.Pause(IsPaused);
+            }*/
+        }
 
-			UI.RunOnUIThread(() =>
-			{
-				UI.UpdateView(GameColors.VoidColor);
-				UI.ShowText(text: "Game Over");
-				UI.ShowControls(false);
-			});
-		}
+        public void Stop()
+        {
+            CancelUpdate();
+            UI.RunOnUIThread(() => UI.ClearCoolDownButtons());
+            universe.Stop();
+        }
 
-		public void Reset()
-		{
-			Stop();
+        public void End()
+        {
+            Stop();
 
-			UI.ShowText(false);
-			UI.ResetAnimation();
-			universe.ResetDimensions();
-			UI.ClearMap();
-			UI.ClearWarpium();
-			UI.ClearWeave();
-		}
+            UI.RunOnUIThread(() =>
+            {
+                UI.UpdateView(GameColors.VoidColor);
+                UI.ShowPopUpMenu(text: "Game Over");
+                UI.ShowControls(false);
+                UI.ShowPauseButton(false);
+            });
+        }
 
-		private void UpdateGameObjects()
-		{
-			foreach (var enemy in universe.enemies)
-			{
-				if (enemy.toReact)
-				{
-					enemy.React();
-				}
-				if (enemy.isMoving)
-				{
-					enemy.Move();
-					objectsToUpdateUI.Add(enemy);
-				}
-			}
+        public void Reset()
+        {
+            Stop();
+            isPaused = false;
+            UI.ShowPopUpMenu(false);
+            UI.ResetAnimation();
+            universe.ResetDimensions();
+            UI.ClearMap();
+            UI.ClearWarpium();
+            UI.ClearWeave();
+        }
 
-			foreach (var bullet in universe.bullets)
-			{
-				bullet.Move();
-				objectsToUpdateUI.Add(bullet);
-			}
+        private void UpdateGameObjects()
+        {
+            foreach (var enemy in universe.enemies)
+            {
+                if (enemy.toReact)
+                {
+                    enemy.React();
+                }
+                if (enemy.isMoving)
+                {
+                    enemy.Move();
+                    objectsToUpdateUI.Add(enemy);
+                }
+            }
 
-			if (universe.player.isMoving)
-			{
-				universe.player.Move();
-				objectsToUpdateUI.Add(universe.player);
-			}
-		}
+            foreach (var bullet in universe.bullets)
+            {
+                bullet.Move();
+                objectsToUpdateUI.Add(bullet);
+            }
 
-		private void ManageDisposedGameObjects()
-		{
-			List<Interactive> interactiveObjectsToDispose = [];
+            if (universe.player.isMoving)
+            {
+                universe.player.Move();
+                objectsToUpdateUI.Add(universe.player);
+            }
+        }
 
-			foreach (var dimension in universe.dimensions)
-			{
-				lock (dimension.interactiveObjects)
-				{
-					foreach (var interactiveObject in dimension.interactiveObjects)
-					{
-						if (interactiveObject.toDispose)
-						{
-							interactiveObjectsToDispose.Add(interactiveObject);
-						}
-					}
-				}
-			}
+        private void ManageDisposedGameObjects()
+        {
+            List<Interactive> interactiveObjectsToDispose = [];
 
-			int toDisposeCount = interactiveObjectsToDispose.Count;
-			for (int i = 0; i < toDisposeCount; i++)
-			{
-				Interactive interactiveObjectToDispose = interactiveObjectsToDispose[0];
-				if (objectsToUpdateUI.Contains(interactiveObjectToDispose))
-				{
-					objectsToUpdateUI.Remove((Kinetic)interactiveObjectToDispose);
-				}
+            foreach (var dimension in universe.dimensions)
+            {
+                lock (dimension.interactiveObjects)
+                {
+                    foreach (var interactiveObject in dimension.interactiveObjects)
+                    {
+                        if (interactiveObject.toDispose)
+                        {
+                            interactiveObjectsToDispose.Add(interactiveObject);
+                        }
+                    }
+                }
+            }
 
-				switch (interactiveObjectToDispose)
-				{
-					case Bullet bullet:
-						universe.bullets.Remove(bullet);
-						break;
-					case Enemy enemy:
-						universe.enemies.Remove(enemy);
-						break;
-				}
-				interactiveObjectToDispose.Dispose();
-			}
-		}
+            int toDisposeCount = interactiveObjectsToDispose.Count;
+            for (int i = 0; i < toDisposeCount; i++)
+            {
+                Interactive interactiveObjectToDispose = interactiveObjectsToDispose[0];
+                if (objectsToUpdateUI.Contains(interactiveObjectToDispose))
+                {
+                    objectsToUpdateUI.Remove((Kinetic)interactiveObjectToDispose);
+                }
 
-		void UpdateGameObjectsInUI()
-		{
-			foreach (var kineticObject in objectsToUpdateUI)
-			{
-				kineticObject.UpdateUI();
-			}
-			objectsToUpdateUI = [];
-		}
+                switch (interactiveObjectToDispose)
+                {
+                    case Bullet bullet:
+                        universe.bullets.Remove(bullet);
+                        break;
+                    case EnemyModel enemy:
+                        universe.enemies.Remove(enemy);
+                        break;
+                }
+                interactiveObjectToDispose.Dispose();
+            }
+        }
 
-		public void CancelUpdate()
-		{
-			if (cancelUpdate is null || cancelUpdate.IsCancellationRequested)
-				return;
+        void UpdateGameObjectsInUI()
+        {
+            foreach (var kineticObject in objectsToUpdateUI)
+            {
+                kineticObject.UpdateUI();
+            }
+            objectsToUpdateUI = [];
+        }
 
-			cancelUpdate.Cancel();
-			cancelUpdate.Dispose();
-		}
+        public void CancelUpdate()
+        {
+            if (cancelUpdate is null || cancelUpdate.IsCancellationRequested)
+                return;
 
-		private void FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
-		{
-			Debug.WriteLine(e.Exception.ToString());
-		}
+            cancelUpdate.Cancel();
+            cancelUpdate.Dispose();
+        }
 
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <returns>true for clockwise or false for !clockwise</returns>
-		public bool RandomDirection() => throwDice.Next(2) == 1;
-	}
+        private void FirstChanceException(object? sender, System.Runtime.ExceptionServices.FirstChanceExceptionEventArgs e)
+        {
+            Debug.WriteLine(e.Exception.ToString());
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <returns>true for clockwise or false for !clockwise</returns>
+        public bool RandomDirection() => throwDice.Next(2) == 1;
+    }
 }

@@ -14,39 +14,39 @@ namespace Invasion1D.Data
 				c2 = new(new(150, 150), 50),
 				c3 = new(new(400, 100), 100);
 
-			_ = new Enemy(c1, .20f, 10);
-			_ = new Enemy(c1, .70f, 10);
-			_ = new Vitalux(c1, .55f);
-			_ = new Warpium(c1, .3f);
+			_ = new EnemyModel(c1, .20f, 10);
+			_ = new EnemyModel(c1, .70f, 10);
+			_ = new VitaluxModel(c1, .55f);
+			_ = new WarpiumModel(c1, .3f);
 
-			_ = new Enemy(c2, .35f, 10);
-			_ = new Enemy(c2, .98f, 10);
-			_ = new Warpium(c2, .2f);
-			_ = new Vitalux(c2, .55f);
-			_ = new Health(c2, .05f);
+			_ = new EnemyModel(c2, .35f, 10);
+			_ = new EnemyModel(c2, .98f, 10);
+			_ = new WarpiumModel(c2, .2f);
+			_ = new VitaluxModel(c2, .55f);
+			_ = new HealthModel(c2, .05f);
 
-			_ = new Enemy(c3, .05f, 10);
-			_ = new Enemy(c3, .7f, 10);
-			_ = new Warpium(c3, .3f);
-			_ = new Health(c3, .4f);
-			_ = new Vitalux(c3, .55f);
-			_ = new Weave(c3, .85f);
+			_ = new EnemyModel(c3, .05f, 10);
+			_ = new EnemyModel(c3, .7f, 10);
+			_ = new WarpiumModel(c3, .3f);
+			_ = new HealthModel(c3, .4f);
+			_ = new VitaluxModel(c3, .55f);
+			_ = new WeaveModel(c3, .85f);
 
 			Linear
 				l1 = new(new(90, 75), new(300, 50)),
 				l2 = new(new(200, 300), new(500, 350)),
 				l3 = new(new(20, 200), new(100, 200));
 
-			_ = new Enemy(l1, .25f, 10);
-			_ = new Warpium(l1, .7f);
-			_ = new Health(l1, .05f);
+			_ = new EnemyModel(l1, .25f, 10);
+			_ = new WarpiumModel(l1, .7f);
+			_ = new HealthModel(l1, .05f);
 
-			_ = new Enemy(l2, .15f, 10);
-			_ = new Warpium(l2, .5f);
+			_ = new EnemyModel(l2, .15f, 10);
+			_ = new WarpiumModel(l2, .5f);
 
-			_ = new Enemy(l3, .75f, 10);
-			_ = new Warpium(l3, .3f);
-			_ = new Health(l3, .5f);
+			_ = new EnemyModel(l3, .75f, 10);
+			_ = new WarpiumModel(l3, .3f);
+			_ = new HealthModel(l3, .5f);
 		}
 	}
 }

@@ -19,7 +19,7 @@
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
     </Style>
     <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}"/>
-    
+
     <Style TargetType="Frame" x:Key="MainFrame"  BasedOn="{StaticResource BaseFrame}">
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
     </Style>
@@ -30,6 +30,17 @@
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
     </Style>
 
+    <Style TargetType="local:PopUpMenu">
+        <Setter Property="Padding" Value="50,100"/>
+        <Setter Property="HorizontalOptions" Value="Center" />
+        <Setter Property="VerticalOptions" Value="Center" />
+        
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
+        <Setter Property="Foreground" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+
+    </Style>
+    
     <Style TargetType="BoxView">
         <Setter Property="HorizontalOptions" Value="Start" />
     </Style>

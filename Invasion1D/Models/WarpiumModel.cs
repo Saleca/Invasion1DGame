@@ -1,26 +1,20 @@
 ﻿using Invasion1D.Helpers;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Invasion1D.Models
 {
-	internal class Weave(
+	public class WarpiumModel(
 		Dimension dimension,
 		float position) :
 			Item(
 				dimension,
 				position,
-				GameColors.GetFromResources(nameof(Weave))!)
+				GameColors.Warpium)
 	{
 		public override bool Power(Character character)
 		{
-			character.AddWeave();
+			character.AddWarpium();
 			toDispose = true;
 			return true;
 		}
 	}
-
 }

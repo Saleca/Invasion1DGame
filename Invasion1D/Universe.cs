@@ -12,9 +12,9 @@ namespace Invasion1D
 		public readonly List<Dimension> 
 			dimensions = [];
 
-		public Player
+		public PlayerModel
 			player = null!;
-		public List<Enemy> 
+		public List<EnemyModel> 
 			enemies = [];
 		public List<Bullet> 
 			bullets = [];
@@ -29,12 +29,12 @@ namespace Invasion1D
 		{
 			_ = new Seed();
 
-			enemies = dimensions.SelectMany(dimension => dimension.interactiveObjects.OfType<Enemy>()).ToList();
+			enemies = dimensions.SelectMany(dimension => dimension.interactiveObjects.OfType<EnemyModel>()).ToList();
 			initialEnemyCount = enemies.Count;
 
 			float pp = .9f;
 			player = new((Circular)dimensions[0], pp, 10);
-			_ = new Weave((Circular)dimensions[0], 0);
+			_ = new WeaveModel((Circular)dimensions[0], 0);
 
 			Game.UI.UpdateView(player.GetView());
 			Game.UI.Draw();

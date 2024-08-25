@@ -85,7 +85,7 @@ namespace Invasion1D.Models
         public void ActivateWeaveCooldown()
         {
             weaveCooldownProgress = 1;
-            if (this is Player)
+            if (this is PlayerModel)
             {
                 Game.UI.RunOnUIThread(() => Game.UI.UpdateWeave(weaveCooldownProgress));
             }
@@ -94,7 +94,7 @@ namespace Invasion1D.Models
         protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
         {
             weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
-            if (this is Player)
+            if (this is PlayerModel)
             {
                 Game.UI.RunOnUIThread(() =>
                 {

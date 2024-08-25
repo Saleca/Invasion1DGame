@@ -51,7 +51,7 @@ namespace Invasion1D.Models
 
 		public Color? GetView()
 		{
-			Interactive? target = FindInteractive(out float interactiveDistance, ignoreTypes: typeof(Player));
+			Interactive? target = FindInteractive(out float interactiveDistance, ignoreTypes: typeof(PlayerModel));
 			return GameColors.CalculateView(interactiveDistance, target?.DisplayColor());
 		}
 
