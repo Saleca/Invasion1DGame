@@ -40,7 +40,6 @@ namespace Invasion1D.Controls
 
 			Interval = interval;
 			Increment = increment;
-
 		}
 
 		public void ActivateCooldown()

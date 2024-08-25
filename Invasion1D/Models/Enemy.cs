@@ -5,9 +5,6 @@ namespace Invasion1D.Models
 {
 	public class Enemy : Character
 	{
-		static App Game =>
-			(App)App.Current!;
-
 		readonly System.Timers.Timer
 			reactionTimer;
 
@@ -28,7 +25,7 @@ namespace Invasion1D.Models
 					speed)
 		{
 			direction = ((App)Application.Current!).RandomDirection();
-			reactionTimer = SetUpTimer(Enemy.Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), () => OnElapsedReactionTimer(null, EventArgs.Empty));
+			reactionTimer = SetUpTimer(Game.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), OnElapsedReactionTimer);
 		}
 
 		public void Start()

@@ -66,10 +66,10 @@ namespace Invasion1D.Models
 			Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
 		}
 
-		protected System.Timers.Timer SetUpTimer(int miliseconds, Action onElapsed, bool reset = false)
+		protected System.Timers.Timer SetUpTimer(int miliseconds, Action<object?, EventArgs> onElapsed, bool reset = false)
 		{
 			System.Timers.Timer? timer = new(miliseconds);
-			timer.Elapsed += (s, e) => onElapsed();
+			timer.Elapsed += (s, e) => onElapsed(null, EventArgs.Empty);
 			timer.AutoReset = reset;
 			timers.Add(timer);
 			return timer;

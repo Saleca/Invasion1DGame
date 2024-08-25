@@ -11,8 +11,6 @@ namespace Invasion1D.Models
 				position,
 				GameColors.GetFromResources(nameof(Health))!)
 	{
-		static App Game => (App)App.Current!;
-
 		float amount = Game.throwDice.Next(3) switch
 		{
 			0 => Stats.minScoreItem,

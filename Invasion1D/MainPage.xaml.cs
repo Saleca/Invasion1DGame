@@ -45,9 +45,9 @@ namespace Invasion1D
 
 		public InvertedProgressBar
 			HealthProgressBar = null!,
-			VitaluxProgressBar = null!;
+			VitaluxProgressBar = null!,
+			WeaveProgressBar = null!;
 		public InvertedCooldownProgressBar
-			WeaveCooldownProgressBar = null!,
 			ShootCooldownProgressBar = null!,
 			WarpCooldownProgressBar = null!;
 
@@ -70,9 +70,8 @@ namespace Invasion1D
 			VitaluxProgressBarContainer.Content = VitaluxProgressBar =
 				new InvertedProgressBar(GameColors.GetFromResources(nameof(Vitalux))!);
 
-			WeaveCooldownProgressBarContainer.Content = WeaveCooldownProgressBar =
-				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Weave))!, Stats.smoothIncrementIntervalMS, Stats.weaveCoolDownIncrement);
-			WeaveCooldownProgressBar.CooldownCompleted += WeaveCooldownCompleted;
+			WeaveCooldownProgressBarContainer.Content = WeaveProgressBar =
+				new InvertedProgressBar(GameColors.GetFromResources(nameof(Weave))!);
 
 			ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
 				new InvertedCooldownProgressBar(GameColors.GetFromResources(nameof(Vitalux))!, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
@@ -124,6 +123,7 @@ namespace Invasion1D
 
 		public void UpdateHealth(float progress) => HealthProgressBar.Progress = progress;
 		public void UpdateVitaLux(float progress) => VitaluxProgressBar.Progress = progress;
+		public void UpdateWeave(float progress) => WeaveProgressBar.Progress = progress;
 
 		public void ActivateShootCooldown() => ShootCooldownProgressBar.ActivateCooldown();
 		public void ShootCooldownCompleted(object? sender, EventArgs e) => ShowShootKey(true);
@@ -173,13 +173,8 @@ namespace Invasion1D
 			ClearWarpColldown();
 		}
 
-		//weave needs refactoring, timer needs to be on character, to be used by enemy, progress update should come from player 
-		public void ActivateWeaveCooldown() =>
-			WeaveCooldownProgressBar.ActivateCooldown();
-		public void WeaveCooldownCompleted(object? sender, EventArgs e) =>
-			Game.universe.player.SetWeave(false);
 		public void ClearWeave() =>
-			WeaveCooldownProgressBar.Progress = 0;
+			WeaveProgressBar.Progress = 0;
 
 		public void AddWarpium()
 		{

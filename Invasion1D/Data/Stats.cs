@@ -54,10 +54,7 @@
 		public const float
 			weaveCoolDownIncrement = .0001f,
 			shotCoolDownIncrement = .01f;
-		//automation : enemies/items to space ratio
 
-		//items respawn rate
-
-		//timers interval
+		//automation : enemies/items to space ratio, items respawn rate
 	}
 }

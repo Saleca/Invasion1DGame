@@ -5,9 +5,6 @@ namespace Invasion1D.Models
 {
 	public class Player : Character
 	{
-		static App Game =>
-			(App)Application.Current!;
-
 		public List<Dimension>
 			visitedDimensions = [];
 
@@ -193,7 +190,6 @@ namespace Invasion1D.Models
 								Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
 								break;
 							case Weave:
-								Game.UI.ActivateWeaveCooldown();
 								Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
 								break;
 						}
