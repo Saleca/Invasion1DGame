@@ -94,13 +94,21 @@
             Margin="5,0"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
-            <Frame 
+            <Grid 
                 Grid.ColumnSpan="2"
-                BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
-                Style="{StaticResource MainFrame}"
-                x:Name="PlayerView">
-            </Frame>
-
+                RowDefinitions="9*,*">
+                <Frame 
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                    Style="{StaticResource MainFrame}"
+                    x:Name="PlayerView">
+                </Frame>
+                <Frame 
+                    Grid.Row="1"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                    Style="{StaticResource MainFrame}"
+                    x:Name="PlayerBackView">
+                </Frame>
+            </Grid>
             <AbsoluteLayout
                 Grid.ColumnSpan="2"
                 IsVisible="false"

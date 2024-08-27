@@ -109,6 +109,10 @@ namespace Invasion1D
         {
             PlayerView.BackgroundColor = color ?? GameColors.VoidColor;
         }
+        public void UpdateBackView(Color? color)
+        {
+            PlayerBackView.BackgroundColor = color ?? GameColors.VoidColor;
+        }
 
         public void UpdateTime(string time)
         {

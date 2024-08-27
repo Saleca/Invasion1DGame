@@ -84,7 +84,11 @@ namespace Invasion1D
                         UpdateGameObjectsInUI();
                         if (!UI.IsAnimating)
                         {
-                            UI.UpdateView(universe.player.GetView());
+                            universe.player.GetView(
+                                view: out Color? view,
+                                backView:out Color? backview);
+                            UI.UpdateView(view);
+                            UI.UpdateBackView(backview);
                         }
                         UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
                         UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
@@ -134,6 +138,8 @@ namespace Invasion1D
             UI.RunOnUIThread(() =>
             {
                 UI.UpdateView(GameColors.VoidColor);
+                UI.UpdateBackView(GameColors.VoidColor);
+
                 UI.ShowPopUpMenu(text: "Game Over");
                 UI.ShowControls(false);
                 UI.ShowPauseButton(false);

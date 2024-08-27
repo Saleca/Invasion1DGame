@@ -42,7 +42,7 @@ namespace Invasion1D.Models
         {
             List<Type> ignore = [typeof(VitaluxModel), typeof(WarpiumModel), typeof(HealthModel), typeof(WeaveModel)];
 
-            Kinetic? target = FindInteractive(out float distanceFromTarget, this, [.. ignore]) as Kinetic;
+            Kinetic? target = FindInteractive(out float distanceFromTarget, direction, this, [.. ignore]) as Kinetic;
 
             if (distanceFromTarget < stepDistance)
             {

@@ -74,7 +74,7 @@ namespace Invasion1D.Controls
 
         public PopUpMenu()
         {
-            Label title = new() { TextColor = Foreground };
+            title = new() { TextColor = Foreground };
             title.SetBinding(Label.TextProperty, new Binding(nameof(Title), source: this));
 
             base.BackgroundColor = BackgroundColor;
@@ -82,6 +82,6 @@ namespace Invasion1D.Controls
 
             Content = [title];
             base.Content = Content;
-        }
+       }
     }
 }

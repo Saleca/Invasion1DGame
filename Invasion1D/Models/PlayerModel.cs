@@ -97,6 +97,8 @@ namespace Invasion1D.Models
                 Game.UI.MapViewAccess.TranslationY = startScaledY;
 
                 Game.UI.UpdateView(Colors.Transparent);
+                Game.UI.UpdateBackView(Colors.Transparent);
+
                 Game.UI.MapViewAccess.IsVisible = true;
             }
 
@@ -167,8 +169,9 @@ namespace Invasion1D.Models
             if (weave) ignore.Add(typeof(WeaveModel));
 
             Interactive? target = FindInteractive(
-            closestTargetDistance: out float distanceFromTarget,
-            ignoreTypes: [.. ignore]);
+                                    closestTargetDistance: out float distanceFromTarget,
+                                    direction: direction,
+                                    ignoreTypes: [.. ignore]);
 
             float step = stepDistance;
             if (distanceFromTarget < step)

@@ -93,7 +93,7 @@ namespace Invasion1D.Models
             if (health == 1) ignore.Add(typeof(HealthModel));
             if (weave) ignore.Add(typeof(WeaveModel));
 
-            Interactive? target = FindInteractive(out float distanceFromTarget, this, ignoreTypes: [.. ignore]);
+            Interactive? target = FindInteractive(out float distanceFromTarget, direction, this, ignoreTypes: [.. ignore]);
 
             if (target is EnemyModel)
             {
