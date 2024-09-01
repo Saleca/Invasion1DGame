@@ -2,6 +2,7 @@
 using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace Invasion1D
@@ -53,7 +54,7 @@ namespace Invasion1D
         public MainPage()
         {
             InitializeComponent();
-
+            MainFrame.SizeChanged += ViewSizeChanged;
             if (debug)
             {
                 MapModeKey.IsVisible = true;
@@ -62,6 +63,7 @@ namespace Invasion1D
 
         public void Initiate()
         {
+
             HealthProgressBarContainer.Content = HealthProgressBar =
                 new InvertedProgressBar(GameColors.Health);
 
@@ -105,13 +107,18 @@ namespace Invasion1D
             IsAnimating = false;
         }
 
-        public void UpdateView(Color? color)
+        public void UpdateView(Color? forwardView, Color? rearView)
         {
-            PlayerView.BackgroundColor = color ?? GameColors.VoidColor;
-        }
-        public void UpdateBackView(Color? color)
-        {
-            PlayerBackView.BackgroundColor = color ?? GameColors.VoidColor;
+            forwardView ??= GameColors.VoidColor;
+            rearView ??= GameColors.VoidColor;
+
+            PlayerView.Background = new RadialGradientBrush(
+                gradientStops:
+                [
+                    new GradientStop { Color = forwardView, Offset = 0.6f },
+                    new GradientStop { Color = rearView, Offset = 0.8f }
+                ],
+                radius: .66);
         }
 
         public void UpdateTime(string time)
@@ -263,8 +270,8 @@ namespace Invasion1D
             if (isMapVisible)
             {
                 MapView.IsVisible = true;
-                Grid.SetColumn(PlayerView, 0);
-                Grid.SetColumnSpan(PlayerView, 1);
+                Grid.SetColumn(MainFrame, 0);
+                Grid.SetColumnSpan(MainFrame, 1);
                 Grid.SetColumn(MapView, 1);
                 Grid.SetColumnSpan(MapView, 1);
                 MapView.Scale = 1;
@@ -274,8 +281,8 @@ namespace Invasion1D
             else
             {
                 MapView.IsVisible = false;
-                Grid.SetColumn(PlayerView, 0);
-                Grid.SetColumnSpan(PlayerView, 2);
+                Grid.SetColumn(MainFrame, 0);
+                Grid.SetColumnSpan(MainFrame, 2);
                 Grid.SetColumn(MapView, 0);
                 Grid.SetColumnSpan(MapView, 2);
             }
@@ -296,8 +303,14 @@ namespace Invasion1D
         protected override void OnAppearing()
         {
             base.OnAppearing();
-
             Window.Destroying += OnWindowDestroying;
+        }
+
+        void ViewSizeChanged(object? sender, EventArgs e)
+        {
+            double size = Math.Max(MainFrame.Width, MainFrame.Height);
+            PlayerView.WidthRequest = size;
+            PlayerView.HeightRequest = size;
         }
 
         private void OnWindowDestroying(object? sender, EventArgs e)

@@ -66,6 +66,7 @@ namespace Invasion1D.Models
             Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
         }
 
+
         protected System.Timers.Timer SetUpTimer(int miliseconds, Action<object?, EventArgs> onElapsed, bool reset = false)
         {
             System.Timers.Timer? timer = new(miliseconds);
@@ -74,6 +75,7 @@ namespace Invasion1D.Models
             timers.Add(timer);
             return timer;
         }
+
         protected void RemoveTimer(System.Timers.Timer timer)
         {
             if (!timers.Remove(timer))

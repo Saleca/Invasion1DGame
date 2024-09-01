@@ -96,8 +96,7 @@ namespace Invasion1D.Models
                 Game.UI.MapViewAccess.TranslationX = startScaledX;
                 Game.UI.MapViewAccess.TranslationY = startScaledY;
 
-                Game.UI.UpdateView(Colors.Transparent);
-                Game.UI.UpdateBackView(Colors.Transparent);
+                Game.UI.UpdateView(Colors.Transparent, Colors.Transparent);
 
                 Game.UI.MapViewAccess.IsVisible = true;
             }

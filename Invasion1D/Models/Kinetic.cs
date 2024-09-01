@@ -49,10 +49,10 @@ namespace Invasion1D.Models
             return closestTarget;
         }
 
-        public void GetView(out Color? view, out Color? backView)
+        public void GetView(out Color? view, out Color? rearView)
         {
             view = null;
-            backView = null;
+            rearView = null;
             Interactive? target = FindInteractive(out float interactiveDistance, direction, ignoreTypes: typeof(PlayerModel));
             if (target != null)
             {
@@ -61,7 +61,7 @@ namespace Invasion1D.Models
             Interactive? backTarget = FindInteractive(out float interactiveDistanceAtBack, !direction, ignoreTypes: typeof(PlayerModel));
             if (backTarget != null)
             {
-                backView = GameColors.CalculateView(interactiveDistanceAtBack, backTarget?.DisplayColor());
+                rearView = GameColors.CalculateView(interactiveDistanceAtBack, backTarget?.DisplayColor());
             }
         }
 
