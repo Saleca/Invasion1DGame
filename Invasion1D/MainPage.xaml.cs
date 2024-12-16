@@ -1,8 +1,6 @@
 ﻿using Invasion1D.Controls;
 using Invasion1D.Data;
 using Invasion1D.Helpers;
-using Invasion1D.Models;
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace Invasion1D
@@ -63,7 +61,6 @@ namespace Invasion1D
 
         public void Initiate()
         {
-
             HealthProgressBarContainer.Content = HealthProgressBar =
                 new InvertedProgressBar(GameColors.Health);
 
