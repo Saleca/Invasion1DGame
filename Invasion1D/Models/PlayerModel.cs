@@ -1,7 +1,6 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
-using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
@@ -61,11 +60,6 @@ public class PlayerModel : Character
 
     internal async Task WarpAnimation(PointF start, PointF end)
     {
-        Debug.WriteLine($"{Game.Instance.UI.MainFrameAccess.X}, {Game.Instance.UI.MainFrameAccess.Y}");
-        Debug.WriteLine($"{Game.Instance.UI.MainFrameAccess.Width}, {Game.Instance.UI.MainFrameAccess.Height}");
-        Debug.WriteLine(start);
-        Debug.WriteLine(end);
-
         float offset = Size - strokeThickness,
             mapOffsetX = (float)Game.Instance.UI.MainFrameAccess.Width / 2 - offset,
             mapOffsetY = (float)Game.Instance.UI.MainFrameAccess.Height / 2 - offset,
