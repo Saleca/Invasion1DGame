@@ -1,5 +1,6 @@
 ﻿using Invasion1D.Helpers;
 using Invasion1D.Models;
+using Invasion1D.Views;
 using System.Diagnostics;
 
 namespace Invasion1D
