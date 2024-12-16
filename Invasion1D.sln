@@ -1,9 +1,9 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.8.34309.116
+VisualStudioVersion = 17.12.35527.113 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Invasion1D", "Invasion1D\Invasion1D.csproj", "{5C553315-0791-462B-898C-F4AD6280CADD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Invasion1D", "Invasion1D\Invasion1D.csproj", "{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,17 +11,14 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Release|Any CPU.Build.0 = Release|Any CPU
-		{5C553315-0791-462B-898C-F4AD6280CADD}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{92D0F95E-1FC1-4188-A7BC-ADF5DF2018FE}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {521E9B81-F6AE-41CC-8CEF-6373E3A74A07}
 	EndGlobalSection
 EndGlobal
