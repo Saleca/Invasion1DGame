@@ -39,9 +39,9 @@ namespace Invasion1D
             player.GetView(
                 view: out Color? view,
                 rearView: out Color? rearView);
-            Game.UI.UpdateView(view, rearView);
+            Game.GamePageInstance.UpdateView(view, rearView);
 
-            Game.UI.Draw();
+            Game.GamePageInstance.Draw();
         }
 
         public void Start()

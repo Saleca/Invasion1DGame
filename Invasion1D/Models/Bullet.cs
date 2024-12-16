@@ -35,7 +35,7 @@ namespace Invasion1D.Models
 
         public static void AddToUI(Bullet bullet)
         {
-            Game.UI.AddToMap(bullet.body);
+            Game.GamePageInstance.AddToMap(bullet.body);
         }
 
         public override void Move()

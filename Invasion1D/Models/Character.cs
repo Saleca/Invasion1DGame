@@ -87,7 +87,7 @@ namespace Invasion1D.Models
             weaveCooldownProgress = 1;
             if (this is PlayerModel)
             {
-                Game.UI.RunOnUIThread(() => Game.UI.UpdateWeave(weaveCooldownProgress));
+                Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateWeave(weaveCooldownProgress));
             }
             weaveCooldownTimer?.Start();
         }
@@ -96,13 +96,13 @@ namespace Invasion1D.Models
             weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
             if (this is PlayerModel)
             {
-                Game.UI.RunOnUIThread(() =>
+                Game.GamePageInstance.RunOnUIThread(() =>
                 {
                     if (disposed)
                     {
                         return;
                     }
-                    Game.UI.UpdateWeave(weaveCooldownProgress);
+                    Game.GamePageInstance.UpdateWeave(weaveCooldownProgress);
                 });
             }
             if (weaveCooldownProgress <= 0)

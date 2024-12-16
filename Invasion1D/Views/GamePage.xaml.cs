@@ -5,7 +5,7 @@ using Microsoft.Maui.Controls.Shapes;
 
 namespace Invasion1D.Views;
 
-public partial class MainPage : ContentPage
+public partial class GamePage : ContentPage
 {
     readonly bool
         debug = true;
@@ -49,7 +49,7 @@ public partial class MainPage : ContentPage
         ShootCooldownProgressBar = null!,
         WarpCooldownProgressBar = null!;
 
-    public MainPage()
+    public GamePage()
     {
         InitializeComponent();
         MainFrame.SizeChanged += ViewSizeChanged;
@@ -207,7 +207,7 @@ public partial class MainPage : ContentPage
 
     public void AddToMap(Shape shape)
     {
-        Game.UI.RunOnUIThread(() => MapView.Children.Add(shape));
+        Game.GamePageInstance.RunOnUIThread(() => MapView.Children.Add(shape));
     }
 
     public void RemoveFromMap(Shape shape)

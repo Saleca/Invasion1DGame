@@ -23,9 +23,9 @@ namespace Invasion1D.Models
         {
             direction = Game.RandomDirection();
 
-            Game.UI.AddWarpium();
-            Game.UI.UpdateVitaLux(vitalux);
-            Game.UI.UpdateHealth(health);
+            Game.GamePageInstance.AddWarpium();
+            Game.GamePageInstance.UpdateVitaLux(vitalux);
+            Game.GamePageInstance.UpdateHealth(health);
         }
 
         public void Warp()
@@ -55,7 +55,7 @@ namespace Invasion1D.Models
                 } while (!newPositionFound);
 
                 warpium--;
-                Game.UI.RemoveWarpium();
+                Game.GamePageInstance.RemoveWarpium();
 
                 currentDimension.RemoveInteractiveObject(this);
 
@@ -67,8 +67,8 @@ namespace Invasion1D.Models
         internal async Task WarpAnimation(PointF start, PointF end)
         {
             float offset = Size - strokeThickness,
-                mapOffsetX = (float)Game.UI.PlayerViewAccess.Width / 2 - offset,
-                mapOffsetY = (float)Game.UI.PlayerViewAccess.Height / 2 - offset,
+                mapOffsetX = (float)Game.GamePageInstance.PlayerViewAccess.Width / 2 - offset,
+                mapOffsetY = (float)Game.GamePageInstance.PlayerViewAccess.Height / 2 - offset,
                 startX = mapOffsetX - start.X,
                 startY = mapOffsetY - start.Y,
                 endX = mapOffsetX - end.X,
@@ -80,10 +80,10 @@ namespace Invasion1D.Models
                 midX = default!,
                 midY = default!;
 
-            if (!Game.UI.isMapVisible)
+            if (!Game.GamePageInstance.isMapVisible)
             {
                 scale = 5;
-                Game.UI.MapViewAccess.Scale = scale;
+                Game.GamePageInstance.MapViewAccess.Scale = scale;
 
                 float startScaledX = startX * scale,
                 startScaledY = startY * scale;
@@ -93,36 +93,36 @@ namespace Invasion1D.Models
                 midX = GameMath.LinearInterpolation(startX, endX, 0.5f);
                 midY = GameMath.LinearInterpolation(startY, endY, 0.5f);
 
-                Game.UI.MapViewAccess.TranslationX = startScaledX;
-                Game.UI.MapViewAccess.TranslationY = startScaledY;
+                Game.GamePageInstance.MapViewAccess.TranslationX = startScaledX;
+                Game.GamePageInstance.MapViewAccess.TranslationY = startScaledY;
 
-                Game.UI.UpdateView(Colors.Transparent, Colors.Transparent);
+                Game.GamePageInstance.UpdateView(Colors.Transparent, Colors.Transparent);
 
-                Game.UI.MapViewAccess.IsVisible = true;
+                Game.GamePageInstance.MapViewAccess.IsVisible = true;
             }
 
-            Game.UI.IsAnimating = true;
+            Game.GamePageInstance.IsAnimating = true;
             Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
-            Game.UI.ActivateWarpCooldown();
+            Game.GamePageInstance.ActivateWarpCooldown();
 
-            if (!Game.UI.isMapVisible)
+            if (!Game.GamePageInstance.isMapVisible)
             {
-                Task<bool> translateOut = Game.UI.MapViewAccess.TranslateTo(midX, midY, Stats.halfAnimationDurationMS, Easing.CubicOut);
-                Task<bool> scaleOut = Game.UI.MapViewAccess.ScaleTo(1, Stats.halfAnimationDurationMS, Easing.CubicOut);
+                Task<bool> translateOut = Game.GamePageInstance.MapViewAccess.TranslateTo(midX, midY, Stats.halfAnimationDurationMS, Easing.CubicOut);
+                Task<bool> scaleOut = Game.GamePageInstance.MapViewAccess.ScaleTo(1, Stats.halfAnimationDurationMS, Easing.CubicOut);
                 await Task.WhenAll(translateOut, scaleOut);
 
-                Task<bool> translateIn = Game.UI.MapViewAccess.TranslateTo(endScaledX, endScaledY, Stats.halfAnimationDurationMS, Easing.CubicIn);
-                Task<bool> scaleIn = Game.UI.MapViewAccess.ScaleTo(scale, Stats.halfAnimationDurationMS, Easing.CubicIn);
+                Task<bool> translateIn = Game.GamePageInstance.MapViewAccess.TranslateTo(endScaledX, endScaledY, Stats.halfAnimationDurationMS, Easing.CubicIn);
+                Task<bool> scaleIn = Game.GamePageInstance.MapViewAccess.ScaleTo(scale, Stats.halfAnimationDurationMS, Easing.CubicIn);
                 await Task.WhenAll(translateIn, scaleIn);
 
             }
 
             await translatePlayer;
-            Game.UI.IsAnimating = false;
+            Game.GamePageInstance.IsAnimating = false;
 
-            if (!Game.UI.isMapVisible)
+            if (!Game.GamePageInstance.isMapVisible)
             {
-                Game.UI.MapViewAccess.IsVisible = false;
+                Game.GamePageInstance.MapViewAccess.IsVisible = false;
             }
 
             GoToDimension(travelingToDimension!, positionPercentageForNewDimention);
@@ -135,7 +135,7 @@ namespace Invasion1D.Models
             if (vitalux >= currentAttackCost)
             {
                 vitalux -= currentAttackCost;
-                Game.UI.UpdateVitaLux(vitalux);
+                Game.GamePageInstance.UpdateVitaLux(vitalux);
 
                 Bullet bullet = new(dimension: currentDimension,
                         position: direction ?
@@ -156,7 +156,7 @@ namespace Invasion1D.Models
                     bullet.NegativeMove();
                 }
 
-                Game.UI.ActivateShootCooldown();
+                Game.GamePageInstance.ActivateShootCooldown();
             }
         }
 
@@ -182,16 +182,16 @@ namespace Invasion1D.Models
                         switch (item)
                         {
                             case VitaluxModel:
-                                Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+                                Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateVitaLux(vitalux));
                                 break;
                             case WarpiumModel:
-                                Game.UI.RunOnUIThread(Game.UI.AddWarpium);
+                                Game.GamePageInstance.RunOnUIThread(Game.GamePageInstance.AddWarpium);
                                 break;
                             case HealthModel:
-                                Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
+                                Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateHealth(health));
                                 break;
                             case WeaveModel:
-                                Game.UI.RunOnUIThread(() => Game.UI.UpdateVitaLux(vitalux));
+                                Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateVitaLux(vitalux));
                                 break;
                         }
                     }
@@ -217,7 +217,7 @@ namespace Invasion1D.Models
         {
             health -= damage;
 
-            Game.UI.RunOnUIThread(() => Game.UI.UpdateHealth(health));
+            Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateHealth(health));
             if (health > 0)
             {
                 return;

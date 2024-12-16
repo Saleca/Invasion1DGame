@@ -22,7 +22,7 @@ namespace Invasion1D.Models
 
 		public virtual void Dispose()
 		{
-			Game.UI.RunOnUIThread(() => Game.UI.RemoveFromMap(body));
+			Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.RemoveFromMap(body));
 		}
 		
 	}

@@ -44,13 +44,13 @@ namespace Invasion1D.Controls
 
         public void ActivateCooldown()
         {
-            Game.UI.RunOnUIThread(() => Progress = 1);
+            Game.GamePageInstance.RunOnUIThread(() => Progress = 1);
             timer.Start();
         }
 
         protected void OnCooldownElapsed(object? sender, EventArgs e)
         {
-            Game.UI.RunOnUIThread(() =>
+            Game.GamePageInstance.RunOnUIThread(() =>
             {
                 if (Cancel)
                 {
@@ -62,7 +62,7 @@ namespace Invasion1D.Controls
             if (Progress <= 0)
             {
                 timer.Stop();
-                Game.UI.RunOnUIThread(() =>
+                Game.GamePageInstance.RunOnUIThread(() =>
                 {
                     CooldownCompleted?.Invoke(this, EventArgs.Empty);
                 });

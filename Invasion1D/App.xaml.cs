@@ -14,8 +14,8 @@ namespace Invasion1D
         //Global variables
         public Universe
             universe = null!;
-        public MainPage
-            UI = null!;
+        public GamePage
+            GamePageInstance = null!;
         public Random
             throwDice = new();
 
@@ -33,8 +33,8 @@ namespace Invasion1D
         {
             InitializeComponent();
 
-            UI = new();
-            MainPage = UI;
+            GamePageInstance = new();
+            MainPage = GamePageInstance;
 
             if (debugExceptions)
             {
@@ -50,8 +50,8 @@ namespace Invasion1D
             }
             else
             {
-                UI.Initiate();
-                UI.UpdateStartKeyText("Restart");
+                GamePageInstance.Initiate();
+                GamePageInstance.UpdateStartKeyText("Restart");
             }
             universe = new();
             universe.Initiate();
@@ -59,14 +59,14 @@ namespace Invasion1D
             //TODO
             //select shape on map to start player on that shape
 
-            UI.ShowStats(true);
-            UI.ShowControls(true);
+            GamePageInstance.ShowStats(true);
+            GamePageInstance.ShowControls(true);
             cancelUpdate = new();
 
             universe.Start();
             Task.Run(Update);
 
-            UI.ShowPauseButton(true);
+            GamePageInstance.ShowPauseButton(true);
             isStarted = true;
         }
 
@@ -83,15 +83,15 @@ namespace Invasion1D
                     Task uiTask = MainThread.InvokeOnMainThreadAsync(() =>
                     {
                         UpdateGameObjectsInUI();
-                        if (!UI.IsAnimating)
+                        if (!GamePageInstance.IsAnimating)
                         {
                             universe.player.GetView(
                                 view: out Color? view,
                                 rearView: out Color? rearView);
-                            UI.UpdateView(view, rearView);
+                            GamePageInstance.UpdateView(view, rearView);
                         }
-                        UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
-                        UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
+                        GamePageInstance.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
+                        GamePageInstance.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
                     });
 
                     //TODO:
@@ -127,7 +127,7 @@ namespace Invasion1D
         public void Stop()
         {
             CancelUpdate();
-            UI.RunOnUIThread(() => UI.ClearCoolDownButtons());
+            GamePageInstance.RunOnUIThread(() => GamePageInstance.ClearCoolDownButtons());
             universe.Stop();
         }
 
@@ -135,13 +135,13 @@ namespace Invasion1D
         {
             Stop();
 
-            UI.RunOnUIThread(() =>
+            GamePageInstance.RunOnUIThread(() =>
             {
-                UI.UpdateView(GameColors.VoidColor, GameColors.VoidColor);
+                GamePageInstance.UpdateView(GameColors.VoidColor, GameColors.VoidColor);
 
-                UI.ShowPopUpMenu(text: "Game Over");
-                UI.ShowControls(false);
-                UI.ShowPauseButton(false);
+                GamePageInstance.ShowPopUpMenu(text: "Game Over");
+                GamePageInstance.ShowControls(false);
+                GamePageInstance.ShowPauseButton(false);
             });
         }
 
@@ -149,12 +149,12 @@ namespace Invasion1D
         {
             Stop();
             isPaused = false;
-            UI.ShowPopUpMenu(false);
-            UI.ResetAnimation();
+            GamePageInstance.ShowPopUpMenu(false);
+            GamePageInstance.ResetAnimation();
             universe.ResetDimensions();
-            UI.ClearMap();
-            UI.ClearWarpium();
-            UI.ClearWeave();
+            GamePageInstance.ClearMap();
+            GamePageInstance.ClearWarpium();
+            GamePageInstance.ClearWeave();
         }
 
         private void UpdateGameObjects()
