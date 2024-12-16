@@ -1,110 +1,108 @@
 ﻿using Invasion1D.Data;
 using Microsoft.Maui.Controls.Shapes;
-using System.Timers;
 
-namespace Invasion1D.Models
+namespace Invasion1D.Models;
+
+public abstract class Interactive : GFX, ICircular
 {
-    public abstract class Interactive : GFX, ICircular
+    protected bool disposed = false;
+
+    public float Size { get; init; }
+    public PointF Position { get; set; }
+
+    public float sizePercentage;
+
+    public Dimension currentDimension = null!;
+
+    float positionPercentage;
+    public float PositionPercentage
     {
-        protected bool disposed = false;
+        get => positionPercentage;
+        set => positionPercentage = (value + 1) % 1;
+    }
 
-        public float Size { get; init; }
-        public PointF Position { get; set; }
+    readonly List<System.Timers.Timer?> timers = [];
 
-        public float sizePercentage;
+    public Interactive(Dimension dimension, float positionPercentage, Color color)
+        : base(0, color, color)
+    {
+        Size = Stats.interactiveObjectSize;
 
-        public Dimension currentDimension = null!;
+        GoToDimension(dimension, positionPercentage);
 
-        float positionPercentage;
-        public float PositionPercentage
+        body = new Ellipse()
         {
-            get => positionPercentage;
-            set => positionPercentage = (value + 1) % 1;
+            StrokeThickness = strokeThickness,
+            Margin = 0,
+
+            WidthRequest = Size,
+            HeightRequest = Size,
+
+            TranslationX = Position.X,
+            TranslationY = Position.Y,
+            ZIndex = 1
+        };
+        body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
+        body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
+    }
+
+    public void GoToDimension(Dimension dimension, float positionPercentage)
+    {
+        currentDimension = dimension;
+        dimension.AddInteractiveObject(this);
+        sizePercentage = dimension.GetPercentageFromDistance(Size);
+
+        PositionPercentage = positionPercentage;
+        Position = dimension.GetPositionInShape(this.positionPercentage, Size / 2);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="offsetPercentage">positive values move clockwise</param>
+    public void MovePositionByPercentage(float offsetPercentage)
+    {
+        PositionPercentage += offsetPercentage;
+        Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
+    }
+
+    protected System.Timers.Timer SetUpTimer(int miliseconds, Action<object?, EventArgs> onElapsed, bool reset = false)
+    {
+        System.Timers.Timer? timer = new(miliseconds);
+        timer.Elapsed += (s, e) => onElapsed(null, EventArgs.Empty);
+        timer.AutoReset = reset;
+        timers.Add(timer);
+        return timer;
+    }
+
+    protected void RemoveTimer(System.Timers.Timer timer)
+    {
+        if (!timers.Remove(timer))
+        {
+            throw new Exception();
         }
 
-        readonly List<System.Timers.Timer?> timers = [];
+        timer.Stop();
+        timer.Dispose();
+    }
 
-        public Interactive(Dimension dimension, float positionPercentage, Color color) : base(0, color, color)
+    public override void Dispose()
+    {
+        if (timers.Count != 0)
         {
-            Size = Stats.interactiveObjectSize;
-
-            GoToDimension(dimension, positionPercentage);
-
-            body = new Ellipse()
+            for (int i = 0; i < timers.Count; i++)
             {
-                StrokeThickness = strokeThickness,
-                Margin = 0,
-
-                WidthRequest = Size,
-                HeightRequest = Size,
-
-                TranslationX = Position.X,
-                TranslationY = Position.Y,
-                ZIndex = 1
-            };
-            body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
-            body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
-        }
-
-        public void GoToDimension(Dimension dimension, float positionPercentage)
-        {
-            currentDimension = dimension;
-            dimension.AddInteractiveObject(this);
-            sizePercentage = dimension.GetPercentageFromDistance(Size);
-
-            PositionPercentage = positionPercentage;
-            Position = dimension.GetPositionInShape(this.positionPercentage, Size / 2);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="offsetPercentage">positive values move clockwise</param>
-        public void MovePositionByPercentage(float offsetPercentage)
-        {
-            PositionPercentage += offsetPercentage;
-            Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
-        }
-
-
-        protected System.Timers.Timer SetUpTimer(int miliseconds, Action<object?, EventArgs> onElapsed, bool reset = false)
-        {
-            System.Timers.Timer? timer = new(miliseconds);
-            timer.Elapsed += (s, e) => onElapsed(null, EventArgs.Empty);
-            timer.AutoReset = reset;
-            timers.Add(timer);
-            return timer;
-        }
-
-        protected void RemoveTimer(System.Timers.Timer timer)
-        {
-            if (!timers.Remove(timer))
-            {
-                throw new Exception();
-            }
-
-            timer.Stop();
-            timer.Dispose();
-        }
-
-        public override void Dispose()
-        {
-            if (timers.Count != 0)
-            {
-                for (int i = 0; i < timers.Count; i++)
+                if (timers[i] is not null)
                 {
-                    if (timers[i] is not null)
-                    {
-                        timers[i]?.Stop();
-                        timers[i]?.Dispose();
-                        timers[i] = null;
-                    }
+                    timers[i]?.Stop();
+                    timers[i]?.Dispose();
+                    timers[i] = null;
                 }
             }
-            disposed = true;
-
-            base.Dispose();
-            currentDimension.RemoveInteractiveObject(this);
         }
+        disposed = true;
+
+        base.Dispose();
+        currentDimension.RemoveInteractiveObject(this);
     }
 }

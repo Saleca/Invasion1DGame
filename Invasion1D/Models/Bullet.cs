@@ -1,4 +1,5 @@
 ﻿using Invasion1D.Data;
+using Invasion1D.Logic;
 
 namespace Invasion1D.Models
 {
@@ -15,7 +16,8 @@ namespace Invasion1D.Models
         readonly System.Timers.Timer?
             cooldownTimer;
 
-        public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color) : base(dimension, position, color, Stats.bulletSpeed)
+        public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color)
+            : base(dimension, position, color, Stats.bulletSpeed)
         {
             this.direction = direction;
             this.weave = weave;
@@ -30,12 +32,12 @@ namespace Invasion1D.Models
                 cooldownTimer = SetUpTimer(Stats.bulletDuration, (o, e) => TakeDamage(damage));
                 cooldownTimer.Start();
             }
-            Game.universe.bullets.Add(this);
+            Game.Instance.universe.bullets.Add(this);
         }
 
         public static void AddToUI(Bullet bullet)
         {
-            Game.GamePageInstance.AddToMap(bullet.body);
+            Game.Instance.UI.AddToMap(bullet.body);
         }
 
         public override void Move()
@@ -68,21 +70,6 @@ namespace Invasion1D.Models
                 MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(stepDistance));
             }
         }
-
-        /*public void Pause(bool pause)
-        {
-            if (pause)
-            {
-                cooldownTimer?.Stop();
-                //get elapsed time
-            }
-            else
-            {
-                //account for already elapsed time
-                cooldownTimer?.Start();
-
-            }
-        }*/
 
         public override void TakeDamage(float damage)
         {

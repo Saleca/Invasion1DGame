@@ -1,77 +1,78 @@
-﻿using Timer = System.Timers.Timer;
+﻿using Invasion1D.Logic;
+using Timer = System.Timers.Timer;
 
-namespace Invasion1D.Controls
+namespace Invasion1D.Controls;
+
+public class InvertedCooldownProgressBar : InvertedProgressBar
 {
-    public class InvertedCooldownProgressBar : InvertedProgressBar
+    readonly Timer timer;
+
+    int interval;
+    public int Interval
     {
-        readonly Timer timer;
-
-        int interval;
-        public int Interval
+        get => interval;
+        set
         {
-            get => interval;
-            set
+            interval = value;
+            if (timer.Interval != interval)
             {
-                interval = value;
-                if (timer.Interval != interval)
-                {
-                    timer.Interval = value;
-                }
+                timer.Interval = value;
             }
         }
+    }
 
-        public float Increment { get; set; }
-        public bool Cancel { get; set; }
-        public EventHandler CooldownCompleted = null!;
+    public float Increment { get; set; }
+    public bool Cancel { get; set; }
+    public EventHandler CooldownCompleted = null!;
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="color">Color of the progress bar</param>
-        /// <param name="interval">Interval in miliseconds to update the automated cooldown</param>
-        /// <param name="increment">Increment of the progress bar at the end of each interval</param>
-        public InvertedCooldownProgressBar(Color color, int interval, float increment) : base(color)
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="color">Color of the progress bar</param>
+    /// <param name="interval">Interval in miliseconds to update the automated cooldown</param>
+    /// <param name="increment">Increment of the progress bar at the end of each interval</param>
+    public InvertedCooldownProgressBar(Color color, int interval, float increment)
+        : base(color)
+    {
+        Progress = 0;
+
+        Cancel = false;
+        timer = new(interval);
+        timer.Elapsed += (s, e) => OnCooldownElapsed(null, EventArgs.Empty);
+
+        Interval = interval;
+        Increment = increment;
+    }
+
+    public void ActivateCooldown()
+    {
+        Game.Instance.UI.RunOnUIThread(() => Progress = 1);
+        timer.Start();
+    }
+
+    protected void OnCooldownElapsed(object? sender, EventArgs e)
+    {
+        Game.Instance.UI.RunOnUIThread(() =>
         {
-            Progress = 0;
-
-            Cancel = false;
-            timer = new(interval);
-            timer.Elapsed += (s, e) => OnCooldownElapsed(null, EventArgs.Empty);
-
-            Interval = interval;
-            Increment = increment;
-        }
-
-        public void ActivateCooldown()
-        {
-            Game.GamePageInstance.RunOnUIThread(() => Progress = 1);
-            timer.Start();
-        }
-
-        protected void OnCooldownElapsed(object? sender, EventArgs e)
-        {
-            Game.GamePageInstance.RunOnUIThread(() =>
+            if (Cancel)
             {
-                if (Cancel)
-                {
-                    return;
-                }
-                Progress -= Increment;
+                return;
+            }
+            Progress -= Increment;
+        });
+
+        if (Progress <= 0)
+        {
+            timer.Stop();
+            Game.Instance.UI.RunOnUIThread(() =>
+            {
+                CooldownCompleted?.Invoke(this, EventArgs.Empty);
             });
-
-            if (Progress <= 0)
-            {
-                timer.Stop();
-                Game.GamePageInstance.RunOnUIThread(() =>
-                {
-                    CooldownCompleted?.Invoke(this, EventArgs.Empty);
-                });
-            }
         }
+    }
 
-        public void Dispose()
-        {
-            timer.Dispose();
-        }
+    public void Dispose()
+    {
+        timer.Dispose();
     }
 }
