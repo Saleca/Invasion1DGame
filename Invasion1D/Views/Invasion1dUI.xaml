@@ -96,7 +96,6 @@
             Margin="5,0"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
-            <!-- TODO: check why PlayerView  to be nested in mainframe with Frame>AbsoluteLayout>Frame -->
             <Frame 
                 Grid.ColumnSpan="2"
                 Style="{StaticResource MainFrame}"

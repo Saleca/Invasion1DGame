@@ -59,6 +59,13 @@ internal class Game
         while (cancelUpdate is not null
             && !cancelUpdate.IsCancellationRequested)
         {
+            if (isPaused)
+            {
+                await Task.Delay(100, cancelUpdate.Token);
+                continue;
+            }
+            Stopwatch sw = Stopwatch.StartNew();
+
             try
             {
                 UpdateGameObjects();
@@ -78,10 +85,8 @@ internal class Game
                     UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
                 });
 
-                //TODO:
-                //measure current frame compute time and delay only the difference between prefered framerate time and compute time
-                await Task.Delay(100, cancelUpdate.Token);
                 await uiTask;
+                
             }
             catch (OperationCanceledException)
             {
@@ -91,6 +96,12 @@ internal class Game
             {
                 Debug.WriteLine($"An error occurred: {ex.Message}");
                 break;
+            }
+
+            int frameTime = 100 - (int)sw.ElapsedMilliseconds;
+            if (frameTime > 0)
+            {
+                await Task.Delay(frameTime, cancelUpdate.Token);
             }
         }
     }

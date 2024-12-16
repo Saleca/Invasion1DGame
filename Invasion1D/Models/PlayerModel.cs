@@ -61,14 +61,14 @@ public class PlayerModel : Character
 
     internal async Task WarpAnimation(PointF start, PointF end)
     {
-        Debug.WriteLine($"{Game.Instance.UI.PlayerViewAccess.X}, {Game.Instance.UI.PlayerViewAccess.Y}");
-        Debug.WriteLine($"{Game.Instance.UI.PlayerViewAccess.Width}, {Game.Instance.UI.PlayerViewAccess.Height}");
+        Debug.WriteLine($"{Game.Instance.UI.MainFrameAccess.X}, {Game.Instance.UI.MainFrameAccess.Y}");
+        Debug.WriteLine($"{Game.Instance.UI.MainFrameAccess.Width}, {Game.Instance.UI.MainFrameAccess.Height}");
         Debug.WriteLine(start);
         Debug.WriteLine(end);
 
         float offset = Size - strokeThickness,
-            mapOffsetX = (float)Game.Instance.UI.PlayerViewAccess.Width / 2 - offset,
-            mapOffsetY = (float)Game.Instance.UI.PlayerViewAccess.Height / 2 - offset,
+            mapOffsetX = (float)Game.Instance.UI.MainFrameAccess.Width / 2 - offset,
+            mapOffsetY = (float)Game.Instance.UI.MainFrameAccess.Height / 2 - offset,
             startX = mapOffsetX - start.X,
             startY = mapOffsetY - start.Y,
             endX = mapOffsetX - end.X,

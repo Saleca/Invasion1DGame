@@ -35,7 +35,7 @@ public partial class Invasion1dUI : ContentPage
     }
 
     public Frame
-        PlayerViewAccess => PlayerView;
+        MainFrameAccess => MainFrame;
     public AbsoluteLayout
         MapViewAccess => MapView;
 
