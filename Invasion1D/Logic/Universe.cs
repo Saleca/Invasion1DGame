@@ -2,13 +2,10 @@
 using Invasion1D.Models;
 using System.Diagnostics;
 
-namespace Invasion1D
+namespace Invasion1D.Logic
 {
     public class Universe
     {
-        static App Game =>
-            ((App)Application.Current!);
-
         public readonly List<Dimension>
             dimensions = [];
 
@@ -39,9 +36,9 @@ namespace Invasion1D
             player.GetView(
                 view: out Color? view,
                 rearView: out Color? rearView);
-            Game.GamePageInstance.UpdateView(view, rearView);
+            Game.Instance.UI.UpdateView(view, rearView);
 
-            Game.GamePageInstance.Draw();
+            Game.Instance.UI.Draw();
         }
 
         public void Start()

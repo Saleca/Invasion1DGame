@@ -1,115 +1,116 @@
 ﻿using Invasion1D.Data;
+using Invasion1D.Logic;
 using Timer = System.Timers.Timer;
 
-namespace Invasion1D.Models
+namespace Invasion1D.Models;
+
+public abstract class Character : Kinetic
 {
-    public abstract class Character : Kinetic
+    public float
+        health = 1,
+        vitalux = 1,
+        vitaAttackCost = 0.25f,
+        weaveAttackCost = 0.50f;
+
+    public int
+        warpium = 1;
+
+    public bool
+        weave = false;
+
+    float weaveCooldownProgress = 1;
+    public Timer weaveCooldownTimer = null!;
+
+    public Character(Dimension dimension, float position, Color color, float speed)
+        : base(dimension, position, color, speed)
     {
-        public float
-            health = 1,
-            vitalux = 1,
-            vitaAttackCost = 0.25f,
-            weaveAttackCost = 0.50f;
+        weaveCooldownTimer = SetUpTimer(Stats.smoothIncrementIntervalMS, OnWeaveCooldownElapsed, true);
+    }
 
-        public int
-            warpium = 1;
+    //temporary
+    public void EndWeaveCooldown(bool weave) => this.weave = weave;
 
-        public bool
-            weave = false;
+    /// <summary>
+    /// uses vitalux to inflict damage
+    /// </summary>
+    public abstract void Attack();
 
-        float weaveCooldownProgress = 1;
-        public Timer weaveCooldownTimer = null!;
+    public void AddVitalux(float amount, out float remaining)
+    {
+        remaining = amount;
+        if (vitalux >= 1) return;
 
-        public Character(Dimension dimension, float position, Color color, float speed) : base(dimension, position, color, speed)
+        vitalux += amount;
+        if (vitalux > 1)
         {
-            weaveCooldownTimer = SetUpTimer(Stats.smoothIncrementIntervalMS, OnWeaveCooldownElapsed, true);
-        }
-
-        //temporary
-        public void EndWeaveCooldown(bool weave) => this.weave = weave;
-
-        /// <summary>
-        /// uses vitalux to inflict damage
-        /// </summary>
-        public abstract void Attack();
-
-        public void AddVitalux(float amount, out float remaining)
-        {
-            remaining = amount;
-            if (vitalux >= 1) return;
-
-            vitalux += amount;
-            if (vitalux > 1)
-            {
-                remaining = vitalux - 1;
-                vitalux = 1;
-            }
-            else
-            {
-                remaining = 0;
-            }
-        }
-
-        public void AddHealth(float amount, out float remaining)
-        {
-            remaining = amount;
-            if (health >= 1) return;
-
-            health += amount;
-            if (health > 1)
-            {
-                remaining = health - 1;
-                health = 1;
-            }
-            else
-            {
-                remaining = 0;
-            }
-        }
-
-        public void AddWarpium() => warpium++;
-
-        public bool AddWeave()
-        {
-            if (weave)
-                return false;
-
+            remaining = vitalux - 1;
             vitalux = 1;
-            weave = true;
-
-            ActivateWeaveCooldown();
-
-            return true;
         }
-
-        public void ActivateWeaveCooldown()
+        else
         {
-            weaveCooldownProgress = 1;
-            if (this is PlayerModel)
-            {
-                Game.GamePageInstance.RunOnUIThread(() => Game.GamePageInstance.UpdateWeave(weaveCooldownProgress));
-            }
-            weaveCooldownTimer?.Start();
+            remaining = 0;
         }
-        protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
+    }
+
+    public void AddHealth(float amount, out float remaining)
+    {
+        remaining = amount;
+        if (health >= 1) return;
+
+        health += amount;
+        if (health > 1)
         {
-            weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
-            if (this is PlayerModel)
+            remaining = health - 1;
+            health = 1;
+        }
+        else
+        {
+            remaining = 0;
+        }
+    }
+
+    public void AddWarpium() => warpium++;
+
+    public bool AddWeave()
+    {
+        if (weave)
+            return false;
+
+        vitalux = 1;
+        weave = true;
+
+        ActivateWeaveCooldown();
+
+        return true;
+    }
+
+    public void ActivateWeaveCooldown()
+    {
+        weaveCooldownProgress = 1;
+        if (this is PlayerModel)
+        {
+            Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateWeave(weaveCooldownProgress));
+        }
+        weaveCooldownTimer?.Start();
+    }
+    protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
+    {
+        weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
+        if (this is PlayerModel)
+        {
+            Game.Instance.UI.RunOnUIThread(() =>
             {
-                Game.GamePageInstance.RunOnUIThread(() =>
+                if (disposed)
                 {
-                    if (disposed)
-                    {
-                        return;
-                    }
-                    Game.GamePageInstance.UpdateWeave(weaveCooldownProgress);
-                });
-            }
-            if (weaveCooldownProgress <= 0)
-            {
-                weaveCooldownTimer?.Stop();
-                weave = false;
-            }
+                    return;
+                }
+                Game.Instance.UI.UpdateWeave(weaveCooldownProgress);
+            });
+        }
+        if (weaveCooldownProgress <= 0)
+        {
+            weaveCooldownTimer?.Stop();
+            weave = false;
         }
     }
 }

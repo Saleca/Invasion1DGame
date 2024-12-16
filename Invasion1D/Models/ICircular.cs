@@ -1,8 +1,7 @@
-﻿namespace Invasion1D.Models
+﻿namespace Invasion1D.Models;
+
+public interface ICircular
 {
-	public interface ICircular
-	{
-		public PointF Position { get; set; }
-		public float Size { get; init; }
-	}
+	public PointF Position { get; set; }
+	public float Size { get; init; }
 }

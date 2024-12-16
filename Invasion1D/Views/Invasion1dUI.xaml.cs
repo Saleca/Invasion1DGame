@@ -1,17 +1,15 @@
 ﻿using Invasion1D.Controls;
 using Invasion1D.Data;
 using Invasion1D.Helpers;
+using Invasion1D.Logic;
 using Microsoft.Maui.Controls.Shapes;
 
 namespace Invasion1D.Views;
 
-public partial class GamePage : ContentPage
+public partial class Invasion1dUI : ContentPage
 {
     readonly bool
         debug = true;
-
-    static App Game =>
-        ((App)Application.Current!);
 
     public bool
         isMapVisible = false;
@@ -49,7 +47,7 @@ public partial class GamePage : ContentPage
         ShootCooldownProgressBar = null!,
         WarpCooldownProgressBar = null!;
 
-    public GamePage()
+    public Invasion1dUI()
     {
         InitializeComponent();
         MainFrame.SizeChanged += ViewSizeChanged;
@@ -81,7 +79,7 @@ public partial class GamePage : ContentPage
 
     public void Draw()
     {
-        foreach (var dimension in Game.universe.dimensions)
+        foreach (var dimension in Game.Instance.universe.dimensions)
         {
             MapView.Add(dimension.body);
 
@@ -154,7 +152,6 @@ public partial class GamePage : ContentPage
         }
     }
 
-
     public void ActivateWarpCooldown()
     {
         ShowWarpKey(false);
@@ -200,14 +197,9 @@ public partial class GamePage : ContentPage
         WarpiumContainer.Clear();
     }
 
-    public void UpdateStartKeyText(string text)
-    {
-        InitKey.Text = text;
-    }
-
     public void AddToMap(Shape shape)
     {
-        Game.GamePageInstance.RunOnUIThread(() => MapView.Children.Add(shape));
+        Game.Instance.UI.RunOnUIThread(() => MapView.Children.Add(shape));
     }
 
     public void RemoveFromMap(Shape shape)
@@ -312,29 +304,29 @@ public partial class GamePage : ContentPage
 
     private void OnWindowDestroying(object? sender, EventArgs e)
     {
-        Game.CancelUpdate();
+        Game.Instance.CancelUpdate();
     }
 
-    private void NegPressed(object sender, EventArgs e) => Game.universe.player.NegativeMove();
-    private void NegReleased(object sender, EventArgs e) => Game.universe.player.StopMovement();
+    private void NegPressed(object sender, EventArgs e) => Game.Instance.universe.player.NegativeMove();
+    private void NegReleased(object sender, EventArgs e) => Game.Instance.universe.player.StopMovement();
 
-    private void PosPressed(object sender, EventArgs e) => Game.universe.player.PositiveMove();
-    private void PosReleased(object sender, EventArgs e) => Game.universe.player.StopMovement();
+    private void PosPressed(object sender, EventArgs e) => Game.Instance.universe.player.PositiveMove();
+    private void PosReleased(object sender, EventArgs e) => Game.Instance.universe.player.StopMovement();
 
-    private void ShootClicked(object sender, EventArgs e) => Game.universe.player.Attack();
-    private void WarpClicked(object sender, EventArgs e) => Game.universe.player.Warp();
+    private void ShootClicked(object sender, EventArgs e) => Game.Instance.universe.player.Attack();
+    private void WarpClicked(object sender, EventArgs e) => Game.Instance.universe.player.Warp();
 
     private void PauseButtonClicked(object sender, EventArgs e)
     {
-        Game.Pause(!Game.IsPaused);
-        ShowPopUpMenu(Game.IsPaused, Game.IsPaused ? "Pause Menu" : "");
-        ShowControls(!Game.IsPaused);
-    }
-
-    private void InitClicked(object sender, EventArgs e)
-    {
-        ShowPopUpMenu(false);
-        Game.Start();
+        Game.Instance.Pause(!Game.Instance.IsPaused);
+        ShowPopUpMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause Menu" : "");
+        ShowControls(!Game.Instance.IsPaused);
     }
     private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
+
+    private void RestartClicked(object sender, EventArgs e)
+    {
+        ShowPopUpMenu(false);
+        Game.Instance.Start();
+    }
 }

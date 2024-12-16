@@ -2,9 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Invasion1D.Controls"
-             x:Class="Invasion1D.Views.GamePage"
+             x:Class="Invasion1D.Views.Invasion1dUI"
              Style="{StaticResource ContentPage}"
-             Title="Invasion1D">
+             Title="Invasion 1D">
 
     <Grid RowDefinitions="2*,6*,2*">
         <Grid 
@@ -89,13 +89,14 @@
                     Grid.Column="2"/>
             </Grid>
         </Grid>
+        
         <Grid 
             Grid.Row="1"
             ColumnDefinitions="*,*"
             Margin="5,0"
             HorizontalOptions="FillAndExpand"
             VerticalOptions="FillAndExpand">
-            
+            <!-- TODO: check why PlayerView  to be nested in mainframe with Frame>AbsoluteLayout>Frame -->
             <Frame 
                 Grid.ColumnSpan="2"
                 Style="{StaticResource MainFrame}"
@@ -164,11 +165,12 @@
         <local:PopUpMenu 
             x:Name="Menu"
             Grid.RowSpan="3"
-            Title="Start Menu">
+            Title="Pause"
+            IsVisible="False">
             <Button
-                Text="Start"
-                Clicked="InitClicked"
-                x:Name="InitKey"
+                Text="Restart"
+                Clicked="RestartClicked"
+                x:Name="RestartKey"
                 Padding="20,10"/>
             <Button
                 Text="View Map"
