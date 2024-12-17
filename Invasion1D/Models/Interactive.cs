@@ -21,8 +21,6 @@ public abstract class Interactive : GFX, ICircular
         set => positionPercentage = (value + 1) % 1;
     }
 
-    readonly List<System.Timers.Timer?> timers = [];
-
     public Interactive(Dimension dimension, float positionPercentage, Color color)
         : base(0, color, color)
     {
@@ -66,40 +64,8 @@ public abstract class Interactive : GFX, ICircular
         Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
     }
 
-    protected System.Timers.Timer SetUpTimer(int miliseconds, Action<object?, EventArgs> onElapsed, bool reset = false)
-    {
-        System.Timers.Timer? timer = new(miliseconds);
-        timer.Elapsed += (s, e) => onElapsed(null, EventArgs.Empty);
-        timer.AutoReset = reset;
-        timers.Add(timer);
-        return timer;
-    }
-
-    protected void RemoveTimer(System.Timers.Timer timer)
-    {
-        if (!timers.Remove(timer))
-        {
-            throw new Exception();
-        }
-
-        timer.Stop();
-        timer.Dispose();
-    }
-
     public override void Dispose()
     {
-        if (timers.Count != 0)
-        {
-            for (int i = 0; i < timers.Count; i++)
-            {
-                if (timers[i] is not null)
-                {
-                    timers[i]?.Stop();
-                    timers[i]?.Dispose();
-                    timers[i] = null;
-                }
-            }
-        }
         disposed = true;
 
         base.Dispose();
