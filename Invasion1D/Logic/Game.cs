@@ -86,7 +86,7 @@ internal class Game
                 });
 
                 await uiTask;
-                
+
             }
             catch (OperationCanceledException)
             {
@@ -157,6 +157,7 @@ internal class Game
     {
         foreach (var enemy in universe.enemies)
         {
+            enemy.Tick();//temporary till i abstract the update logic 
             if (enemy.toReact)
             {
                 enemy.React();
@@ -170,10 +171,12 @@ internal class Game
 
         foreach (var bullet in universe.bullets)
         {
+            bullet.Tick();
             bullet.Move();
             objectsToUpdateUI.Add(bullet);
         }
 
+        universe.player.Tick();
         if (universe.player.isMoving)
         {
             universe.player.Move();

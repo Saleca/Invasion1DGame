@@ -4,8 +4,11 @@ using Timer = System.Timers.Timer;
 
 namespace Invasion1D.Models;
 
-public abstract class Character : Kinetic
+public abstract class Character(Dimension dimension, float position, Color color, float speed)
+    : Kinetic(dimension, position, color, speed)
 {
+    int weaveCooldown = -1;
+
     public float
         health = 1,
         vitalux = 1,
@@ -19,15 +22,41 @@ public abstract class Character : Kinetic
         weave = false;
 
     float weaveCooldownProgress = 1;
-    public Timer weaveCooldownTimer = null!;
-
-    public Character(Dimension dimension, float position, Color color, float speed)
-        : base(dimension, position, color, speed)
-    {
-        weaveCooldownTimer = SetUpTimer(Stats.smoothIncrementIntervalMS, OnWeaveCooldownElapsed, true);
-    }
 
     //temporary
+    public void Tick()
+    {
+        if (weaveCooldown == -1)
+            return;
+
+        weaveCooldown--;
+        if (weaveCooldown != 0)
+        {
+            return;
+        }
+
+        weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
+        if (this is PlayerModel)
+        {
+            Game.Instance.UI.RunOnUIThread(() =>
+            {
+                if (disposed)
+                {
+                    return;
+                }
+                Game.Instance.UI.UpdateWeave(weaveCooldownProgress);
+            });
+        }
+
+        if (weaveCooldownProgress <= 0)
+        {
+            weaveCooldown = -1;
+            weave = false;
+            return;
+        }
+
+        weaveCooldown = Stats.smoothIncrementIntervalF;
+    }
     public void EndWeaveCooldown(bool weave) => this.weave = weave;
 
     /// <summary>
@@ -91,26 +120,6 @@ public abstract class Character : Kinetic
         {
             Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateWeave(weaveCooldownProgress));
         }
-        weaveCooldownTimer?.Start();
-    }
-    protected void OnWeaveCooldownElapsed(object? sender, EventArgs e)
-    {
-        weaveCooldownProgress -= Stats.weaveCoolDownIncrement;
-        if (this is PlayerModel)
-        {
-            Game.Instance.UI.RunOnUIThread(() =>
-            {
-                if (disposed)
-                {
-                    return;
-                }
-                Game.Instance.UI.UpdateWeave(weaveCooldownProgress);
-            });
-        }
-        if (weaveCooldownProgress <= 0)
-        {
-            weaveCooldownTimer?.Stop();
-            weave = false;
-        }
+        weaveCooldown = Stats.smoothIncrementIntervalF;
     }
 }

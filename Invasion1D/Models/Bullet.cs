@@ -6,21 +6,15 @@ namespace Invasion1D.Models
     public class Bullet : Kinetic
     {
         public float
-            condition;
-        public float
+            condition,
             damage;
 
-        readonly bool
-            weave;
-
-        readonly System.Timers.Timer?
-            cooldownTimer;
+        int cooldownTimer = -1;
 
         public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color)
             : base(dimension, position, color, Stats.bulletSpeed)
         {
             this.direction = direction;
-            this.weave = weave;
             if (weave)
             {
                 damage = condition = Stats.weaveAttackDamage;
@@ -29,10 +23,25 @@ namespace Invasion1D.Models
             {
                 damage = condition = Stats.regularAttackDamage;
 
-                cooldownTimer = SetUpTimer(Stats.bulletDuration, (o, e) => TakeDamage(damage));
-                cooldownTimer.Start();
+                cooldownTimer = Stats.bulletDurationF;
             }
             Game.Instance.universe.bullets.Add(this);
+        }
+
+        public void Tick()
+        {
+            if (cooldownTimer == -1)
+            {
+                return;
+            }
+
+            cooldownTimer--;
+            if (cooldownTimer != 0)
+            {
+                return;
+            }
+
+            TakeDamage(damage);
         }
 
         public static void AddToUI(Bullet bullet)

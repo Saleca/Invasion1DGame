@@ -69,7 +69,7 @@ public partial class Invasion1dUI : ContentPage
             new InvertedProgressBar(GameColors.Weave);
 
         ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
-            new InvertedCooldownProgressBar(GameColors.Vitalux, Stats.smoothIncrementIntervalMS, Stats.shotCoolDownIncrement);
+            new InvertedCooldownProgressBar(GameColors.Vitalux, Stats.smoothIncrementIntervalF, Stats.shotCoolDownIncrement);
         ShootCooldownProgressBar.CooldownCompleted += ShootCooldownCompleted;
 
         WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =

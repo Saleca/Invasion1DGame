@@ -6,30 +6,24 @@ namespace Invasion1D.Models;
 
 public class EnemyModel : Character
 {
-    System.Timers.Timer
-        reactionTimer;
+    int reactionCooldown = -1;
+    public bool toReact = false;
 
-    public bool
-        toReact = false;
-
-    Interactive?
-        targetInSight;
+    Interactive? targetInSight;
 
     public EnemyModel(Dimension shape, float position, float speed)
         : base(shape, position, GameColors.Enemy, speed)
     {
         direction = Game.Instance.RandomDirection();
-        reactionTimer = SetUpTimer(Game.Instance.throwDice.Next(Stats.minEnemyReaction, Stats.maxEnemyReaction), OnElapsedReactionTimer);
+        reactionCooldown = Game.Instance.throwDice.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
     }
 
     public void Start()
     {
-        reactionTimer.Start();
         toReact = false;
     }
     public void Stop()
     {
-        reactionTimer.Stop();
         toReact = false;
     }
 
@@ -145,15 +139,10 @@ public class EnemyModel : Character
         RestartReactionTimer();
     }
 
-    private void OnElapsedReactionTimer(object? sender, EventArgs e)
-    {
-        toReact = true;
-    }
-
     void RestartReactionTimer()
     {
         toReact = false;
-        reactionTimer.Start();
+        reactionCooldown = Game.Instance.throwDice.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
     }
 
     void MoveToTarget()
@@ -177,5 +166,21 @@ public class EnemyModel : Character
         }
 
         toDispose = true;
+    }
+
+    internal new void Tick()
+    {
+        base.Tick();
+        if (reactionCooldown == -1)
+            return;
+
+        reactionCooldown--;
+        if (reactionCooldown != 0)
+        {
+            return;
+        }
+
+        toReact = true;
+        reactionCooldown = -1;
     }
 }
