@@ -89,32 +89,50 @@
                     Grid.Column="2"/>
             </Grid>
         </Grid>
-        
-        <Grid 
+
+        <Frame 
             Grid.Row="1"
-            ColumnDefinitions="*,*"
             Margin="5,0"
             HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand">
-            <Frame 
-                Grid.ColumnSpan="2"
-                Style="{StaticResource MainFrame}"
-                x:Name="MainFrame">
-                <AbsoluteLayout>
-                    <Frame
-                        Style="{StaticResource ViewFrame}"
-                        BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
-                        x:Name="PlayerView"
-                        AbsoluteLayout.LayoutBounds="0.5, 0.5, -1, -1"
-                        AbsoluteLayout.LayoutFlags="PositionProportional"/>
-                </AbsoluteLayout>
-            </Frame>
-            <AbsoluteLayout
-                Grid.ColumnSpan="2"
-                IsVisible="false"
-                Padding="0"
-                x:Name="MapView"/>
-        </Grid>
+            VerticalOptions="FillAndExpand"
+                
+            Style="{StaticResource MainFrame}"
+            x:Name="MainFrame">
+            <AbsoluteLayout>
+                <Frame
+                    Style="{StaticResource ViewFrame}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                    x:Name="PlayerView"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    />
+
+                <AbsoluteLayout
+                    Padding="0"
+                    x:Name="MapView"
+                    />
+
+                <local:PopUpMenu 
+                    x:Name="Menu"
+                    AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize, AutoSize"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
+                    
+                    Title="Pause"
+                    IsVisible="False">
+                    <Button
+                        Text="Restart"
+                        Clicked="RestartClicked"
+                        x:Name="RestartKey"
+                        Padding="20,10"/>
+                    <Button
+                        Text="View Map"
+                        Clicked="MapModeClicked"
+                        x:Name="MapModeKey"
+                        Padding="20,10"
+                        IsVisible="false"/>
+                </local:PopUpMenu>
+            </AbsoluteLayout>
+        </Frame>
 
         <Grid
             x:Name="ControlsGrid"
@@ -130,7 +148,8 @@
                 Text="&lt;--"
                 Pressed="NegPressed"
                 Released="NegReleased"
-                x:Name="NegKey"/>
+                x:Name="NegKey"
+                />
             <Button
                 Grid.Row="0"
                 Grid.Column="1"
@@ -160,23 +179,5 @@
                     Clicked="WarpClicked"/>
             </Grid>
         </Grid>
-
-        <local:PopUpMenu 
-            x:Name="Menu"
-            Grid.RowSpan="3"
-            Title="Pause"
-            IsVisible="False">
-            <Button
-                Text="Restart"
-                Clicked="RestartClicked"
-                x:Name="RestartKey"
-                Padding="20,10"/>
-            <Button
-                Text="View Map"
-                Clicked="MapModeClicked"
-                x:Name="MapModeKey"
-                Padding="20,10"
-                IsVisible="false"/>
-        </local:PopUpMenu>
     </Grid>
 </ContentPage>

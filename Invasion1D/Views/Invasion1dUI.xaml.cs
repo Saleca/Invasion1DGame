@@ -3,6 +3,7 @@ using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
 using Microsoft.Maui.Controls.Shapes;
+using System.Diagnostics;
 
 namespace Invasion1D.Views;
 
@@ -51,10 +52,17 @@ public partial class Invasion1dUI : ContentPage
     {
         InitializeComponent();
         MainFrame.SizeChanged += ViewSizeChanged;
+        MapView.SizeChanged += InitializeMap;
         if (debug)
         {
             MapModeKey.IsVisible = true;
         }
+    }
+
+    private void InitializeMap(object? sender, EventArgs e)
+    {
+        MapView.IsVisible = false;
+        CenterMapView(null, EventArgs.Empty);
     }
 
     public void Initiate()
@@ -259,22 +267,29 @@ public partial class Invasion1dUI : ContentPage
         if (isMapVisible)
         {
             MapView.IsVisible = true;
-            Grid.SetColumn(MainFrame, 0);
-            Grid.SetColumnSpan(MainFrame, 1);
-            Grid.SetColumn(MapView, 1);
-            Grid.SetColumnSpan(MapView, 1);
-            MapView.Scale = 1;
-            MapView.TranslationX = 0;
-            MapView.TranslationY = 0;
+            CenterMapView(null, EventArgs.Empty);
         }
         else
         {
             MapView.IsVisible = false;
-            Grid.SetColumn(MainFrame, 0);
-            Grid.SetColumnSpan(MainFrame, 2);
-            Grid.SetColumn(MapView, 0);
-            Grid.SetColumnSpan(MapView, 2);
         }
+    }
+
+    public void CenterMapView(object? sender, EventArgs e)
+    {
+        if (!isMapVisible)
+        {
+            return;
+        }
+
+        double scaleX = MainFrame.Width / MapView.Width;
+        double scaleY = MainFrame.Height / MapView.Height;
+
+        double scale = Math.Min(scaleX, scaleY);
+        MapView.Scale = scale;
+
+        MapView.TranslationX = (MainFrame.Width - MapView.Width) / 2;
+        MapView.TranslationY = (MainFrame.Height - MapView.Height) / 2;
     }
 
     public void RunOnUIThread(Action action)
@@ -300,6 +315,8 @@ public partial class Invasion1dUI : ContentPage
         double size = Math.Max(MainFrame.Width, MainFrame.Height);
         PlayerView.WidthRequest = size;
         PlayerView.HeightRequest = size;
+
+        CenterMapView(null, EventArgs.Empty);
     }
 
     private void OnWindowDestroying(object? sender, EventArgs e)

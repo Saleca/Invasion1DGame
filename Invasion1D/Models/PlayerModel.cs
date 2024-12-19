@@ -1,6 +1,7 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
+using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
@@ -60,38 +61,35 @@ public class PlayerModel : Character
 
     internal async Task WarpAnimation(PointF start, PointF end)
     {
-        float offset = Size - strokeThickness,
-            mapOffsetX = (float)Game.Instance.UI.MainFrameAccess.Width / 2 - offset,
-            mapOffsetY = (float)Game.Instance.UI.MainFrameAccess.Height / 2 - offset,
-            startX = mapOffsetX - start.X,
-            startY = mapOffsetY - start.Y,
-            endX = mapOffsetX - end.X,
-            endY = mapOffsetY - end.Y;
+        const float scale = 5;
 
-        float scale = default!,
-            endScaledX = default!,
-            endScaledY = default!,
-            midX = default!,
-            midY = default!;
+        float playerOffset = Size - strokeThickness,
+            mainFrameCenterX = (float)(Game.Instance.UI.MainFrameAccess.Width / 2) - playerOffset,
+            mainFrameCenterY = (float)(Game.Instance.UI.MainFrameAccess.Height / 2) - playerOffset,
+
+            //mid position is reached with scale 1
+            midPositionX = GameMath.LinearInterpolation(mainFrameCenterX - start.X, mainFrameCenterX - end.X, 0.5f),
+            midPositionY = GameMath.LinearInterpolation(mainFrameCenterY - start.Y, mainFrameCenterY - end.Y, 0.5f),
+
+            offsetX = mainFrameCenterX - (float)Game.Instance.UI.MapViewAccess.Width / 2,
+            offsetY = mainFrameCenterY - (float)Game.Instance.UI.MapViewAccess.Height / 2,
+
+            scaledMapCenterX = (float)Game.Instance.UI.MapViewAccess.Width * scale / 2,
+            scaledMapCenterY = (float)Game.Instance.UI.MapViewAccess.Height * scale / 2,
+
+            startPositionX = offsetX - (start.X * scale - scaledMapCenterX),
+            startPositionY = offsetY - (start.Y * scale - scaledMapCenterY),
+            endPositionX = offsetX - (end.X * scale - scaledMapCenterX),
+            endPositionY = offsetY - (end.Y * scale - scaledMapCenterY);
 
         if (!Game.Instance.UI.isMapVisible)
         {
-            scale = 5;
             Game.Instance.UI.MapViewAccess.Scale = scale;
 
-            float startScaledX = startX * scale,
-            startScaledY = startY * scale;
-            endScaledX = endX * scale;
-            endScaledY = endY * scale;
-
-            midX = GameMath.LinearInterpolation(startX, endX, 0.5f);
-            midY = GameMath.LinearInterpolation(startY, endY, 0.5f);
-
-            Game.Instance.UI.MapViewAccess.TranslationX = startScaledX;
-            Game.Instance.UI.MapViewAccess.TranslationY = startScaledY;
+            Game.Instance.UI.MapViewAccess.TranslationX = startPositionX;
+            Game.Instance.UI.MapViewAccess.TranslationY = startPositionY;
 
             Game.Instance.UI.UpdateView(Colors.Transparent, Colors.Transparent);
-
             Game.Instance.UI.MapViewAccess.IsVisible = true;
         }
 
@@ -101,14 +99,13 @@ public class PlayerModel : Character
 
         if (!Game.Instance.UI.isMapVisible)
         {
-            Task<bool> translateOut = Game.Instance.UI.MapViewAccess.TranslateTo(midX, midY, Stats.halfAnimationDurationMS, Easing.CubicOut);
+            Task<bool> translateOut = Game.Instance.UI.MapViewAccess.TranslateTo(midPositionX, midPositionY, Stats.halfAnimationDurationMS, Easing.CubicOut);
             Task<bool> scaleOut = Game.Instance.UI.MapViewAccess.ScaleTo(1, Stats.halfAnimationDurationMS, Easing.CubicOut);
             await Task.WhenAll(translateOut, scaleOut);
 
-            Task<bool> translateIn = Game.Instance.UI.MapViewAccess.TranslateTo(endScaledX, endScaledY, Stats.halfAnimationDurationMS, Easing.CubicIn);
+            Task<bool> translateIn = Game.Instance.UI.MapViewAccess.TranslateTo(endPositionX, endPositionY, Stats.halfAnimationDurationMS, Easing.CubicIn);
             Task<bool> scaleIn = Game.Instance.UI.MapViewAccess.ScaleTo(scale, Stats.halfAnimationDurationMS, Easing.CubicIn);
             await Task.WhenAll(translateIn, scaleIn);
-
         }
 
         await translatePlayer;

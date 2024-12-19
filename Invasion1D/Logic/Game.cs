@@ -7,26 +7,25 @@ namespace Invasion1D.Logic;
 
 internal class Game
 {
-    static Game instance = new();
+    readonly static Game instance = new();
     public static Game Instance => instance;
+    Game() { } //private constructor
 
+    public readonly Invasion1dUI UI = new();
+    public Random throwDice = null!;
     public Universe universe = null!;
-    public Invasion1dUI UI = new();
-
-    public Random throwDice = new();
 
     //state
     CancellationTokenSource cancelUpdate = null!;
-    List<Kinetic> objectsToUpdateUI = [];
+    readonly List<Kinetic> objectsToUpdateUI = [];
 
     bool
         isStarted = false,
         isPaused = false;
 
-
     public bool IsPaused => isPaused;
 
-    public void Start()
+    public void Start(int seed = 0)
     {
         if (isStarted)
         {
@@ -37,8 +36,11 @@ internal class Game
             UI.Initiate();
         }
 
+        throwDice = new(seed);
+
         universe = new();
         universe.Initiate();
+        UI.CenterMapView(null, EventArgs.Empty);
 
         //TODO
         //select shape on map to start player on that shape
@@ -109,15 +111,6 @@ internal class Game
     public void Pause(bool pause)
     {
         isPaused = pause;
-        //TODO: change cooldown login to work on frames
-        /*foreach (var enemy in universe.enemies)
-        {
-            enemy.Pause(IsPaused);
-        }
-        foreach (var bullet in universe.bullets)
-        {
-            bullet.Pause(IsPaused);
-        }*/
     }
 
     public void Stop()
@@ -230,7 +223,7 @@ internal class Game
         {
             kineticObject.UpdateUI();
         }
-        objectsToUpdateUI = [];
+        objectsToUpdateUI.Clear();
     }
 
     public void CancelUpdate()
