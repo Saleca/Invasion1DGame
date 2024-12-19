@@ -19,4 +19,9 @@ public partial class StartMenu : ContentPage
     {
 
     }
+
+    private void PrivacyPolicy_Clicked(object sender, EventArgs e)
+    {
+        Launcher.OpenAsync("https://saleca.github.io/Home/invasion1d/privacy-policy");
+    }
 }

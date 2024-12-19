@@ -4,27 +4,31 @@
              x:Class="Invasion1D.Views.StartMenu"
              Title="Start Menu">
     <Grid
-        RowDefinitions="2*,*,*,*,*,2*"
-        ColumnDefinitions="3*,*,3*">
+        Margin="100"
+        RowDefinitions="*,*,*,*,*">
+        
         <Label Text="Start Menu"
-               Grid.Row="1"
-               Grid.Column="1"/>
+               Grid.Row="0"/>
 
         <Button
-            Grid.Row="3"
-            Grid.Column="1"
+            Grid.Row="2"
             Text="Start"
             Clicked="Start_Clicked"
             x:Name="Start"
             Padding="20,10"/>
 
         <Button
-            Grid.Row="4"
-            Grid.Column="1"
+            Grid.Row="3"
             Text="Tutorial"
             Clicked="Tutorial_Clicked"
             x:Name="Tutorial"
             Padding="20,10"
             IsEnabled="False"/>
+
+        <Button
+            Grid.Row="4"
+            Text="Privacy Policy"
+            Clicked="PrivacyPolicy_Clicked"
+            x:Name="PrivacyPolicy"/>
     </Grid>
 </ContentPage>
