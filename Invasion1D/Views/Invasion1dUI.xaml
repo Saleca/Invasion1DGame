@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Invasion1D.Controls"
+             xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="Invasion1D.Views.Invasion1dUI"
              Style="{StaticResource ContentPage}"
              Title="Invasion 1D">
@@ -45,15 +46,15 @@
                     Grid.Column="2"
                     Text="Enemies"/>
                 <Label
+                    x:Name="EnemiesLabel"
                     Grid.Row="1"
-                    Grid.Column="2"
-                    x:Name="EnemiesLabel"/>
+                    Grid.Column="2"/>
                 <Button 
+                    x:Name="PauseButton"
                     Text="P"
                     Grid.Column="3"
                     Grid.RowSpan="2"
-                    Clicked="PauseButtonClicked"
-                    x:Name="PauseButton"/>
+                    Clicked="PauseButtonClicked"/>
             </Grid>
             <Grid 
                 Grid.Row="1"
@@ -62,27 +63,27 @@
                 HorizontalOptions="FillAndExpand"
                 VerticalOptions="FillAndExpand">
                 <Label
+                    Text="Health"
                     Grid.Row="0"
-                    Grid.Column="0"
-                    Text="Health"/>
+                    Grid.Column="0"/>
                 <ContentView
                     x:Name="HealthProgressBarContainer"
                     Grid.Row="1"
                     Grid.Column="0"/>
 
                 <Label
+                     Text="Vitalux"
                      Grid.Row="0"
-                     Grid.Column="1"
-                     Text="Vitalux"/>
+                     Grid.Column="1"/>
                 <ContentView
                      x:Name="VitaluxProgressBarContainer"
                      Grid.Row="1"
                      Grid.Column="1"/>
 
                 <Label
+                     Text="Weave"
                      Grid.Row="0"
-                     Grid.Column="2"
-                     Text="Weave"/>
+                     Grid.Column="2"/>
                 <ContentView
                     x:Name="WeaveCooldownProgressBarContainer"
                     Grid.Row="1"
@@ -91,43 +92,48 @@
         </Grid>
 
         <Frame 
+            x:Name="MainFrame"
             Grid.Row="1"
             Margin="5,0"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-                
-            Style="{StaticResource MainFrame}"
-            x:Name="MainFrame">
+            Style="{StaticResource MainFrame}">
             <AbsoluteLayout>
                 <Frame
+                    x:Name="PlayerView"
+                    android:VisualElement.Elevation="0"
                     Style="{StaticResource ViewFrame}"
                     BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
-                    x:Name="PlayerView"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
-                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                    />
+                    AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                 <AbsoluteLayout
-                    Padding="0"
                     x:Name="MapView"
-                    />
-
+                    Padding="0"/>
+                
                 <local:PopUpMenu 
                     x:Name="Menu"
-                    AbsoluteLayout.LayoutBounds="0.5,0.5,AutoSize, AutoSize"
-                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                    
                     Title="Pause"
+                    AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
+                    AbsoluteLayout.LayoutFlags="PositionProportional"
                     IsVisible="False">
+                    <Button 
+                        x:Name="ContinueButton"
+                        Text="Continue"
+                        Padding="20,10"
+                        Clicked="PauseButtonClicked"/>
                     <Button
+                        x:Name="RestartKey"
                         Text="Restart"
                         Clicked="RestartClicked"
-                        x:Name="RestartKey"
                         Padding="20,10"/>
                     <Button
+                        x:Name="LaunchPage"
+                        Text="Back"
+                        Clicked="LaunchPage_Clicked"
+                        Padding="20,10"/>       
+                    <Button
+                        x:Name="MapModeKey"
                         Text="View Map"
                         Clicked="MapModeClicked"
-                        x:Name="MapModeKey"
                         Padding="20,10"
                         IsVisible="false"/>
                 </local:PopUpMenu>
@@ -143,20 +149,19 @@
             VerticalOptions="FillAndExpand"
             IsVisible="false">
             <Button
+                x:Name="NegKey"
                 Grid.Row="0"
                 Grid.Column="0"
                 Text="&lt;--"
                 Pressed="NegPressed"
-                Released="NegReleased"
-                x:Name="NegKey"
-                />
+                Released="NegReleased"/>
             <Button
+                x:Name="PosKey"
                 Grid.Row="0"
                 Grid.Column="1"
                 Text="-->"
                 Pressed="PosPressed"
-                Released="PosReleased"
-                x:Name="PosKey"/>
+                Released="PosReleased"/>
             <Grid 
                 Grid.Row="1"
                 Grid.Column="0">

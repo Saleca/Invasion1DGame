@@ -51,8 +51,10 @@ public partial class Invasion1dUI : ContentPage
     public Invasion1dUI()
     {
         InitializeComponent();
+        
         MainFrame.SizeChanged += ViewSizeChanged;
         MapView.SizeChanged += InitializeMap;
+
         if (debug)
         {
             MapModeKey.IsVisible = true;
@@ -118,10 +120,12 @@ public partial class Invasion1dUI : ContentPage
         PlayerView.Background = new RadialGradientBrush(
             gradientStops:
             [
-                new GradientStop { Color = forwardView, Offset = 0.6f },
-                new GradientStop { Color = rearView, Offset = 0.8f }
+                new GradientStop { Color = forwardView, Offset = .8f },
+                new GradientStop { Color = rearView, Offset = .9f }
             ],
-            radius: .66);
+            center: new(0.5, 0.5),
+            radius: .75)
+        { };
     }
 
     public void UpdateTime(string time)
@@ -233,6 +237,11 @@ public partial class Invasion1dUI : ContentPage
         }
     }
 
+    public void ShowContinueButton(bool show)
+    {
+        ContinueButton.IsVisible = show;
+    }
+
     public void ShowControls(bool show)
     {
         if (show)
@@ -332,6 +341,12 @@ public partial class Invasion1dUI : ContentPage
 
     private void ShootClicked(object sender, EventArgs e) => Game.Instance.universe.player.Attack();
     private void WarpClicked(object sender, EventArgs e) => Game.Instance.universe.player.Warp();
+
+    private void LaunchPage_Clicked(object sender, EventArgs e)
+    {
+        Game.Instance.Stop();
+        App.Current!.MainPage = new StartMenu();
+    }
 
     private void PauseButtonClicked(object sender, EventArgs e)
     {
