@@ -292,8 +292,8 @@ public partial class Invasion1dUI : ContentPage
         }
 
         //remove hardcoded margins
-        double scaleX = MainFrame.Width / (MapView.Width+(50-17)+50);
-        double scaleY = MainFrame.Height / (MapView.Height+50);
+        double scaleX = MainFrame.Width / (MapView.Width+20);
+        double scaleY = MainFrame.Height / (MapView.Height+20);
 
         double scale = Math.Min(scaleX, scaleY);
         MapView.Scale = scale;
