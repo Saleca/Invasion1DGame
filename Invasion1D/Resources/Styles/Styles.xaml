@@ -19,16 +19,6 @@
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
     </Style>
     <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}"/>
-   
-    <Style TargetType="Frame" x:Key="MainFrame"  BasedOn="{StaticResource BaseFrame}">
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
-    </Style>
-   
-    <Style TargetType="Frame" x:Key="ViewFrame">
-        <Setter Property="Margin" Value="0"/>
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="VerticalOptions" Value="Center" />
-    </Style>
 
     <Style TargetType="local:WarpiumControl">
         <Setter Property="Margin" Value="2,5"/>

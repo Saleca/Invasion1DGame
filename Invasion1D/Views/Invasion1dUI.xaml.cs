@@ -120,11 +120,11 @@ public partial class Invasion1dUI : ContentPage
         PlayerView.Background = new RadialGradientBrush(
             gradientStops:
             [
-                new GradientStop { Color = forwardView, Offset = .8f },
+                new GradientStop { Color = forwardView, Offset = .75f },
                 new GradientStop { Color = rearView, Offset = .9f }
             ],
             center: new(0.5, 0.5),
-            radius: .75)
+            radius: .66)
         { };
     }
 
@@ -291,8 +291,9 @@ public partial class Invasion1dUI : ContentPage
             return;
         }
 
-        double scaleX = MainFrame.Width / MapView.Width;
-        double scaleY = MainFrame.Height / MapView.Height;
+        //remove hardcoded margins
+        double scaleX = MainFrame.Width / (MapView.Width+(50-17)+50);
+        double scaleY = MainFrame.Height / (MapView.Height+50);
 
         double scale = Math.Min(scaleX, scaleY);
         MapView.Scale = scale;
@@ -321,9 +322,9 @@ public partial class Invasion1dUI : ContentPage
 
     void ViewSizeChanged(object? sender, EventArgs e)
     {
-        double size = Math.Max(MainFrame.Width, MainFrame.Height);
-        PlayerView.WidthRequest = size;
-        PlayerView.HeightRequest = size;
+        //double size = Math.Max(MainFrame.Width, MainFrame.Height);
+        PlayerView.WidthRequest = MainFrame.Width;//size;
+        PlayerView.HeightRequest = MainFrame.Height;// size;
 
         CenterMapView(null, EventArgs.Empty);
     }

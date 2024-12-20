@@ -2,6 +2,15 @@
 
 public static class Stats
 {
+    //Dimentions
+
+    public const int
+        minCircleRadius = 33,
+        maxCircleRadius = 66,
+        minLineSize = 180,
+        maxLineSize = 360,
+        maxMultiverseSize = 500;
+
     //Items
     public const int
         startWarpium = 0;

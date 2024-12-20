@@ -93,21 +93,22 @@
 
         <Frame 
             x:Name="MainFrame"
-            Grid.Row="1"
-            Margin="5,0"
-            Style="{StaticResource MainFrame}">
-            <AbsoluteLayout>
+            Grid.Row="1">
+            <AbsoluteLayout
+                Padding="0">
                 <Frame
                     x:Name="PlayerView"
                     android:VisualElement.Elevation="0"
-                    Style="{StaticResource ViewFrame}"
+                    
+                    Margin="0"
                     BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                 <AbsoluteLayout
                     x:Name="MapView"
-                    Padding="0"/>
+                    Padding="0"
+                    Margin="0"/>
                 
                 <local:PopUpMenu 
                     x:Name="Menu"
