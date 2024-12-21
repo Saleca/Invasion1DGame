@@ -7,48 +7,8 @@ namespace Invasion1D.Data;
 
 public class Seed
 {
-    //TODO randomise seed
     public Seed()
     {
-       /* bool multiverseHasSpace = true;
-        while (multiverseHasSpace)
-        {
-            Dimension dimension;
-            float size;
-
-            int value = Game.Instance.throwDice.Next(0, 2);
-            switch (value)
-            {
-                case 0:
-                    //generate position and radius
-                    PointF position = new();
-                    float radius = 0;
-
-                    //check overlap
-
-                    dimension = new Circular(position, radius);
-                    //calculate perimeter size
-                    size = 0;
-                    break;
-                case 1:
-                    //generate line coordinates
-                    PointF
-                        startPosition = new(),
-                        endPosition = new();
-
-                    //check overlap
-
-                    dimension = new Linear(startPosition, endPosition);
-
-                    //calculate size
-                    size = 0;
-                    break;
-            }
-
-            //calculate contents density
-            //add contents
-        }*/
-
         Circular
             c1 = new(new(33, 33), 33),
             c2 = new(new(150, 150), 50),
@@ -88,8 +48,4 @@ public class Seed
         _ = new WarpiumModel(l3, .3f);
         _ = new HealthModel(l3, .5f);
     }
-
-    //calculate center of circles to leave a certain offset(set on stats) from margin
-    //calculate line direction
-    //check overlaping shapes
 }
