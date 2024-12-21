@@ -21,35 +21,43 @@ public class Seed
             switch (value)
             {
                 case 0:
+                    //TODO:
                     //generate position and radius
                     PointF position = new();
                     float radius = 0;
 
+                    //TODO:
                     //check overlap
 
                     dimension = new Circular(position, radius);
+                    //TODO:
                     //calculate perimeter size
                     size = 0;
                     break;
                 case 1:
+                    //TODO:
                     //generate line coordinates
                     PointF
                         startPosition = new(),
                         endPosition = new();
 
+                    //TODO:
                     //check overlap
 
                     dimension = new Linear(startPosition, endPosition);
 
+                    //TODO:
                     //calculate size
                     size = 0;
                     break;
             }
 
-
             //calculate contents density
             int maxContentCount = (int)Math.Round(size / Stats.maxDensity);
             int contents = Game.Instance.throwDice.Next((int)(maxContentCount / 2), maxContentCount); //includes a warpium by default
+
+            //TODO:
+            //Calculate positions
             _ = new WarpiumModel(dimension, .3f);
 
             //add contents
@@ -59,13 +67,17 @@ public class Seed
                 contents--;
             }
 
+            //TODO:
             //calculate how many of each item
             int enemyCount = 0,
                 healthCount = 0,
                 vitaluxCount = 0;
             for (int i = 0; i < enemyCount; i++)
             {
-                _ = new EnemyModel(dimension, .20f, 10);
+                //TODO:
+                //Calculate speed
+                float speed = Stats.minEnemySpeed + Stats.maxEnemySpeed;
+                _ = new EnemyModel(dimension, .20f, speed);
             }
             for (int i = 0; i < healthCount; i++)
             {
@@ -75,7 +87,6 @@ public class Seed
             {
                 _ = new VitaluxModel(dimension, .55f);
             }
-
         }
 
         Circular
