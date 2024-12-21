@@ -201,7 +201,7 @@ public partial class Invasion1dUI : ContentPage
     {
         if (show)
         {
-            Menu.Title = text;
+            MenuTitle.Text = text;
             Menu.IsVisible = true;
         }
         else

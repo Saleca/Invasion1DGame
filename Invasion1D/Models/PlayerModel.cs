@@ -25,6 +25,9 @@ public class PlayerModel : Character
     {
         if (warpium > 0)
         {
+            //TODO
+            //select shape on map to start player on that shape
+            //instead of
             if (visitedDimensions.Count == Game.Instance.universe.dimensions.Count - 1)
             {
                 visitedDimensions.Clear();
@@ -46,11 +49,11 @@ public class PlayerModel : Character
                     halfSize: Size / 2,
                     position: out newPosition);
             } while (!newPositionFound);
+            currentDimension.RemoveInteractiveObject(this);
+            //this
 
             warpium--;
             Game.Instance.UI.RemoveWarpium();
-
-            currentDimension.RemoveInteractiveObject(this);
 
             _ = WarpAnimation(start: new((float)body.TranslationX, (float)body.TranslationY),
                         end: newPosition!.Value);

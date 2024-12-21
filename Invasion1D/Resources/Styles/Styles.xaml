@@ -11,30 +11,29 @@
 
     <Style TargetType="Frame" x:Key="BaseFrame">
         <Setter Property="CornerRadius" Value="8"/>
+        <Setter Property="Margin" Value="5"/>
+    </Style>
+
+    <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}">
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
-        <Setter Property="Padding" Value="0"/>
-        <Setter Property="Margin" Value="5"/>
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+        <Setter Property="Padding" Value="0"/>
     </Style>
-    <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}"/>
+
+    <Style TargetType="Frame" x:Key="PopupMenu" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="Margin" Value="100"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
+        <Setter Property="VerticalOptions" Value="FillAndExpand" />
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
+    </Style>
 
     <Style TargetType="local:WarpiumControl">
         <Setter Property="Margin" Value="2,5"/>
         <Setter Property="BackgroundColor" Value="{StaticResource Warpium}"/>
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
-    </Style>
-
-    <Style TargetType="local:PopUpMenu">
-        <Setter Property="Padding" Value="50,100"/>
-        <Setter Property="HorizontalOptions" Value="Center" />
-        <Setter Property="VerticalOptions" Value="Center" />
-
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
-        <Setter Property="Foreground" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
-
     </Style>
 
     <Style TargetType="BoxView">
@@ -84,5 +83,4 @@
         <Setter Property="VerticalTextAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="14" />
     </Style>
-    
 </ResourceDictionary>

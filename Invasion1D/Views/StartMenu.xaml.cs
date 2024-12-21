@@ -12,7 +12,6 @@ public partial class StartMenu : ContentPage
 
     private void Start_Clicked(object sender, EventArgs e)
     {
-
         Game.Instance.Start(seed);
     }
 
@@ -28,9 +27,17 @@ public partial class StartMenu : ContentPage
 
     private void SeedEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
+        if(e.NewTextValue == "")
+        {
+            SeedEntry.Text = "0";
+            return;
+        }
+
         if (int.TryParse(e.NewTextValue, out int seed))
         {
             this.seed = seed;
+            SeedEntry.Text = seed.ToString();
+
         }
         else
         {

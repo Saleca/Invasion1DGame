@@ -110,29 +110,6 @@
                     IsVisible="false"
                     Padding="0"
                     Margin="0"/>
-                
-                <local:PopUpMenu 
-                    x:Name="Menu"
-                    Title="Pause"
-                    AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
-                    AbsoluteLayout.LayoutFlags="PositionProportional"
-                    IsVisible="False">
-                    <Button 
-                        x:Name="ContinueButton"
-                        Text="Continue"
-                        Padding="20,10"
-                        Clicked="PauseButtonClicked"/>
-                    <Button
-                        x:Name="RestartKey"
-                        Text="Restart"
-                        Clicked="RestartClicked"
-                        Padding="20,10"/>
-                    <Button
-                        x:Name="LaunchPage"
-                        Text="Back"
-                        Clicked="LaunchPage_Clicked"
-                        Padding="20,10"/>       
-                </local:PopUpMenu>
             </AbsoluteLayout>
         </Frame>
 
@@ -180,5 +157,39 @@
                     Clicked="WarpClicked"/>
             </Grid>
         </Grid>
+
+        <Frame
+            x:Name="Menu"
+            Grid.RowSpan="3"
+            IsVisible="False"
+            Style="{StaticResource PopupMenu}">
+            <Grid
+                RowDefinitions="*,*,*,*,*">
+                <Label 
+                    x:Name="MenuTitle"
+                    Text="Pause"/>
+
+                <Button 
+                    x:Name="ContinueButton"
+                    Text="Continue"
+                    Clicked="PauseButtonClicked"
+                    Grid.Row="2"
+                    Padding="20,10"/>
+
+                <Button
+                    x:Name="RestartKey"
+                    Text="Restart"
+                    Clicked="RestartClicked"
+                    Grid.Row="3"
+                    Padding="20,10"/>
+
+                <Button
+                    x:Name="LaunchPage"
+                    Text="Quit"
+                    Clicked="LaunchPage_Clicked"
+                    Grid.Row="4"
+                    Padding="20,10"/>
+            </Grid>
+        </Frame>
     </Grid>
 </ContentPage>
