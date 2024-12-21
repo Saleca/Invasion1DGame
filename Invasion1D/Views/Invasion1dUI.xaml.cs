@@ -47,11 +47,8 @@ public partial class Invasion1dUI : ContentPage
         InitializeComponent();
 
         MainFrame.SizeChanged += ViewSizeChanged;
-        if (Game.Instance.IsTutorial)
-        {
-            MapView.IsVisible = true;
-            MapView.SizeChanged += InitializeMap;
-        }
+        MapView.SizeChanged += InitializeMap;
+
 
         HealthProgressBarContainer.Content = HealthProgressBar =
             new InvertedProgressBar(GameColors.Health);
@@ -75,6 +72,12 @@ public partial class Invasion1dUI : ContentPage
 
     private void InitializeMap(object? sender, EventArgs e)
     {
+        if (!Game.Instance.IsTutorial)
+        {
+            MapView.IsVisible = false;
+            MapView.SizeChanged -= InitializeMap;
+            return;
+        }
         CenterMapView(null, EventArgs.Empty);
     }
 

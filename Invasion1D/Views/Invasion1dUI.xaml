@@ -99,7 +99,6 @@
                 <Frame
                     x:Name="PlayerView"
                     android:VisualElement.Elevation="0"
-                    
                     Margin="0"
                     BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
@@ -107,7 +106,6 @@
 
                 <AbsoluteLayout
                     x:Name="MapView"
-                    IsVisible="false"
                     Padding="0"
                     Margin="0"/>
             </AbsoluteLayout>

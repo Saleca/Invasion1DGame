@@ -77,7 +77,6 @@ public class PlayerModel : Character
 
             scaledMapCenterX = (float)Game.Instance.UI.MapViewAccess.Width * scale / 2,
             scaledMapCenterY = (float)Game.Instance.UI.MapViewAccess.Height * scale / 2,
-
             startPositionX = offsetX - (start.X * scale - scaledMapCenterX),
             startPositionY = offsetY - (start.Y * scale - scaledMapCenterY),
             endPositionX = offsetX - (end.X * scale - scaledMapCenterX),
