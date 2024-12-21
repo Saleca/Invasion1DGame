@@ -23,7 +23,8 @@
     </Style>
 
     <Style TargetType="Frame" x:Key="PopupMenu" BasedOn="{StaticResource BaseFrame}">
-        <Setter Property="Margin" Value="100"/>
+        <Setter Property="Margin" Value="50"/>
+        <Setter Property="Padding" Value="50"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
