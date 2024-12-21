@@ -2,8 +2,9 @@
 
 public static class Stats
 {
-    //Dimentions
+    public const int frameMS = 100;
 
+    //Dimentions
     public const int
         minCircleRadius = 33,
         maxCircleRadius = 66,
@@ -13,7 +14,7 @@ public static class Stats
 
     //Items
     public const int
-        startWarpium = 0;
+        startWarpiumCount = 0;
 
     public const float
         regularAttackCost = 0.25f,
@@ -46,19 +47,16 @@ public static class Stats
         warpAnimationDurationMS = 4000,
         halfAnimationDurationMS = warpAnimationDurationMS / 2;
 
-    public const int
-        warpIncrementIntervalMS = 25;
-
     public const float
-        warpCooldownIncrementCount = warpAnimationDurationMS / warpIncrementIntervalMS,
-        warpCooldownIncrements = 1.0f / warpCooldownIncrementCount;
+        warpCooldownIncrementCount = warpAnimationDurationMS / (frameMS * smoothIncrementIntervalF);
 
     //UI
     public const int
         smoothIncrementIntervalF = 1;
     public const float
         weaveCoolDownIncrement = .01f,
-        shotCoolDownIncrement = .01f;
+        shootCoolDownIncrement = .05f,
+        warpCooldownIncrement = 1.0f / warpCooldownIncrementCount;
 
     //automation : enemies/items to space ratio, items respawn rate
 }

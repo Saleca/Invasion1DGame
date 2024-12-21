@@ -17,7 +17,7 @@ public partial class StartMenu : ContentPage
 
     private void Tutorial_Clicked(object sender, EventArgs e)
     {
-        Game.Instance.Start(seed, true);
+        TutorialIntro.IsVisible = true;
     }
 
     private void PrivacyPolicy_Clicked(object sender, EventArgs e)
@@ -27,7 +27,7 @@ public partial class StartMenu : ContentPage
 
     private void SeedEntry_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if(e.NewTextValue == "")
+        if (e.NewTextValue == "")
         {
             SeedEntry.Text = "0";
             return;
@@ -43,5 +43,15 @@ public partial class StartMenu : ContentPage
         {
             SeedEntry.Text = e.OldTextValue;
         }
+    }
+
+    private void StartTutorialButton_Clicked(object sender, EventArgs e)
+    {
+        Game.Instance.Start(seed, true);
+    }
+
+    private void BackButton_Clicked(object sender, EventArgs e)
+    {
+        TutorialIntro.IsVisible = false;
     }
 }

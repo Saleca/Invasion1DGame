@@ -29,7 +29,7 @@ public class EnemyModel : Character
 
     public override void Attack()
     {
-        float currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+        float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.regularAttackCost;
         if (vitalux >= currentAttackCost)
         {
             vitalux -= currentAttackCost;

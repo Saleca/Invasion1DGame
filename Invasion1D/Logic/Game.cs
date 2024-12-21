@@ -1,4 +1,5 @@
-﻿using Invasion1D.Helpers;
+﻿using Invasion1D.Data;
+using Invasion1D.Helpers;
 using Invasion1D.Models;
 using Invasion1D.Views;
 using System.Diagnostics;
@@ -70,7 +71,7 @@ internal class Game
         {
             if (isPaused)
             {
-                await Task.Delay(100, cancelUpdate.Token);
+                await Task.Delay(Stats.frameMS, cancelUpdate.Token);
                 continue;
             }
             Stopwatch sw = Stopwatch.StartNew();
@@ -106,7 +107,7 @@ internal class Game
                 break;
             }
 
-            int frameTime = 100 - (int)sw.ElapsedMilliseconds;
+            int frameTime = Stats.frameMS - (int)sw.ElapsedMilliseconds;
             if (frameTime > 0)
             {
                 await Task.Delay(frameTime, cancelUpdate.Token);

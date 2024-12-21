@@ -2,48 +2,90 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Invasion1D.Views.StartMenu"
+             Style="{StaticResource ContentPage}"
              Title="Start Menu">
-    <Grid
-        Margin="100"
-        RowDefinitions="*,*,*,*,*,*">
-
-        <Label Text="Start Menu"
-               Grid.Row="0"/>
-
+    <AbsoluteLayout>
         <Grid
-            Grid.Row="2"
-            ColumnDefinitions="*,*"
-            Padding="20,10">
+            AbsoluteLayout.LayoutBounds=".5,.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Margin="100"
+            RowDefinitions="*,*,*,*,*,*">
+
             <Label 
-                Text="Seed"
-                Grid.Column="0"/>
-            <Entry 
-                x:Name="SeedEntry" 
-                Text="0"
-                TextChanged="SeedEntry_TextChanged"
-                HorizontalTextAlignment="Center"
-                VerticalTextAlignment="Center"
-                Grid.Column="1"/>
+                Text="Start Menu"
+                Grid.Row="0"/>
+
+            <Grid
+                Grid.Row="2"
+                ColumnDefinitions="*,*"
+                Padding="20,10">
+                <Label 
+                    Text="Seed"
+                    Grid.Column="0"/>
+                <Entry 
+                    x:Name="SeedEntry" 
+                    Text="0"
+                    TextChanged="SeedEntry_TextChanged"
+                    HorizontalTextAlignment="Center"
+                    VerticalTextAlignment="Center"
+                    Grid.Column="1"/>
+            </Grid>
+
+            <Button
+                x:Name="Start"
+                Text="Start"
+                Clicked="Start_Clicked"
+                Grid.Row="3"
+                Padding="20,10"/>
+
+            <Button
+                Text="Tutorial"
+                Clicked="Tutorial_Clicked"
+                Grid.Row="4"
+                Padding="20,10"/>
+
+            <Button
+                x:Name="PrivacyPolicy"
+                Text="Privacy Policy"
+                Clicked="PrivacyPolicy_Clicked"
+                Grid.Row="5"
+                Padding="20,10"/>
         </Grid>
 
-        <Button
-            Grid.Row="3"
-            Text="Start"
-            Clicked="Start_Clicked"
-            x:Name="Start"
-            Padding="20,10"/>
+        <Frame
+            x:Name="TutorialIntro"
+            AbsoluteLayout.LayoutBounds=".5,.5,1,1"
+            AbsoluteLayout.LayoutFlags="All"
+            Style="{StaticResource PopupMenu}"
+            IsVisible="False">
+            <Grid
+                RowDefinitions="*,*,*,*,*,*">
+                <Label 
+                    Text="Welcome"/>
 
-        <Button
-            Grid.Row="4"
-            Text="Tutorial"
-            Clicked="Tutorial_Clicked"
-            x:Name="Tutorial"
-            Padding="20,10"/>
+                <Label 
+                    Text="You are an one dimentional beeing that landed on a multiverse with mean one dimentional creatures."
+                    Grid.Row="2"/>
+                <Label 
+                     Text="Luckily you have the means to defend and counquer, use vitalux to shoot your enemies and warp to teleport to another dimention. Be wise, what goes around comes around, specially with Weave - this temporary power weakens the damage of the shot but it will not fade"
+                     Grid.Row="3"/>
+                <Label 
+                  Text="In this tutorial you can see the multiverse from a higher dimention. Are you ready?"
+                  Grid.Row="4"/>
 
-        <Button
-            Grid.Row="5"
-            Text="Privacy Policy"
-            Clicked="PrivacyPolicy_Clicked"
-            x:Name="PrivacyPolicy"/>
-    </Grid>
+                <Grid
+                    Grid.Row="5"
+                    ColumnDefinitions="*,*">
+                    <Button 
+                        Text="Back"
+                        Clicked="BackButton_Clicked"
+                        Grid.Column="0"/>
+                    <Button 
+                        Text="Start"
+                        Clicked="StartTutorialButton_Clicked"
+                        Grid.Column="1"/>
+                </Grid>
+            </Grid>
+        </Frame>
+    </AbsoluteLayout>
 </ContentPage>

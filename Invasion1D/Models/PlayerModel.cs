@@ -96,7 +96,7 @@ public class PlayerModel : Character
 
         Game.Instance.UI.IsAnimating = true;
         Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
-        Game.Instance.UI.ActivateWarpCooldown();
+        ActivateWarpCooldown();
 
         if (!Game.Instance.IsTutorial)
         {
@@ -123,7 +123,7 @@ public class PlayerModel : Character
 
     public override void Attack()
     {
-        float currentAttackCost = weave ? weaveAttackCost : vitaAttackCost;
+        float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.regularAttackCost;
         if (vitalux >= currentAttackCost)
         {
             vitalux -= currentAttackCost;
@@ -148,7 +148,7 @@ public class PlayerModel : Character
                 bullet.NegativeMove();
             }
 
-            Game.Instance.UI.ActivateShootCooldown();
+            ActivateShootCooldown();
         }
     }
 

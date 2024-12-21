@@ -35,14 +35,6 @@ public partial class Invasion1dUI : ContentPage
     public AbsoluteLayout
         MapViewAccess => MapView;
 
-    public InvertedProgressBar
-        HealthProgressBar = null!,
-        VitaluxProgressBar = null!,
-        WeaveProgressBar = null!;
-    public InvertedCooldownProgressBar
-        ShootCooldownProgressBar = null!,
-        WarpCooldownProgressBar = null!;
-
     readonly Style selectedButtonStyle;
     public Invasion1dUI()
     {
@@ -57,27 +49,8 @@ public partial class Invasion1dUI : ContentPage
 
         MainFrame.SizeChanged += ViewSizeChanged;
         MapView.SizeChanged += InitializeMap;
-
-
-        HealthProgressBarContainer.Content = HealthProgressBar =
-            new InvertedProgressBar(GameColors.Health);
-        HealthProgressBar.Progress = 1;
-
-        VitaluxProgressBarContainer.Content = VitaluxProgressBar =
-            new InvertedProgressBar(GameColors.Vitalux);
-        VitaluxProgressBar.Progress = 1;
-
-        WeaveCooldownProgressBarContainer.Content = WeaveProgressBar =
-            new InvertedProgressBar(GameColors.Weave);
-
-        ShootCooldownProgressBarContainer.Content = ShootCooldownProgressBar =
-            new InvertedCooldownProgressBar(GameColors.Vitalux, Stats.smoothIncrementIntervalF, Stats.shotCoolDownIncrement);
-        ShootCooldownProgressBar.CooldownCompleted += ShootCooldownCompleted;
-
-        WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
-            new InvertedCooldownProgressBar(GameColors.Warpium, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
-        WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
     }
+
 
     public void Draw()
     {
@@ -112,14 +85,11 @@ public partial class Invasion1dUI : ContentPage
                 new GradientStop { Color = rearView, Offset = .9f }
             ],
             center: new(0.5, 0.5),
-            radius: .66)
-        { };
+            radius: .66);
     }
 
-    public void UpdateTime(string time)
-    {
-        TimeLabel.Text = time;
-    }
+    public void UpdateTime(string time) => TimeLabel.Text = time;
+
     public void UpdateEnemyCountLabel(string enemies)
     {
         EnemiesLabel.Text = enemies;
@@ -127,61 +97,16 @@ public partial class Invasion1dUI : ContentPage
 
     public void UpdateHealth(float progress) => HealthProgressBar.Progress = progress;
     public void UpdateVitaLux(float progress) => VitaluxProgressBar.Progress = progress;
-    public void UpdateWeave(float progress) => WeaveProgressBar.Progress = progress;
+    public void UpdateWeaveCooldown(float progress) => WeaveCooldownProgressBar.Progress = progress;
+    public void UpdateShootCooldown(float progress) => ShootCooldownProgressBar.Progress = progress;
+    public void UpdateWarpCooldown(float progress) => WarpCooldownProgressBar.Progress = progress;
 
-    public void ActivateShootCooldown()
-    {
-        ShowShootKey(false);
-        ShootCooldownProgressBar.ActivateCooldown();
-    }
-    public void ShootCooldownCompleted(object? sender, EventArgs e) => ShowShootKey(true);
+    public void ShowShootKey(bool show) => ShootKey.IsVisible = show;
+    public void ShowWarpKey(bool show) => WarpKey.IsVisible = show;
 
-    public void ShowShootKey(bool show)
-    {
-        if (show)
-        {
-            ShootKey.IsVisible = true;
-        }
-        else
-        {
-            ShootKey.IsVisible = false;
-        }
-    }
-
-    public void ActivateWarpCooldown()
-    {
-        ShowWarpKey(false);
-        WarpCooldownProgressBar.ActivateCooldown();
-
-    }
-    public void WarpCooldownCompleted(object? sender, EventArgs e) => RunOnUIThread(() => ShowWarpKey(true));
-    public void ShowWarpKey(bool show)
-    {
-        if (show)
-        {
-            WarpKey.IsVisible = true;
-        }
-        else
-        {
-            WarpKey.IsVisible = false;
-        }
-    }
-
-    public void ClearWeave() =>
-        WeaveProgressBar.Progress = 0;
-
-    public void AddWarpium()
-    {
-        WarpiumContainer.Add(new WarpiumControl());
-    }
-    public void RemoveWarpium()
-    {
-        WarpiumContainer.RemoveAt(0);
-    }
-    public void ClearWarpium()
-    {
-        WarpiumContainer.Clear();
-    }
+    public void AddWarpium() => WarpiumContainer.Add(new WarpiumControl());
+    public void RemoveWarpium() => WarpiumContainer.RemoveAt(0);
+    public void ClearWarpium() => WarpiumContainer.Clear();
 
     public void AddToMap(Shape shape)
     {
@@ -212,6 +137,11 @@ public partial class Invasion1dUI : ContentPage
         }
     }
 
+    public void ShowContinueButton(bool show) => ContinueButton.IsVisible = show;
+    public void ShowControls(bool show) => ControlsGrid.IsVisible = show;
+    public void ShowPauseButton(bool show) => PauseButton.IsVisible = show;
+    public void ShowStats(bool show) => StatsGrid.IsVisible = show;
+
     public void ShowPopUpMenu(bool show = true, string text = "")
     {
         if (show)
@@ -225,38 +155,6 @@ public partial class Invasion1dUI : ContentPage
         }
     }
 
-    public void ShowContinueButton(bool show)
-    {
-        ContinueButton.IsVisible = show;
-    }
-
-    public void ShowControls(bool show)
-    {
-        if (show)
-        {
-            ControlsGrid.IsVisible = true;
-        }
-        else
-        {
-            ControlsGrid.IsVisible = false;
-        }
-    }
-    public void ShowPauseButton(bool show)
-    {
-        PauseButton.IsVisible = show;
-    }
-
-    public void ShowStats(bool show)
-    {
-        if (show)
-        {
-            StatsGrid.IsVisible = true;
-        }
-        else
-        {
-            StatsGrid.IsVisible = false;
-        }
-    }
 
     public void CenterMapView(object? sender, EventArgs e)
     {
@@ -293,13 +191,6 @@ public partial class Invasion1dUI : ContentPage
     {
         PlayerView.WidthRequest = MainFrame.Width;
         PlayerView.HeightRequest = MainFrame.Height;
-
-        if (!Game.Instance.IsTutorial)
-        {
-            return;
-        }
-
-        CenterMapView(null, EventArgs.Empty);
     }
 
     private void InitializeMap(object? sender, EventArgs e)

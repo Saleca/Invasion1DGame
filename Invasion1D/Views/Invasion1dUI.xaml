@@ -66,26 +66,32 @@
                     Text="Health"
                     Grid.Row="0"
                     Grid.Column="0"/>
-                <ContentView
-                    x:Name="HealthProgressBarContainer"
+                <local:InvertedProgressBar
+                    x:Name="HealthProgressBar"
+                    ProgressBarColor="{StaticResource Health}"
+                    Progress="1"
                     Grid.Row="1"
                     Grid.Column="0"/>
 
                 <Label
-                     Text="Vitalux"
-                     Grid.Row="0"
-                     Grid.Column="1"/>
-                <ContentView
-                     x:Name="VitaluxProgressBarContainer"
-                     Grid.Row="1"
-                     Grid.Column="1"/>
+                    Text="Vitalux"
+                    Grid.Row="0"
+                    Grid.Column="1"/>
+                <local:InvertedProgressBar
+                    x:Name="VitaluxProgressBar"
+                    ProgressBarColor="{StaticResource Vitalux}"
+                    Progress="1"
+                    Grid.Row="1"
+                    Grid.Column="1"/>
 
                 <Label
                      Text="Weave"
                      Grid.Row="0"
                      Grid.Column="2"/>
-                <ContentView
-                    x:Name="WeaveCooldownProgressBarContainer"
+                <local:InvertedProgressBar
+                    x:Name="WeaveCooldownProgressBar"
+                    ProgressBarColor="{StaticResource Weave}"
+                    
                     Grid.Row="1"
                     Grid.Column="2"/>
             </Grid>
@@ -136,8 +142,9 @@
             <Grid 
                 Grid.Row="1"
                 Grid.Column="0">
-                <ContentView
-                    x:Name="ShootCooldownProgressBarContainer"/>
+                <local:InvertedProgressBar
+                    x:Name="ShootCooldownProgressBar"
+                    ProgressBarColor="{StaticResource Vitalux}"/>
                 <Button 
                     x:Name="ShootKey"
                     Text="Shoot"
@@ -147,8 +154,9 @@
             <Grid 
                 Grid.Row="1"
                 Grid.Column="1">
-                <ContentView
-                    x:Name="WarpCooldownProgressBarContainer"/>
+                <local:InvertedProgressBar
+                    x:Name="WarpCooldownProgressBar"
+                    ProgressBarColor="{StaticResource Warpium}"/>
                 <Button
                     x:Name="WarpKey"
                     Text="Warp"
