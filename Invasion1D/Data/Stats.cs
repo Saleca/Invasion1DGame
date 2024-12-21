@@ -9,7 +9,9 @@ public static class Stats
         maxCircleRadius = 66,
         minLineSize = 180,
         maxLineSize = 360,
-        maxMultiverseSize = 500;
+        maxMultiverseSize = 500,
+        maxDensity = 50; //1 unity/maxDentity
+
 
     //Items
     public const int
@@ -29,7 +31,8 @@ public static class Stats
     //Kinetic
     public const float
         playerSpeed = 10,
-        enemySpeed = 5,
+        minEnemySpeed = 5,
+        maxEnemySpeed = 10,
         bulletSpeed = 20;
 
     public const int

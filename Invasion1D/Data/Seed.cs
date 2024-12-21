@@ -1,4 +1,5 @@
-﻿using Invasion1D.Logic;
+﻿using Android.Util;
+using Invasion1D.Logic;
 using Invasion1D.Models;
 
 using Linear = Invasion1D.Models.Linear;
@@ -10,11 +11,11 @@ public class Seed
     //TODO randomise seed
     public Seed()
     {
-       /* bool multiverseHasSpace = true;
+        bool multiverseHasSpace = true;
         while (multiverseHasSpace)
         {
-            Dimension dimension;
-            float size;
+            Dimension dimension = null!;
+            float size = 0;
 
             int value = Game.Instance.throwDice.Next(0, 2);
             switch (value)
@@ -45,9 +46,37 @@ public class Seed
                     break;
             }
 
+
             //calculate contents density
+            int maxContentCount = (int)Math.Round(size / Stats.maxDensity);
+            int contents = Game.Instance.throwDice.Next((int)(maxContentCount / 2), maxContentCount); //includes a warpium by default
+            _ = new WarpiumModel(dimension, .3f);
+
             //add contents
-        }*/
+            if (Game.Instance.throwDice.Next(0, 2) > 0)
+            {
+                _ = new WeaveModel(dimension, .85f);
+                contents--;
+            }
+
+            //calculate how many of each item
+            int enemyCount = 0,
+                healthCount = 0,
+                vitaluxCount = 0;
+            for (int i = 0; i < enemyCount; i++)
+            {
+                _ = new EnemyModel(dimension, .20f, 10);
+            }
+            for (int i = 0; i < healthCount; i++)
+            {
+                _ = new HealthModel(dimension, .05f);
+            }
+            for (int i = 0; i < vitaluxCount; i++)
+            {
+                _ = new VitaluxModel(dimension, .55f);
+            }
+
+        }
 
         Circular
             c1 = new(new(33, 33), 33),
