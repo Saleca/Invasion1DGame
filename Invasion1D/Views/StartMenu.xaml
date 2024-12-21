@@ -5,27 +5,43 @@
              Title="Start Menu">
     <Grid
         Margin="100"
-        RowDefinitions="*,*,*,*,*">
-        
+        RowDefinitions="*,*,*,*,*,*">
+
         <Label Text="Start Menu"
                Grid.Row="0"/>
 
-        <Button
+        <Grid
             Grid.Row="2"
+            ColumnDefinitions="*,*"
+            Padding="20,10">
+            <Label 
+                Text="Seed"
+                Grid.Column="0"/>
+            <Entry 
+                x:Name="SeedEntry" 
+                Text="0"
+                TextChanged="SeedEntry_TextChanged"
+                HorizontalTextAlignment="Center"
+                VerticalTextAlignment="Center"
+                Grid.Column="1"/>
+        </Grid>
+
+        <Button
+            Grid.Row="3"
             Text="Start"
             Clicked="Start_Clicked"
             x:Name="Start"
             Padding="20,10"/>
 
         <Button
-            Grid.Row="3"
+            Grid.Row="4"
             Text="Tutorial"
             Clicked="Tutorial_Clicked"
             x:Name="Tutorial"
             Padding="20,10"/>
 
         <Button
-            Grid.Row="4"
+            Grid.Row="5"
             Text="Privacy Policy"
             Clicked="PrivacyPolicy_Clicked"
             x:Name="PrivacyPolicy"/>
