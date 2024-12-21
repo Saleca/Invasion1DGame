@@ -18,6 +18,7 @@ internal class Game
     //state
     CancellationTokenSource cancelUpdate = null!;
     readonly List<Kinetic> objectsToUpdateUI = [];
+    public Stopwatch stopwatch = null!;
 
     int seed = 0;
     bool isTutorial = false;
@@ -53,6 +54,7 @@ internal class Game
         cancelUpdate = new();
 
         universe.Start();
+        stopwatch = Stopwatch.StartNew();
         isPaused = false;
         App.Current!.MainPage = UI;
         Task.Run(Update);
@@ -88,7 +90,7 @@ internal class Game
                             rearView: out Color? rearView);
                         UI.UpdateView(view, rearView);
                     }
-                    UI.UpdateTime(universe.stopwatch.Elapsed.CustomToString());
+                    UI.UpdateTime(stopwatch.Elapsed.CustomToString());
                     UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
                 });
 
@@ -116,11 +118,20 @@ internal class Game
     public void Pause(bool pause)
     {
         isPaused = pause;
+        if (pause)
+        {
+            stopwatch.Stop();
+        }
+        else
+        {
+            stopwatch.Start();
+        }
     }
 
     public void Stop()
     {
         CancelUpdate();
+        stopwatch.Stop();
         universe.Stop();
     }
 

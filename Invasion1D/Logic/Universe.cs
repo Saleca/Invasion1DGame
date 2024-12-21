@@ -19,9 +19,6 @@ namespace Invasion1D.Logic
         public int
             initialEnemyCount;
 
-        public Stopwatch
-            stopwatch = null!;
-
         public void Initiate()
         {
             _ = new Seed();
@@ -44,11 +41,10 @@ namespace Invasion1D.Logic
         public void Start()
         {
             enemies.AsParallel().ForAll(enemy => enemy.Start());
-            stopwatch = Stopwatch.StartNew();
         }
+       
         public void Stop()
         {
-            stopwatch.Stop();
             enemies.AsParallel().ForAll(enemy => enemy.Stop());
         }
 

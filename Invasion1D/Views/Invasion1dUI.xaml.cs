@@ -310,7 +310,7 @@ public partial class Invasion1dUI : ContentPage
     private void PauseButtonClicked(object sender, EventArgs e)
     {
         Game.Instance.Pause(!Game.Instance.IsPaused);
-        ShowPopUpMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause Menu" : "");
+        ShowPopUpMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause" : "");
         ShowControls(!Game.Instance.IsPaused);
     }
     private void RestartClicked(object sender, EventArgs e)
