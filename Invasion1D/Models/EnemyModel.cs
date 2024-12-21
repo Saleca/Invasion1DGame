@@ -15,7 +15,7 @@ public class EnemyModel : Character
         : base(shape, position, GameColors.Enemy, speed)
     {
         direction = Game.Instance.RandomDirection();
-        reactionCooldown = Game.Instance.throwDice.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
+        reactionCooldown = Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
     }
 
     public void Start()
@@ -103,7 +103,7 @@ public class EnemyModel : Character
     {
         if (targetInSight is null)
         {
-            switch (Game.Instance.throwDice.Next(3))
+            switch (Game.Instance.Fate.Next(3))
             {
                 case 0:
                     PositiveMove();
@@ -120,7 +120,7 @@ public class EnemyModel : Character
         {
             if (targetInSight is PlayerModel)
             {
-                switch (Game.Instance.throwDice.Next(2))
+                switch (Game.Instance.Fate.Next(2))
                 {
                     case 0:
                         MoveToTarget();
@@ -142,7 +142,7 @@ public class EnemyModel : Character
     void RestartReactionTimer()
     {
         toReact = false;
-        reactionCooldown = Game.Instance.throwDice.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
+        reactionCooldown = Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
     }
 
     void MoveToTarget()

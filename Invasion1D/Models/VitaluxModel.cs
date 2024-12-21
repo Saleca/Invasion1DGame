@@ -7,7 +7,7 @@ namespace Invasion1D.Models;
 internal class VitaluxModel(Dimension dimension, float position)
     : Item(dimension, position, GameColors.Vitalux)
 {
-    float amount = Game.Instance.throwDice.Next(3) switch
+    float amount = Game.Instance.Fate.Next(3) switch
     {
         0 => Stats.minScoreItem,
         1 => Stats.mediumScoreItem,

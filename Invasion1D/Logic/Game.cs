@@ -11,36 +11,39 @@ internal class Game
     public static Game Instance => instance;
     Game() { } //private constructor
 
-    public readonly Invasion1dUI UI = new();
-    public Random throwDice = null!;
+    public Invasion1dUI UI = null!;
+    public Random Fate = null!;
     public Universe universe = null!;
 
     //state
     CancellationTokenSource cancelUpdate = null!;
     readonly List<Kinetic> objectsToUpdateUI = [];
 
+    int seed = 0;
+    bool isTutorial = false;
+
     bool
         isStarted = false,
         isPaused = false;
 
+    public int Seed => seed;
+    public bool IsTutorial => isTutorial;
     public bool IsPaused => isPaused;
 
-    public void Start(int seed = 0)
+    public void Start(int seed = 0, bool isTutorial = false)
     {
         if (isStarted)
         {
-            Reset();
-        }
-        else
-        {
-            UI.Initiate();
+            Stop();
         }
 
-        throwDice = new(seed);
+        this.seed = seed;
+        this.isTutorial = isTutorial;
 
+        UI = new Invasion1dUI();
+        Fate = new(seed);
         universe = new();
         universe.Initiate();
-        UI.CenterMapView(null, EventArgs.Empty);
 
         //TODO
         //select shape on map to start player on that shape
@@ -50,6 +53,8 @@ internal class Game
         cancelUpdate = new();
 
         universe.Start();
+        isPaused = false;
+        App.Current!.MainPage = UI;
         Task.Run(Update);
 
         UI.ShowPauseButton(true);
@@ -116,7 +121,6 @@ internal class Game
     public void Stop()
     {
         CancelUpdate();
-        UI.RunOnUIThread(() => UI.ClearCoolDownButtons());
         universe.Stop();
     }
 
@@ -133,19 +137,6 @@ internal class Game
             UI.ShowControls(false);
             UI.ShowPauseButton(false);
         });
-    }
-
-    public void Reset()
-    {
-        Stop();
-        isPaused = false;
-        UI.ShowPopUpMenu(false);
-        UI.ShowContinueButton(true);
-        UI.ResetAnimation();
-        universe.ResetDimensions();
-        UI.ClearMap();
-        UI.ClearWarpium();
-        UI.ClearWeave();
     }
 
     private void UpdateGameObjects()
@@ -246,5 +237,5 @@ internal class Game
     /// 
     /// </summary>
     /// <returns>true for clockwise or false for !clockwise</returns>
-    public bool RandomDirection() => throwDice.Next(2) == 1;
+    public bool RandomDirection() => Fate.Next(2) == 1;
 }

@@ -22,8 +22,7 @@
             Text="Tutorial"
             Clicked="Tutorial_Clicked"
             x:Name="Tutorial"
-            Padding="20,10"
-            IsEnabled="False"/>
+            Padding="20,10"/>
 
         <Button
             Grid.Row="4"

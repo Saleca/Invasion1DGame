@@ -19,8 +19,6 @@ public class PlayerModel : Character
         direction = Game.Instance.RandomDirection();
 
         Game.Instance.UI.AddWarpium();
-        Game.Instance.UI.UpdateVitaLux(vitalux);
-        Game.Instance.UI.UpdateHealth(health);
     }
 
     public void Warp()
@@ -36,13 +34,13 @@ public class PlayerModel : Character
 
             Dimension[] unvisitedDimensions = Game.Instance.universe.dimensions.Except(visitedDimensions).ToArray();
 
-            travelingToDimension = unvisitedDimensions[Game.Instance.throwDice.Next(unvisitedDimensions.Length)];
+            travelingToDimension = unvisitedDimensions[Game.Instance.Fate.Next(unvisitedDimensions.Length)];
 
             bool newPositionFound;
             PointF? newPosition;
             do
             {
-                positionPercentageForNewDimention = Game.Instance.throwDice.NextSingle();
+                positionPercentageForNewDimention = Game.Instance.Fate.NextSingle();
                 newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
                     positionPercentage: positionPercentageForNewDimention,
                     halfSize: Size / 2,
@@ -82,7 +80,7 @@ public class PlayerModel : Character
             endPositionX = offsetX - (end.X * scale - scaledMapCenterX),
             endPositionY = offsetY - (end.Y * scale - scaledMapCenterY);
 
-        if (!Game.Instance.UI.isMapVisible)
+        if (!Game.Instance.IsTutorial)
         {
             Game.Instance.UI.MapViewAccess.Scale = scale;
 
@@ -97,7 +95,7 @@ public class PlayerModel : Character
         Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
         Game.Instance.UI.ActivateWarpCooldown();
 
-        if (!Game.Instance.UI.isMapVisible)
+        if (!Game.Instance.IsTutorial)
         {
             Task<bool> translateOut = Game.Instance.UI.MapViewAccess.TranslateTo(midPositionX, midPositionY, Stats.halfAnimationDurationMS, Easing.CubicOut);
             Task<bool> scaleOut = Game.Instance.UI.MapViewAccess.ScaleTo(1, Stats.halfAnimationDurationMS, Easing.CubicOut);
@@ -111,7 +109,7 @@ public class PlayerModel : Character
         await translatePlayer;
         Game.Instance.UI.IsAnimating = false;
 
-        if (!Game.Instance.UI.isMapVisible)
+        if (!Game.Instance.IsTutorial)
         {
             Game.Instance.UI.MapViewAccess.IsVisible = false;
         }

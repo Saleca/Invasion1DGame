@@ -9,12 +9,6 @@ namespace Invasion1D.Views;
 
 public partial class Invasion1dUI : ContentPage
 {
-    readonly bool
-        debug = true;
-
-    public bool
-        isMapVisible = false;
-
     readonly object locker = new();
     bool isAnimating = false;
     public bool IsAnimating
@@ -51,29 +45,21 @@ public partial class Invasion1dUI : ContentPage
     public Invasion1dUI()
     {
         InitializeComponent();
-        
+
         MainFrame.SizeChanged += ViewSizeChanged;
-        MapView.SizeChanged += InitializeMap;
-
-        if (debug)
+        if (Game.Instance.IsTutorial)
         {
-            MapModeKey.IsVisible = true;
+            MapView.IsVisible = true;
+            MapView.SizeChanged += InitializeMap;
         }
-    }
 
-    private void InitializeMap(object? sender, EventArgs e)
-    {
-        MapView.IsVisible = false;
-        CenterMapView(null, EventArgs.Empty);
-    }
-
-    public void Initiate()
-    {
         HealthProgressBarContainer.Content = HealthProgressBar =
             new InvertedProgressBar(GameColors.Health);
+        HealthProgressBar.Progress = 1;
 
         VitaluxProgressBarContainer.Content = VitaluxProgressBar =
             new InvertedProgressBar(GameColors.Vitalux);
+        VitaluxProgressBar.Progress = 1;
 
         WeaveCooldownProgressBarContainer.Content = WeaveProgressBar =
             new InvertedProgressBar(GameColors.Weave);
@@ -85,6 +71,11 @@ public partial class Invasion1dUI : ContentPage
         WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
             new InvertedCooldownProgressBar(GameColors.Warpium, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
         WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
+    }
+
+    private void InitializeMap(object? sender, EventArgs e)
+    {
+        CenterMapView(null, EventArgs.Empty);
     }
 
     public void Draw()
@@ -105,10 +96,6 @@ public partial class Invasion1dUI : ContentPage
         MapView.Scale = 1;
         MapView.TranslationX = 0;
         MapView.TranslationY = 0;
-        if (!isMapVisible)
-        {
-            MapView.IsVisible = false;
-        }
         IsAnimating = false;
     }
 
@@ -147,11 +134,7 @@ public partial class Invasion1dUI : ContentPage
         ShootCooldownProgressBar.ActivateCooldown();
     }
     public void ShootCooldownCompleted(object? sender, EventArgs e) => ShowShootKey(true);
-    public void ClearShootColldown()
-    {
-        ShowShootKey(true);
-        ShootCooldownProgressBar.Progress = 0;
-    }
+
     public void ShowShootKey(bool show)
     {
         if (show)
@@ -181,16 +164,6 @@ public partial class Invasion1dUI : ContentPage
         {
             WarpKey.IsVisible = false;
         }
-    }
-    public void ClearWarpColldown()
-    {
-        ShowWarpKey(true);
-        WarpCooldownProgressBar.Progress = 0;
-    }
-    public void ClearCoolDownButtons()
-    {
-        ClearShootColldown();
-        ClearWarpColldown();
     }
 
     public void ClearWeave() =>
@@ -270,30 +243,11 @@ public partial class Invasion1dUI : ContentPage
         }
     }
 
-    public void ChangeMapMode()
-    {
-        isMapVisible = !isMapVisible;
-        if (isMapVisible)
-        {
-            MapView.IsVisible = true;
-            CenterMapView(null, EventArgs.Empty);
-        }
-        else
-        {
-            MapView.IsVisible = false;
-        }
-    }
-
     public void CenterMapView(object? sender, EventArgs e)
     {
-        if (!isMapVisible)
-        {
-            return;
-        }
-
         //remove hardcoded margins
-        double scaleX = MainFrame.Width / (MapView.Width+20);
-        double scaleY = MainFrame.Height / (MapView.Height+20);
+        double scaleX = MainFrame.Width / (MapView.Width + 20);
+        double scaleY = MainFrame.Height / (MapView.Height + 20);
 
         double scale = Math.Min(scaleX, scaleY);
         MapView.Scale = scale;
@@ -322,9 +276,13 @@ public partial class Invasion1dUI : ContentPage
 
     void ViewSizeChanged(object? sender, EventArgs e)
     {
-        //double size = Math.Max(MainFrame.Width, MainFrame.Height);
-        PlayerView.WidthRequest = MainFrame.Width;//size;
-        PlayerView.HeightRequest = MainFrame.Height;// size;
+        PlayerView.WidthRequest = MainFrame.Width;
+        PlayerView.HeightRequest = MainFrame.Height;
+
+        if (!Game.Instance.IsTutorial)
+        {
+            return;
+        }
 
         CenterMapView(null, EventArgs.Empty);
     }
@@ -355,11 +313,9 @@ public partial class Invasion1dUI : ContentPage
         ShowPopUpMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause Menu" : "");
         ShowControls(!Game.Instance.IsPaused);
     }
-    private void MapModeClicked(object sender, EventArgs e) => ChangeMapMode();
-
     private void RestartClicked(object sender, EventArgs e)
     {
         ShowPopUpMenu(false);
-        Game.Instance.Start();
+        Game.Instance.Start(Game.Instance.Seed, Game.Instance.IsTutorial);
     }
 }

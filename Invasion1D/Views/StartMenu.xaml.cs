@@ -11,13 +11,12 @@ public partial class StartMenu : ContentPage
 
     private void Start_Clicked(object sender, EventArgs e)
     {
-        App.Current!.MainPage = Game.Instance.UI;
-        Game.Instance.Start();
+        Game.Instance.Start(0, false);
     }
 
     private void Tutorial_Clicked(object sender, EventArgs e)
     {
-
+        Game.Instance.Start(0, true);
     }
 
     private void PrivacyPolicy_Clicked(object sender, EventArgs e)

@@ -107,6 +107,7 @@
 
                 <AbsoluteLayout
                     x:Name="MapView"
+                    IsVisible="false"
                     Padding="0"
                     Margin="0"/>
                 
@@ -131,12 +132,6 @@
                         Text="Back"
                         Clicked="LaunchPage_Clicked"
                         Padding="20,10"/>       
-                    <Button
-                        x:Name="MapModeKey"
-                        Text="View Map"
-                        Clicked="MapModeClicked"
-                        Padding="20,10"
-                        IsVisible="false"/>
                 </local:PopUpMenu>
             </AbsoluteLayout>
         </Frame>
