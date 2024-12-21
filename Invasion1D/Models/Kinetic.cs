@@ -5,8 +5,6 @@ namespace Invasion1D.Models;
 public abstract class Kinetic(Dimension dimension, float position, Color color, float speed)
     : Interactive(dimension, position, color)
 {
-    public const bool clockwise = true;
-
     public float speed = speed;
     public bool
         direction,
@@ -67,13 +65,13 @@ public abstract class Kinetic(Dimension dimension, float position, Color color, 
     public void NegativeMove()
     {
         isMoving = true;
-        direction = !clockwise;
+        direction = false;
     }
 
     public void PositiveMove()
     {
         isMoving = true;
-        direction = clockwise;
+        direction = true;
     }
 
     public void StopMovement()
@@ -81,13 +79,12 @@ public abstract class Kinetic(Dimension dimension, float position, Color color, 
         isMoving = false;
     }
 
-    public abstract void Move();
-
     public void UpdateUI()
     {
         body.TranslationX = Position.X;
         body.TranslationY = Position.Y;
     }
 
+    public abstract void Move();
     public abstract void TakeDamage(float damage);
 }

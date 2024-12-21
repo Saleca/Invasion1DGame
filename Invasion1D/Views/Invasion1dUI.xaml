@@ -124,15 +124,15 @@
                 Grid.Row="0"
                 Grid.Column="0"
                 Text="&lt;--"
-                Pressed="NegPressed"
-                Released="NegReleased"/>
+                Pressed="NegativeDirectionPressed"
+                Released="DirectionButtonReleased"/>
             <Button
                 x:Name="PosKey"
                 Grid.Row="0"
                 Grid.Column="1"
                 Text="-->"
-                Pressed="PosPressed"
-                Released="PosReleased"/>
+                Pressed="PositiveDirectionPressed"
+                Released="DirectionButtonReleased"/>
             <Grid 
                 Grid.Row="1"
                 Grid.Column="0">

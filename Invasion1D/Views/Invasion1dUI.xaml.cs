@@ -2,6 +2,7 @@
 using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
+using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
 using System.Diagnostics;
 
@@ -42,9 +43,17 @@ public partial class Invasion1dUI : ContentPage
         ShootCooldownProgressBar = null!,
         WarpCooldownProgressBar = null!;
 
+    readonly Style selectedButtonStyle;
     public Invasion1dUI()
     {
         InitializeComponent();
+
+        if (!ResourcesInterop.TryGetResource("SelectedButton", out Style? selectedButtonStyle))
+        {
+            throw new Exception();
+        }
+
+        this.selectedButtonStyle = selectedButtonStyle!;
 
         MainFrame.SizeChanged += ViewSizeChanged;
         MapView.SizeChanged += InitializeMap;
@@ -68,17 +77,6 @@ public partial class Invasion1dUI : ContentPage
         WarpCooldownProgressBarContainer.Content = WarpCooldownProgressBar =
             new InvertedCooldownProgressBar(GameColors.Warpium, Stats.warpIncrementIntervalMS, Stats.warpCooldownIncrements);
         WarpCooldownProgressBar.CooldownCompleted += WarpCooldownCompleted;
-    }
-
-    private void InitializeMap(object? sender, EventArgs e)
-    {
-        if (!Game.Instance.IsTutorial)
-        {
-            MapView.IsVisible = false;
-            MapView.SizeChanged -= InitializeMap;
-            return;
-        }
-        CenterMapView(null, EventArgs.Empty);
     }
 
     public void Draw()
@@ -122,7 +120,7 @@ public partial class Invasion1dUI : ContentPage
     {
         TimeLabel.Text = time;
     }
-    public void UpdateEnemies(string enemies)
+    public void UpdateEnemyCountLabel(string enemies)
     {
         EnemiesLabel.Text = enemies;
     }
@@ -198,6 +196,20 @@ public partial class Invasion1dUI : ContentPage
     public void ClearMap()
     {
         MapView.Children.Clear();
+    }
+
+    public void SelectDirection(bool direction)
+    {
+        if (direction)
+        {
+            PosKey.Style = selectedButtonStyle;
+            NegKey.Style = null;
+        }
+        else
+        {
+            PosKey.Style = null;
+            NegKey.Style = selectedButtonStyle;
+        }
     }
 
     public void ShowPopUpMenu(bool show = true, string text = "")
@@ -290,16 +302,34 @@ public partial class Invasion1dUI : ContentPage
         CenterMapView(null, EventArgs.Empty);
     }
 
+    private void InitializeMap(object? sender, EventArgs e)
+    {
+        if (!Game.Instance.IsTutorial)
+        {
+            MapView.IsVisible = false;
+            MapView.SizeChanged -= InitializeMap;
+            return;
+        }
+
+        CenterMapView(null, EventArgs.Empty);
+    }
+
     private void OnWindowDestroying(object? sender, EventArgs e)
     {
         Game.Instance.CancelUpdate();
     }
 
-    private void NegPressed(object sender, EventArgs e) => Game.Instance.universe.player.NegativeMove();
-    private void NegReleased(object sender, EventArgs e) => Game.Instance.universe.player.StopMovement();
-
-    private void PosPressed(object sender, EventArgs e) => Game.Instance.universe.player.PositiveMove();
-    private void PosReleased(object sender, EventArgs e) => Game.Instance.universe.player.StopMovement();
+    private void NegativeDirectionPressed(object sender, EventArgs e)
+    {
+        Game.Instance.universe.player.NegativeMove();
+        SelectDirection(false);
+    }
+    private void PositiveDirectionPressed(object sender, EventArgs e)
+    {
+        Game.Instance.universe.player.PositiveMove();
+        SelectDirection(true);
+    }
+    private void DirectionButtonReleased(object sender, EventArgs e) => Game.Instance.universe.player.StopMovement();
 
     private void ShootClicked(object sender, EventArgs e) => Game.Instance.universe.player.Attack();
     private void WarpClicked(object sender, EventArgs e) => Game.Instance.universe.player.Warp();

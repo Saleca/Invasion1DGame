@@ -91,11 +91,10 @@ internal class Game
                         UI.UpdateView(view, rearView);
                     }
                     UI.UpdateTime(stopwatch.Elapsed.CustomToString());
-                    UI.UpdateEnemies($"{universe.enemies.Count}/{universe.initialEnemyCount}");
+                    UI.UpdateEnemyCountLabel($"{universe.enemies.Count}/{universe.initialEnemyCount}");
                 });
 
                 await uiTask;
-
             }
             catch (OperationCanceledException)
             {

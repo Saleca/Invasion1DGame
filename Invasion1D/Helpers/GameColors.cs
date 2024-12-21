@@ -14,12 +14,22 @@ internal static class GameColors
     static GameColors()
     {
         Exception exception = new("Color not found");
-        Player = GetFromResources(nameof(PlayerModel).Replace("Model", "")) ?? throw exception;
-        Enemy = GetFromResources(nameof(EnemyModel).Replace("Model", "")) ?? throw exception;
-        Vitalux = GetFromResources(nameof(VitaluxModel).Replace("Model", "")) ?? throw exception;
-        Health = GetFromResources(nameof(HealthModel).Replace("Model", "")) ?? throw exception;
-        Weave = GetFromResources(nameof(WeaveModel).Replace("Model", "")) ?? throw exception;
-        Warpium = GetFromResources(nameof(WarpiumModel).Replace("Model", "")) ?? throw exception;
+        if (!ResourcesInterop.TryGetResource(nameof(PlayerModel).Replace("Model", ""), out Color? playerColor)
+            || !ResourcesInterop.TryGetResource(nameof(EnemyModel).Replace("Model", ""), out Color? enemyColor)
+            || !ResourcesInterop.TryGetResource(nameof(VitaluxModel).Replace("Model", ""), out Color? vitaluxColor)
+            || !ResourcesInterop.TryGetResource(nameof(HealthModel).Replace("Model", ""), out Color? healthColor)
+            || !ResourcesInterop.TryGetResource(nameof(WeaveModel).Replace("Model", ""), out Color? weaveColor)
+            || !ResourcesInterop.TryGetResource(nameof(WarpiumModel).Replace("Model", ""), out Color? warpiumColor))
+        {
+            throw exception;
+        }
+
+        Player = playerColor!;
+        Enemy = enemyColor!;
+        Vitalux = vitaluxColor!;
+        Health = healthColor!;
+        Weave = weaveColor!;
+        Warpium = warpiumColor!;
     }
 
     internal static Color LinearInterpolation(Color a, Color b, float i)
@@ -65,13 +75,4 @@ internal static class GameColors
         AppTheme.Light => Colors.White,
         _ => Colors.Black,
     };
-
-    public static Color? GetFromResources(string color)
-    {
-        if (App.Current!.Resources.TryGetValue(color, out object? colorvalue))
-        {
-            return (Color)colorvalue;
-        }
-        return null;
-    }
 }

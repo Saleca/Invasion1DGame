@@ -17,6 +17,7 @@ public class PlayerModel : Character
         : base(dimension, position, GameColors.Player, speed)
     {
         direction = Game.Instance.RandomDirection();
+        Game.Instance.UI.SelectDirection(direction);
 
         Game.Instance.UI.AddWarpium();
     }
