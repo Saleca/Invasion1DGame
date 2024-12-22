@@ -13,7 +13,7 @@ public class PlayerModel : Character
     float positionPercentageForNewDimention;
 
     public int warpium = 1;
-    public Cooldown warpCooldown;
+    public Cooldown warpCooldown = null!;
 
     public PlayerModel(Dimension dimension, float position, float speed)
         : base(dimension, position, GameColors.Player, speed)

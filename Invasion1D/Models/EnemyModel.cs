@@ -7,7 +7,7 @@ namespace Invasion1D.Models;
 
 public class EnemyModel : Character
 {
-    Cooldown reactionCooldown;
+    Cooldown reactionCooldown = null!;
     bool react = false;
     public bool CanReact => react;
     Interactive? targetInSight;
