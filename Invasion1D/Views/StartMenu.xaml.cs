@@ -8,6 +8,9 @@ public partial class StartMenu : ContentPage
     public StartMenu()
     {
         InitializeComponent();
+        Random random = new();
+        seed = random.Next(10000);
+        SeedEntry.Text = seed.ToString();
     }
 
     private void Start_Clicked(object sender, EventArgs e)
@@ -50,8 +53,18 @@ public partial class StartMenu : ContentPage
         Game.Instance.Start(seed, true);
     }
 
-    private void BackButton_Clicked(object sender, EventArgs e)
+    private void BackButton_Clicked(object? sender, EventArgs e)
     {
         TutorialIntro.IsVisible = false;
+    }
+
+    private void SeedEntry_Completed(object? sender, EventArgs e)
+    {
+        SeedEntry.Unfocus();
+    }
+    private void SeedEntry_Focused(object? sender, FocusEventArgs e)
+    {
+        SeedEntry.Focused -= SeedEntry_Focused;
+        SeedEntry.Unfocus();
     }
 }

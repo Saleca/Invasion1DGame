@@ -26,6 +26,8 @@
                     x:Name="SeedEntry" 
                     Text="0"
                     TextChanged="SeedEntry_TextChanged"
+                    Completed="SeedEntry_Completed"
+                    Focused="SeedEntry_Focused"
                     HorizontalTextAlignment="Center"
                     VerticalTextAlignment="Center"
                     Grid.Column="1"/>
@@ -59,19 +61,19 @@
             Style="{StaticResource PopupMenu}"
             IsVisible="False">
             <Grid
-                RowDefinitions="*,*,*,*,*,*">
+                RowDefinitions="*,auto,auto,auto,50,*">
                 <Label 
                     Text="Welcome"/>
 
                 <Label 
                     Text="You are an one dimentional beeing that landed on a multiverse with mean one dimentional creatures."
-                    Grid.Row="2"/>
+                    Grid.Row="1"/>
                 <Label 
                      Text="Luckily you have the means to defend and counquer, use vitalux to shoot your enemies and warp to teleport to another dimention. Be wise, what goes around comes around, specially with Weave - this temporary power weakens the damage of the shot but it will not fade"
-                     Grid.Row="3"/>
+                     Grid.Row="2"/>
                 <Label 
                   Text="In this tutorial you can see the multiverse from a higher dimention. Are you ready?"
-                  Grid.Row="4"/>
+                  Grid.Row="3"/>
 
                 <Grid
                     Grid.Row="5"
