@@ -9,7 +9,7 @@
             AbsoluteLayout.LayoutBounds=".5,.5,1,1"
             AbsoluteLayout.LayoutFlags="All"
             Margin="100"
-            RowDefinitions="*,*,*,*,*,*">
+            RowDefinitions="*,*,auto,*,*,*">
 
             <Label 
                 Text="Start Menu"

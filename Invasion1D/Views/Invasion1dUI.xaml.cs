@@ -49,8 +49,22 @@ public partial class Invasion1dUI : ContentPage
 
         MainFrame.SizeChanged += ViewSizeChanged;
         MapView.SizeChanged += InitializeMap;
+
+        HealthProgressBar.SizeChanged += InitializeHealthProgressBar;
+        VitaluxProgressBar.SizeChanged += InitializeVitaluxProgressBar; ;
     }
 
+    private void InitializeVitaluxProgressBar(object? sender, EventArgs e)
+    {
+        VitaluxProgressBar.Progress = 1;
+        VitaluxProgressBar.SizeChanged -= InitializeVitaluxProgressBar; ;
+    }
+
+    private void InitializeHealthProgressBar(object? sender, EventArgs e)
+    {
+        HealthProgressBar.Progress = 1;
+        HealthProgressBar.SizeChanged -= InitializeHealthProgressBar;
+    }
 
     public void Draw()
     {

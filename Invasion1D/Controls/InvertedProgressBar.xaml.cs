@@ -50,10 +50,22 @@ public partial class InvertedProgressBar : Frame
 
     public InvertedProgressBar()
     {
+        HandlerChanged += Frame_HandlerChanged;
         progressBarControl = new BoxView();
         progressBarControl.SetBinding(BackgroundColorProperty, new Binding(nameof(ProgressBarColor), source: this));
         progressBarControl.SetBinding(WidthRequestProperty, new Binding(nameof(ProgressBarWidthRequest), source: this));
 
         Content = progressBarControl;
+    }
+
+
+    private void Frame_HandlerChanged(object? sender, EventArgs e)
+    {
+#if ANDROID
+        if (Handler != null && Handler.PlatformView is Android.Views.View nativeView)
+        {
+            nativeView.Elevation = 0f; 
+        }
+#endif
     }
 }
