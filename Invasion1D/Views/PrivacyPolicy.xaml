@@ -2,33 +2,26 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Invasion1D.Views.PrivacyPolicy"
-             x:Name="page"
+            
              Style="{StaticResource ContentPage}"
              Title="PrivacyPolicy">
-        <AbsoluteLayout>
-            <WebView 
-                x:Name="PrivacyPolicyWebView"
-                Source="https://saleca.github.io/Home/invasion1d/privacy-policy"
-                AbsoluteLayout.LayoutBounds=".5, 0, AutoSize, AutoSize"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                HeightRequest="{Binding Source={x:Reference page}, Path=Height}"
-                WidthRequest="{Binding Source={x:Reference page}, Path=Width}"
-                Margin="25,0"/>
-            
+    <ScrollView>
+        <VerticalStackLayout
+        x:Name="DisplayLayout">
+
             <Grid
-                HeightRequest="50"
-                Margin="50,25"
-                AbsoluteLayout.LayoutBounds=".5, 1, AutoSize, AutoSize"
-                AbsoluteLayout.LayoutFlags="PositionProportional"
-                ColumnDefinitions="*,*">
+            HeightRequest="50"
+            Margin="50,25"
+            ColumnDefinitions="*,*">
                 <Button
-                    Text="Back"
-                    Clicked="Back_Clicked"
-                    Grid.Column="0"/>
+                Text="Back"
+                Clicked="Back_Clicked"
+                Grid.Column="0"/>
                 <Button
-                    Text="Open in browser"
-                    Clicked="OpenInBrowser_Clicked"
-                    Grid.Column="1"/>
+                Text="Open in browser"
+                Clicked="OpenInBrowser_Clicked"
+                Grid.Column="1"/>
             </Grid>
-        </AbsoluteLayout>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

@@ -1,10 +1,28 @@
+using HtmlAgilityPack;
+
 namespace Invasion1D.Views;
 
 public partial class PrivacyPolicy : ContentPage
 {
+    const string url = "https://saleca.github.io/Home/invasion1d/privacy-policy";
+
     public PrivacyPolicy()
     {
         InitializeComponent();
+
+        HtmlNode mainNode = ExtractMainContent() ?? throw new Exception();
+
+        HtmlNodeCollection nodes = mainNode.SelectNodes(".//text()");
+        for (int i = 0; i < nodes.Count; i++)
+        {
+            //if nodes[i] is tittle set style ...
+            DisplayLayout.Insert(
+                index: i,
+                child: new Label()
+                    {
+                        Text = nodes[i].InnerText.Trim()
+                    }); 
+        }
     }
 
     private void Back_Clicked(object sender, EventArgs e)
@@ -14,22 +32,21 @@ public partial class PrivacyPolicy : ContentPage
 
     private void OpenInBrowser_Clicked(object sender, EventArgs e)
     {
-        Launcher.OpenAsync("https://saleca.github.io/Home/invasion1d/privacy-policy");
+        Launcher.OpenAsync(url);
     }
 
-    private async void PrivacyPolicyWebView_Navigated(object sender, WebNavigatedEventArgs e)
+    public static HtmlNode? ExtractMainContent()
     {
-        string script = "document.body.scrollHeight;";
-        var result = await PrivacyPolicyWebView.EvaluateJavaScriptAsync(script);
+        HtmlWeb web = new();
+        HtmlDocument doc = web.Load(url);
 
-        if (!string.IsNullOrEmpty(result))
+        HtmlNode mainNode = doc.DocumentNode.SelectSingleNode("//main");
+
+        if (mainNode != null)
         {
-            int contentHeight = int.Parse(result);
-            PrivacyPolicyWebView.HeightRequest = contentHeight;
+            return mainNode;
         }
-        else
-        {
-            PrivacyPolicyWebView.HeightRequest = Height;
-        }
+
+        return null;
     }
 }
