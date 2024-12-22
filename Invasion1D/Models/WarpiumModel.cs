@@ -7,7 +7,12 @@ public class WarpiumModel(Dimension dimension, float position)
 {
     public override bool Power(Character character)
     {
-        character.AddWarpium();
+        if (character is not PlayerModel player)
+        {
+            return false;
+        }
+
+        player.AddWarpium();
         toDispose = true;
         return true;
     }

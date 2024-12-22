@@ -1,7 +1,6 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
-using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
@@ -13,6 +12,9 @@ public class PlayerModel : Character
     Dimension? travelingToDimension;
     float positionPercentageForNewDimention;
 
+    public int warpium = 1;
+    public Cooldown warpCooldown;
+
     public PlayerModel(Dimension dimension, float position, float speed)
         : base(dimension, position, GameColors.Player, speed)
     {
@@ -20,7 +22,19 @@ public class PlayerModel : Character
         Game.Instance.UI.SelectDirection(direction);
 
         Game.Instance.UI.AddWarpium();
+        SetUpCooldownTimers();
     }
+
+    public new void Tick()
+    {
+        base.Tick();
+        if (warpCooldown.IsActive)
+        {
+            warpCooldown.Update();
+        }
+    }
+
+    public void AddWarpium() => warpium++;
 
     public void Warp()
     {
@@ -96,7 +110,7 @@ public class PlayerModel : Character
 
         Game.Instance.UI.IsAnimating = true;
         Task<bool> translatePlayer = body.TranslateTo(end.X, end.Y, Stats.warpAnimationDurationMS, Easing.CubicInOut);
-        ActivateWarpCooldown();
+        warpCooldown.Activate();
 
         if (!Game.Instance.IsTutorial)
         {
@@ -123,6 +137,11 @@ public class PlayerModel : Character
 
     public override void Attack()
     {
+        if (shootCooldown.IsActive)
+        {
+            return;
+        }
+
         float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.regularAttackCost;
         if (vitalux >= currentAttackCost)
         {
@@ -148,7 +167,7 @@ public class PlayerModel : Character
                 bullet.NegativeMove();
             }
 
-            ActivateShootCooldown();
+            shootCooldown.Activate();
         }
     }
 
@@ -218,4 +237,127 @@ public class PlayerModel : Character
         toDispose = true;
         Game.Instance.End();
     }
+
+    private void SetUpCooldownTimers()
+    {
+        weaveCooldown = new(
+            start: () =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.UpdateWeaveCooldown(1);
+                });
+            },
+            update: (progress) =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.UpdateWeaveCooldown(progress);
+                });
+            },
+            complete: () =>
+            {
+                weave = false;
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.UpdateWeaveCooldown(0);
+                });
+            },
+            interval: Stats.smoothIncrementIntervalF,
+            increment: Stats.weaveCooldownIncrement,
+            inverted: true);
+
+        shootCooldown = new(
+            start: () =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.ShowShootKey(false);
+                    Game.Instance.UI.UpdateShootCooldown(1);
+                });
+            },
+            update: (progress) =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.UpdateShootCooldown(progress);
+                });
+            },
+            complete: () =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.ShowShootKey(true);
+                    Game.Instance.UI.UpdateShootCooldown(0);
+                });
+            },
+            interval: Stats.smoothIncrementIntervalF,
+            increment: Stats.shootCooldownIncrement,
+            inverted: true);
+
+        warpCooldown = new(
+            start: () =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.ShowWarpKey(false);
+                    Game.Instance.UI.UpdateWarpCooldown(1);
+                });
+            },
+            update: (progress) =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.UpdateWarpCooldown(progress);
+                });
+            },
+            complete: () =>
+            {
+                Game.Instance.UI.RunOnUIThread(() =>
+                {
+                    if (disposed)
+                    {
+                        return;
+                    }
+                    Game.Instance.UI.ShowWarpKey(true);
+                    Game.Instance.UI.UpdateWarpCooldown(0);
+                });
+            },
+            interval: Stats.smoothIncrementIntervalF,
+            increment: Stats.warpCooldownIncrement,
+            inverted: true);
+    }
+
 }

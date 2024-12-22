@@ -155,7 +155,7 @@ internal class Game
         foreach (var enemy in universe.enemies)
         {
             enemy.Tick();//temporary till i abstract the update logic 
-            if (enemy.toReact)
+            if (enemy.CanReact)
             {
                 enemy.React();
             }
@@ -168,7 +168,6 @@ internal class Game
 
         foreach (var bullet in universe.bullets)
         {
-            bullet.Tick();
             bullet.Move();
             objectsToUpdateUI.Add(bullet);
         }

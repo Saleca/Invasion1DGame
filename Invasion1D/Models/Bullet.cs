@@ -8,8 +8,7 @@ namespace Invasion1D.Models
         public float
             condition,
             damage;
-
-        int cooldownTimer = -1;
+        Cooldown? lifeSpan;
 
         public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color)
             : base(dimension, position, color, Stats.bulletSpeed)
@@ -23,25 +22,12 @@ namespace Invasion1D.Models
             {
                 damage = condition = Stats.regularAttackDamage;
 
-                cooldownTimer = Stats.bulletDurationF;
+                lifeSpan = new(
+                    interval: Stats.bulletDurationF,
+                    complete: () => { TakeDamage(damage); });
+                lifeSpan.Activate();
             }
             Game.Instance.universe.bullets.Add(this);
-        }
-
-        public void Tick()
-        {
-            if (cooldownTimer == -1)
-            {
-                return;
-            }
-
-            cooldownTimer--;
-            if (cooldownTimer != 0)
-            {
-                return;
-            }
-
-            TakeDamage(damage);
         }
 
         public static void AddToUI(Bullet bullet)
@@ -51,6 +37,8 @@ namespace Invasion1D.Models
 
         public override void Move()
         {
+            lifeSpan?.Update();
+
             List<Type> ignore = [typeof(VitaluxModel), typeof(WarpiumModel), typeof(HealthModel), typeof(WeaveModel)];
 
             Kinetic? target = FindInteractive(out float distanceFromTarget, direction, this, [.. ignore]) as Kinetic;

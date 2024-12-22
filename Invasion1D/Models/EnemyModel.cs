@@ -1,30 +1,51 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
+using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
 public class EnemyModel : Character
 {
-    int reactionCooldown = -1;
-    public bool toReact = false;
-
+    Cooldown reactionCooldown;
+    bool react = false;
+    public bool CanReact => react;
     Interactive? targetInSight;
 
     public EnemyModel(Dimension shape, float position, float speed)
         : base(shape, position, GameColors.Enemy, speed)
     {
         direction = Game.Instance.RandomDirection();
-        reactionCooldown = Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
+
+        SetUpCooldownTimers();
+    }
+
+    private void SetUpCooldownTimers()
+    {
+        shootCooldown = new(
+              interval: Stats.smoothIncrementIntervalF,
+              increment: Stats.shootCooldownIncrement);
+
+        weaveCooldown = new(
+            interval: Stats.smoothIncrementIntervalF,
+            increment: Stats.weaveCooldownIncrement,
+            start: () => { weave = true; },
+            complete: () => { weave = false; });
+
+        reactionCooldown = new(
+            start: () => { react = false; },
+            complete: () => { react = true; });
     }
 
     public void Start()
     {
-        toReact = false;
+        reactionCooldown.Activate(Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF));
     }
+
     public void Stop()
     {
-        toReact = false;
+        reactionCooldown.Reset();
+        react = false;
     }
 
     public override void Attack()
@@ -34,6 +55,7 @@ public class EnemyModel : Character
         {
             vitalux -= currentAttackCost;
 
+            Debug.WriteLine($"direction: {direction}");
             Bullet bullet = new(dimension: currentDimension,
                     position: direction ?
                         GameMath.AddPercentage(PositionPercentage, sizePercentage) :
@@ -52,6 +74,7 @@ public class EnemyModel : Character
             {
                 bullet.NegativeMove();
             }
+            shootCooldown.Activate();
         }
     }
 
@@ -126,8 +149,10 @@ public class EnemyModel : Character
                         MoveToTarget();
                         break;
                     case 1:
-                        Attack();
-                        //allow run away when no attck available (or search vitalux)
+                        if (!shootCooldown.IsActive) // run away if no attack available
+                        {
+                            Attack();
+                        }
                         break;
                 }
             }
@@ -136,13 +161,7 @@ public class EnemyModel : Character
                 MoveToTarget();
             }
         }
-        RestartReactionTimer();
-    }
-
-    void RestartReactionTimer()
-    {
-        toReact = false;
-        reactionCooldown = Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF);
+        reactionCooldown.Activate(Game.Instance.Fate.Next(Stats.minEnemyReactionF, Stats.maxEnemyReactionF));
     }
 
     void MoveToTarget()
@@ -171,16 +190,9 @@ public class EnemyModel : Character
     internal new void Tick()
     {
         base.Tick();
-        if (reactionCooldown == -1)
-            return;
-
-        reactionCooldown--;
-        if (reactionCooldown != 0)
+        if (reactionCooldown.IsActive)
         {
-            return;
+            reactionCooldown.Update();
         }
-
-        toReact = true;
-        reactionCooldown = -1;
     }
 }

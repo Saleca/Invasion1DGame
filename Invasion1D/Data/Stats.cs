@@ -54,8 +54,8 @@ public static class Stats
     public const int
         smoothIncrementIntervalF = 1;
     public const float
-        weaveCoolDownIncrement = .01f,
-        shootCoolDownIncrement = .05f,
+        weaveCooldownIncrement = .01f,
+        shootCooldownIncrement = .05f,
         warpCooldownIncrement = 1.0f / warpCooldownIncrementCount;
 
     //automation : enemies/items to space ratio, items respawn rate
