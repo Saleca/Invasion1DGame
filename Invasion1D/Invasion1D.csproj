@@ -18,8 +18,8 @@
     <ApplicationId>com.saleca.invasion1d</ApplicationId>
 
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.5.2</ApplicationDisplayVersion>
-    <ApplicationVersion>21</ApplicationVersion>
+    <ApplicationDisplayVersion>0.5.3</ApplicationDisplayVersion>
+    <ApplicationVersion>22</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -56,6 +56,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Update="Views\PrivacyPolicy.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\StartMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
