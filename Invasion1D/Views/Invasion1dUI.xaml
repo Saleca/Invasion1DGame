@@ -8,6 +8,7 @@
              Title="Invasion 1D">
 
     <Grid RowDefinitions="2*,6*,2*">
+        <!-- remove margins ?-->
         <Grid 
             x:Name="StatsGrid"
             Grid.Column="0"
@@ -39,7 +40,7 @@
                     x:Name="WarpiumContainer"
                     Grid.Row="1"
                     Grid.Column="1"
-                    HorizontalOptions="Center"/>
+                    Style="{StaticResource WarpiumContainer}"/>
 
                 <Label
                     Grid.Row="0"
@@ -169,33 +170,34 @@
             Grid.RowSpan="3"
             IsVisible="False"
             Style="{StaticResource PopupMenu}">
-            <Grid
-                RowDefinitions="*,*,*,*,*">
+            <FlexLayout
+                Direction="Column">
                 <Label 
                     x:Name="MenuTitle"
-                    Text="Pause"/>
+                    Text="Pause"
+                    FlexLayout.Grow="1"
+                    Style="{StaticResource DocumentTitle}"/>
 
                 <Button 
                     x:Name="ContinueButton"
                     Text="Continue"
                     Clicked="PauseButtonClicked"
-                    Grid.Row="2"
-                    Padding="20,10"/>
+                    Style="{StaticResource MenuButton}"/>
+                <local:Space HeightRequest="5"/>
 
                 <Button
                     x:Name="RestartKey"
                     Text="Restart"
                     Clicked="RestartClicked"
-                    Grid.Row="3"
-                    Padding="20,10"/>
+                    Style="{StaticResource MenuButton}"/>
+                <local:Space HeightRequest="5"/>
 
                 <Button
                     x:Name="LaunchPage"
                     Text="Quit"
                     Clicked="LaunchPage_Clicked"
-                    Grid.Row="4"
-                    Padding="20,10"/>
-            </Grid>
+                    Style="{StaticResource MenuButton}"/>
+            </FlexLayout>
         </Frame>
     </Grid>
 </ContentPage>

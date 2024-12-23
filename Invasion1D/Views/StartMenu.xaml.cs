@@ -25,7 +25,7 @@ public partial class StartMenu : ContentPage
 
     private void PrivacyPolicy_Clicked(object sender, EventArgs e)
     {
-        App.Current!.MainPage = new PrivacyPolicy();
+        App.Current!.MainPage = App.PrivacyPolicyInstance;
     }
 
     private void SeedEntry_TextChanged(object sender, TextChangedEventArgs e)

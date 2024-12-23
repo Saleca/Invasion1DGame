@@ -118,8 +118,16 @@ public partial class Invasion1dUI : ContentPage
     public void ShowShootKey(bool show) => ShootKey.IsVisible = show;
     public void ShowWarpKey(bool show) => WarpKey.IsVisible = show;
 
-    public void AddWarpium() => WarpiumContainer.Add(new WarpiumControl());
-    public void RemoveWarpium() => WarpiumContainer.RemoveAt(0);
+    public void AddWarpium()
+    {
+        WarpiumContainer.Add(new Space() { WidthRequest = 5 });
+        WarpiumContainer.Add(new WarpiumControl());
+    }
+    public void RemoveWarpium()
+    {
+        WarpiumContainer.RemoveAt(0);
+        WarpiumContainer.RemoveAt(0);
+    }
     public void ClearWarpium() => WarpiumContainer.Clear();
 
     public void AddToMap(Shape shape)

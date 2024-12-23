@@ -1,6 +1,6 @@
 ﻿namespace Invasion1D.Helpers;
 
-public static class StringExtentions
+public static partial class StringExtentions
 {
     public static string CustomToString(this TimeSpan timeSpan)
     {
@@ -17,4 +17,13 @@ public static class StringExtentions
             return timeSpan.ToString(@"ss\.f");
         }
     }
+
+    public static string CleanElementTextContents(this string text)
+    {
+        text = text.Trim().Replace("\r\n", " ").Replace("\n", " ").Replace("\r", " ");
+        return MultipleSpaces().Replace(text, " ");
+    }
+
+    [System.Text.RegularExpressions.GeneratedRegex(@"\s+")]
+    private static partial System.Text.RegularExpressions.Regex MultipleSpaces();
 }

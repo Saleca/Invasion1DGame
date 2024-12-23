@@ -7,12 +7,13 @@
 
     <Style TargetType="ContentPage" x:Key="ContentPage">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
+        <Setter Property="Padding" Value="5"/>
     </Style>
 
     <Style TargetType="Frame" x:Key="BaseFrame">
         <Setter Property="CornerRadius" Value="8"/>
-        <Setter Property="Margin" Value="5"/>
-        <Setter Property="Padding" Value="0"/>
+        <Setter Property="Margin" Value="0"/>
+        <Setter Property="Padding" Value="5"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
@@ -22,20 +23,15 @@
     <Style TargetType="Frame" BasedOn="{StaticResource BaseFrame}"/>
 
     <Style TargetType="Frame" x:Key="PopupMenu" BasedOn="{StaticResource BaseFrame}">
-        <Setter Property="Margin" Value="50"/>
-        <Setter Property="Padding" Value="50"/>
+        <Setter Property="Margin" Value="50, 100"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand" />
         <Setter Property="VerticalOptions" Value="FillAndExpand" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
     </Style>
 
-    <Style TargetType="local:InvertedProgressBar" BasedOn="{StaticResource BaseFrame}"/>
-
-    <Style TargetType="local:WarpiumControl">
-        <Setter Property="Margin" Value="2,5"/>
-        <Setter Property="BackgroundColor" Value="{StaticResource Warpium}"/>
-        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
+    <Style TargetType="local:InvertedProgressBar" BasedOn="{StaticResource BaseFrame}">
+        <Setter Property="Padding" Value="0"/>
     </Style>
 
     <Style TargetType="BoxView">
@@ -51,12 +47,10 @@
         <Setter Property="VerticalOptions" Value="FillAndExpand"/>
         <Setter Property="FontSize" Value="14"/>
         <Setter Property="Padding" Value="2,1"/>
-        <Setter Property="Margin" Value="5"/>
+        <Setter Property="Margin" Value="0"/>
         <Setter Property="MinimumHeightRequest" Value="10"/>
         <Setter Property="MinimumWidthRequest" Value="10"/>
-    </Style>
-    
-    <Style TargetType="Button" BasedOn="{StaticResource BaseButton}">
+
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -79,7 +73,12 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-    
+
+    <Style TargetType="Button" BasedOn="{StaticResource BaseButton}"/>
+    <Style TargetType="Button" x:Key="MenuButton" BasedOn="{StaticResource BaseButton}">
+        <Setter Property="Padding" Value="20,10"/>
+    </Style>
+
     <Style TargetType="Button" x:Key="SelectedButton" BasedOn="{StaticResource BaseButton}">
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -103,12 +102,53 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-    
-    <Style TargetType="Label">
+
+    <Style TargetType="Label" x:Key="BaseLabel">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
         <Setter Property="FontSize" Value="14" />
+    </Style>
+    <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}"/>
+
+    <Style TargetType="Label" x:Key="DocumentText" BasedOn="{StaticResource BaseLabel}">
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
+        <Setter Property="VerticalTextAlignment" Value="Start"/>
+        <Setter Property="LineBreakMode" Value="CharacterWrap"/>
+        <Setter Property="Margin" Value="5,0,5,5"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="DocumentTitle">
+        <Setter Property="FontSize" Value="25" />
+        <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="Margin" Value="5,0,5,15"/>
+    </Style>
+
+    <Style TargetType="Label" x:Key="DocumentSubTitle" BasedOn="{StaticResource DocumentTitle}">
+        <Setter Property="FontSize" Value="20"/>
+    </Style>
+
+    <Style TargetType="Grid">
+        <Setter Property="RowSpacing" Value="5"/>
+        <Setter Property="ColumnSpacing" Value="5"/>
+    </Style>
+
+    <Style TargetType="VerticalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <Style TargetType="HorizontalStackLayout">
+        <Setter Property="Spacing" Value="5"/>
+    </Style>
+
+    <Style TargetType="HorizontalStackLayout" x:Key="WarpiumContainer">
+        <Setter Property="Spacing" Value="0"/>
+        <Setter Property="HorizontalOptions" Value="Center"/>
+    </Style>
+
+    <Style TargetType="local:WarpiumControl">
+        <Setter Property="BackgroundColor" Value="{StaticResource Warpium}"/>
+        <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
     </Style>
 </ResourceDictionary>
