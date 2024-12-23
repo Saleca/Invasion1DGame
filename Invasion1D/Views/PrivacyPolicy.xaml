@@ -7,20 +7,19 @@
              Title="PrivacyPolicy">
     <ScrollView>
         <VerticalStackLayout
-        x:Name="DisplayLayout">
-
+            x:Name="DisplayLayout">
             <Grid
-            HeightRequest="50"
-            Margin="50,25"
-            ColumnDefinitions="*,*">
+                HeightRequest="50"
+                Margin="50,25"
+                ColumnDefinitions="*,*">
                 <Button
-                Text="Back"
-                Clicked="Back_Clicked"
-                Grid.Column="0"/>
+                    Text="Back"
+                    Clicked="Back_Clicked"
+                    Grid.Column="0"/>
                 <Button
-                Text="Open in browser"
-                Clicked="OpenInBrowser_Clicked"
-                Grid.Column="1"/>
+                    Text="Open in browser"
+                    Clicked="OpenInBrowser_Clicked"
+                    Grid.Column="1"/>
             </Grid>
         </VerticalStackLayout>
     </ScrollView>

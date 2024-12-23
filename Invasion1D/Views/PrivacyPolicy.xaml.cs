@@ -1,4 +1,5 @@
 using HtmlAgilityPack;
+using Windows.Media.Audio;
 
 namespace Invasion1D.Views;
 
@@ -11,8 +12,11 @@ public partial class PrivacyPolicy : ContentPage
         InitializeComponent();
 
         HtmlNode mainNode = ExtractMainContent() ?? throw new Exception();
-
-        HtmlNodeCollection nodes = mainNode.SelectNodes(".//text()");
+        HtmlNode enNode = mainNode.ChildNodes[1];//extract only html nodes 
+        //create button for each node class name
+        //display only one at the time , associated with a button
+        //format text for "document" (same for tutorial intro)
+        HtmlNodeCollection nodes = enNode.SelectNodes(".//text()");
         for (int i = 0; i < nodes.Count; i++)
         {
             //if nodes[i] is tittle set style ...
