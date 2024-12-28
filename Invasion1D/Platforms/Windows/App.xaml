@@ -5,4 +5,22 @@
     xmlns:maui="using:Microsoft.Maui"
     xmlns:local="using:Invasion1D.WinUI">
 
+    <maui:MauiWinUIApplication.Resources>
+        <ResourceDictionary>
+            <!--     light theme
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#333"/>
+            <Thickness x:Key="TextControlBorderThemeThickness">0,0,0,1</Thickness>
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555"/>
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#333"/>
+            <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,1</Thickness>
+            -->
+            
+            <!-- dark theme -->
+            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#bbb"/>
+            <Thickness x:Key="TextControlBorderThemeThickness">0,0,0,1</Thickness>
+            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#999"/>
+            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#bbb"/>
+            <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,1</Thickness>
+        </ResourceDictionary>
+    </maui:MauiWinUIApplication.Resources>
 </maui:MauiWinUIApplication>

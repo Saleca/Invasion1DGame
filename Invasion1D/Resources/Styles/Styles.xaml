@@ -236,6 +236,16 @@
         <Setter Property="FontSize" Value="20"/>
     </Style>
 
+    <Style TargetType="Entry">
+        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
+        <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="IsTextPredictionEnabled" Value="False"/>
+        <Setter Property="ClearButtonVisibility" Value="Never"/>
+        <Setter Property="ReturnType" Value="Done"/>
+    </Style>
+
     <Style TargetType="Grid">
         <Setter Property="RowSpacing" Value="5"/>
         <Setter Property="ColumnSpacing" Value="5"/>
