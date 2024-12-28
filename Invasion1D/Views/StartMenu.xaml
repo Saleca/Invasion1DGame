@@ -1,100 +1,53 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Invasion1D.Controls"
              x:Class="Invasion1D.Views.StartMenu"
              Style="{StaticResource ContentPage}"
              Title="Start Menu">
-    <AbsoluteLayout>
-        <FlexLayout
-            AbsoluteLayout.LayoutBounds=".5,.5,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            Direction="Column">
-            <Label 
-                Text="Start Menu"
-                FlexLayout.Grow="1"
-                Style="{StaticResource DocumentTitle}"/>
-            <VerticalStackLayout>
-                <Frame>
-                    <Grid
-                        ColumnDefinitions="*,*">
-                        <Label 
-                            Text="Seed"
-                            Grid.Column="0"/>
-                        <Entry 
-                            x:Name="SeedEntry" 
-                            Text="0"
-                            TextChanged="SeedEntry_TextChanged"
-                            Completed="SeedEntry_Completed"
-                            Focused="SeedEntry_Focused"
-                            HorizontalTextAlignment="Center"
-                            VerticalTextAlignment="Center"
-                            Grid.Column="1"/>
-                    </Grid>
-                </Frame>
-                
-                <Button
-                    x:Name="Start"
-                    Text="Start"
-                    Clicked="Start_Clicked"
-                    Style="{StaticResource MenuButton}"/>
-                
-                <Button
-                    Text="Tutorial"
-                    Clicked="Tutorial_Clicked"
-                    Style="{StaticResource MenuButton}"/>
-                
-                <Button
-                    x:Name="PrivacyPolicy"
-                    Text="Privacy Policy"
-                    Clicked="PrivacyPolicy_Clicked"
-                    Style="{StaticResource MenuButton}"/>
-            </VerticalStackLayout>
-        </FlexLayout>
-
-        <Frame
-            x:Name="TutorialIntro"
-            AbsoluteLayout.LayoutBounds=".5,.5,1,1"
-            AbsoluteLayout.LayoutFlags="All"
-            Style="{StaticResource PopupMenu}"
-            IsVisible="False">
-            <Grid 
-                RowDefinitions="*,auto">
-                <ScrollView
-                    Grid.Row="0">
-                    <VerticalStackLayout>
-                        <Label 
-                            Text="Welcome"
-                            Style="{StaticResource DocumentTitle}"/>
-
-                        <Label 
-                            Text="You are an one dimentional beeing that landed on a multiverse with mean one dimentional creatures."
-                            Style="{StaticResource DocumentText}"/>
-
-                        <Label 
-                            Text="Luckily you have the means to defend and counquer, use vitalux to shoot your enemies and warp to teleport to another dimention. Be wise, what goes around comes around, specially with Weave - this temporary power weakens the damage of the shot but it will not fade"
-                            Style="{StaticResource DocumentText}"/>
-
-                        <Label 
-                            Text="In this tutorial you can see the multiverse from a higher dimention. Are you ready?"
-                            Style="{StaticResource DocumentText}"/>
-                    </VerticalStackLayout>
-                </ScrollView>
-               
+    <local:PopupMenu
+        x:Name="Menu">
+        <local:PopupMenu.MenuContent>
+            <Frame 
+                Style="{StaticResource VerticalMenuFrame}">
                 <Grid
-                    Grid.Row="1"
                     ColumnDefinitions="*,*">
-                    <Button 
-                        Text="Back"
-                        Clicked="BackButton_Clicked"
-                        Grid.Column="0"
-                        Style="{StaticResource MenuButton}"/>
-                    <Button 
-                        Text="Start"
-                        Clicked="StartTutorialButton_Clicked"
-                        Grid.Column="1"
-                        Style="{StaticResource MenuButton}"/>
+                    <Label 
+                        Text="Seed"
+                        Grid.Column="0"/>
+                    <Entry 
+                        x:Name="SeedEntry" 
+                        Text="0"
+                        TextChanged="SeedEntry_TextChanged"
+                        Completed="SeedEntry_Completed"
+                        Focused="SeedEntry_Focused"
+                        HorizontalTextAlignment="Center"
+                        VerticalTextAlignment="Center"
+                        Grid.Column="1"/>
                 </Grid>
-            </Grid>
-        </Frame>
-    </AbsoluteLayout>
+            </Frame>
+
+            <Button
+                x:Name="Start"
+                Text="Start"
+                Clicked="Start_Clicked"
+                Style="{StaticResource VerticalMenuButton}"/>
+
+            <Button
+                Text="Tutorial"
+                Clicked="Tutorial_Clicked"
+                Style="{StaticResource VerticalMenuButton}"/>
+
+            <Button 
+                 Text="Settings"
+                 Clicked="SettingsButton_Clicked"
+                 Style="{StaticResource VerticalMenuButton}"/>
+
+            <Button
+                x:Name="PrivacyPolicy"
+                Text="Privacy Policy"
+                Clicked="PrivacyPolicy_Clicked"
+                Style="{StaticResource VerticalMenuButton}"/>
+        </local:PopupMenu.MenuContent>
+    </local:PopupMenu>
 </ContentPage>

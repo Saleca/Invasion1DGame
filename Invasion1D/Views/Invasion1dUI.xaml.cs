@@ -164,11 +164,11 @@ public partial class Invasion1dUI : ContentPage
     public void ShowPauseButton(bool show) => PauseButton.IsVisible = show;
     public void ShowStats(bool show) => StatsGrid.IsVisible = show;
 
-    public void ShowPopUpMenu(bool show = true, string text = "")
+    public void ShowPopupMenu(bool show = true, string text = "")
     {
         if (show)
         {
-            MenuTitle.Text = text;
+            Menu.Title = text;
             Menu.IsVisible = true;
         }
         else
@@ -256,12 +256,17 @@ public partial class Invasion1dUI : ContentPage
     private void PauseButtonClicked(object sender, EventArgs e)
     {
         Game.Instance.Pause(!Game.Instance.IsPaused);
-        ShowPopUpMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause" : "");
+        ShowPopupMenu(Game.Instance.IsPaused, Game.Instance.IsPaused ? "Pause" : "");
         ShowControls(!Game.Instance.IsPaused);
     }
     private void RestartClicked(object sender, EventArgs e)
     {
-        ShowPopUpMenu(false);
+        ShowPopupMenu(false);
         Game.Instance.Start(Game.Instance.Seed, Game.Instance.IsTutorial);
+    }
+
+    private void SettingsButton_Clicked(object sender, EventArgs e)
+    {
+        Menu.Modal = new Settings();
     }
 }

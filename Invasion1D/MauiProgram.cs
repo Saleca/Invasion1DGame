@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Invasion1D.Views;
+using Microsoft.Extensions.Logging;
 
 namespace Invasion1D
 {
@@ -20,7 +21,7 @@ namespace Invasion1D
 			builder.Logging.AddDebug();
 #endif
 
-			return builder.Build();
+            return builder.Build();
 		}
 	}
 }

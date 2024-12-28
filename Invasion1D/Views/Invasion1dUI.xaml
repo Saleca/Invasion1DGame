@@ -57,6 +57,7 @@
                     Grid.RowSpan="2"
                     Clicked="PauseButtonClicked"/>
             </Grid>
+
             <Grid 
                 Grid.Row="1"
                 RowDefinitions="*,*"
@@ -165,39 +166,33 @@
             </Grid>
         </Grid>
 
-        <Frame
+        <local:PopupMenu
             x:Name="Menu"
+            Title="Pause"
             Grid.RowSpan="3"
-            IsVisible="False"
-            Style="{StaticResource PopupMenu}">
-            <FlexLayout
-                Direction="Column">
-                <Label 
-                    x:Name="MenuTitle"
-                    Text="Pause"
-                    FlexLayout.Grow="1"
-                    Style="{StaticResource DocumentTitle}"/>
-
+            IsVisible="False">
+            <local:PopupMenu.MenuContent>
                 <Button 
                     x:Name="ContinueButton"
                     Text="Continue"
                     Clicked="PauseButtonClicked"
-                    Style="{StaticResource MenuButton}"/>
-                <local:Space HeightRequest="5"/>
-
+                    Style="{StaticResource VerticalMenuButton}"/>
                 <Button
                     x:Name="RestartKey"
                     Text="Restart"
                     Clicked="RestartClicked"
-                    Style="{StaticResource MenuButton}"/>
-                <local:Space HeightRequest="5"/>
-
+                    Style="{StaticResource VerticalMenuButton}"/>
+                <Button 
+                    x:Name="SettingsButton"
+                    Text="Settings"
+                    Clicked="SettingsButton_Clicked"
+                    Style="{StaticResource VerticalMenuButton}"/>
                 <Button
                     x:Name="LaunchPage"
                     Text="Quit"
                     Clicked="LaunchPage_Clicked"
-                    Style="{StaticResource MenuButton}"/>
-            </FlexLayout>
-        </Frame>
+                    Style="{StaticResource VerticalMenuButton}"/>
+            </local:PopupMenu.MenuContent>
+        </local:PopupMenu>
     </Grid>
 </ContentPage>

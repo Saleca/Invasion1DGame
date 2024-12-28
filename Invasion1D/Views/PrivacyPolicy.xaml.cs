@@ -20,7 +20,7 @@ public partial class PrivacyPolicy : ContentPage
     {
         if (!ResourcesInterop.TryGetResource("DocumentText", out Style? textStyle)
            || !ResourcesInterop.TryGetResource("DocumentSubTitle", out Style? subTitleStyle)
-            || !ResourcesInterop.TryGetResource("DocumentTitle", out Style? titleStyle)
+           || !ResourcesInterop.TryGetResource("DocumentTitle", out Style? titleStyle)
            || !ResourcesInterop.TryGetResource("MenuButton", out Style? menuButton))
         {
             throw new Exception();

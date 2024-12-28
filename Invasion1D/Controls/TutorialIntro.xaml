@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Invasion1D.Controls.TutorialIntro">
+    <Grid
+        RowDefinitions="*,auto">
+        <ScrollView
+        Grid.Row="0">
+            <VerticalStackLayout>
+                <Label 
+                    Text="Welcome"
+                    Style="{StaticResource Title}"/>
+
+                <Label 
+                    Text="You are an one dimentional beeing that landed on a multiverse with mean one dimentional creatures."
+                    Style="{StaticResource Text}"/>
+
+                <Label 
+                    Text="Luckily you have the means to defend and counquer, use vitalux to shoot your enemies and warp to teleport to another dimention. Be wise, what goes around comes around, specially with Weave - this temporary power weakens the damage of the shot but it will not fade"
+                    Style="{StaticResource Text}"/>
+
+                <Label 
+                    Text="In this tutorial you can see the multiverse from a higher dimention. Are you ready?"
+                    Style="{StaticResource Text}"/>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button 
+             Text="Start"
+             Clicked="StartTutorialButton_Clicked"
+             Grid.Row="1"
+             Style="{StaticResource MenuButton}"/>
+    </Grid>
+</ContentView>

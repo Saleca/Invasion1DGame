@@ -18,8 +18,8 @@
     <ApplicationId>com.saleca.invasion1d</ApplicationId>
 
     <!-- Versions -->
-    <ApplicationDisplayVersion>0.6.1</ApplicationDisplayVersion>
-    <ApplicationVersion>24</ApplicationVersion>
+    <ApplicationDisplayVersion>0.6.3</ApplicationDisplayVersion>
+    <ApplicationVersion>26</ApplicationVersion>
 
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">31.0</SupportedOSPlatformVersion>
     <SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'windows'">10.0.17763.0</SupportedOSPlatformVersion>
@@ -57,6 +57,18 @@
   </ItemGroup>
 
   <ItemGroup>
+    <MauiXaml Update="Controls\PopupMenu.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Controls\Settings.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Controls\ThemeSelector.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
+    <MauiXaml Update="Controls\TutorialIntro.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\PrivacyPolicy.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

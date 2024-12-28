@@ -144,7 +144,7 @@ internal class Game
             UI.UpdateView(GameColors.VoidColor, GameColors.VoidColor);
 
             UI.ShowContinueButton(false);
-            UI.ShowPopUpMenu(text: "Game Over");
+            UI.ShowPopupMenu(text: "Game Over");
             UI.ShowControls(false);
             UI.ShowPauseButton(false);
         });

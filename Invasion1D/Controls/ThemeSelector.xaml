@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Frame xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Invasion1D.Controls"
+    Style="{StaticResource BaseFrame}"
+    x:Class="Invasion1D.Controls.ThemeSelector">
+    <Grid
+        ColumnDefinitions="*,auto,*,auto,*">
+        <Button 
+            x:Name="Light"
+            Text="Light"
+            Clicked="LightButton_Clicked"
+            Grid.Column="0"
+            Style="{StaticResource ThemeButton}"/>
+
+        <local:Space 
+            Grid.Column="1"
+            Style="{StaticResource VerticalSeparator}"/>
+
+        <Button 
+            x:Name="Device"
+            Text="Device"
+            Clicked="DeviceButton_Clicked"
+            Grid.Column="2"
+            Style="{StaticResource ThemeButton}"/>
+
+        <local:Space 
+            Grid.Column="3"
+            Style="{StaticResource VerticalSeparator}"/>
+
+        <Button
+            x:Name="Dark"
+            Text="Dark"
+            Clicked="DarkButton_Clicked"
+            Grid.Column="4"
+            Style="{StaticResource ThemeButton}"/>
+    </Grid>
+</Frame>
