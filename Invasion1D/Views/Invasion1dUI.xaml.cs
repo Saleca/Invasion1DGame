@@ -267,6 +267,6 @@ public partial class Invasion1dUI : ContentPage
 
     private void SettingsButton_Clicked(object sender, EventArgs e)
     {
-        Menu.Modal = new Settings();
+        Menu.Modal = new Settings(seedReadOnly: true);
     }
 }

@@ -12,6 +12,6 @@ public partial class TutorialIntro : ContentView
 
     private void StartTutorialButton_Clicked(object sender, EventArgs e)
     {
-        Game.Instance.Start(StartMenu.seed, true);
+        Game.Instance.Start(Seed.Current, true);
     }
 }

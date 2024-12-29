@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<Grid xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Invasion1D.Controls.UnderLineEntry"
+    RowDefinitions="*,auto">
+    <VisualStateManager.VisualStateGroups>
+        <VisualStateGroup x:Name="CommonStates">
+            <VisualState x:Name="Normal"/>
+            <VisualState x:Name="PointerOver">
+                <VisualState.Setters>
+                    <Setter 
+                        TargetName="EntryUnderline" 
+                        Property="BoxView.BackgroundColor" 
+                        Value="Gray"/>
+                </VisualState.Setters>
+            </VisualState>
+        </VisualStateGroup>
+    </VisualStateManager.VisualStateGroups>
+
+    <ContentView x:Name="Container"/>
+    <BoxView
+        x:Name="EntryUnderline"
+        BackgroundColor="{AppThemeBinding Dark={StaticResource Light}, Light={StaticResource Dark}}"
+        HeightRequest="1"
+        HorizontalOptions="FillAndExpand"
+        Grid.Row="1"/>
+</Grid>

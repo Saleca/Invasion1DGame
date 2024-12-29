@@ -60,6 +60,9 @@
     <MauiXaml Update="Controls\PopupMenu.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Controls\SeedView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Controls\Settings.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
@@ -69,7 +72,7 @@
     <MauiXaml Update="Controls\TutorialIntro.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
-    <MauiXaml Update="Controls\VariableBorder.xaml">
+    <MauiXaml Update="Controls\UnderLineEntry.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
     <MauiXaml Update="Views\PrivacyPolicy.xaml">

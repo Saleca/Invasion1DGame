@@ -21,7 +21,7 @@ namespace Invasion1D.Logic
 
         public void Initiate()
         {
-            _ = new Seed();
+            _ = new Populate();
 
             enemies = dimensions.SelectMany(dimension => dimension.interactiveObjects.OfType<EnemyModel>()).ToList();
             initialEnemyCount = enemies.Count;

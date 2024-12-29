@@ -5,5 +5,7 @@
     x:Class="Invasion1D.Controls.Settings">
     <VerticalStackLayout>
         <local:ThemeSelector/>
+        <local:SeedView
+            x:Name="SeedViewControl"/>
     </VerticalStackLayout>
 </ContentView>

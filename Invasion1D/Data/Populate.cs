@@ -5,9 +5,9 @@ using Linear = Invasion1D.Models.Linear;
 
 namespace Invasion1D.Data;
 
-public class Seed
+public class Populate
 {
-    public Seed()
+    public Populate()
     {
         Circular
             c1 = new(new(33, 33), 33),
