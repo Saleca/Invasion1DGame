@@ -69,6 +69,9 @@
     <MauiXaml Update="Controls\TutorialIntro.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>
+    <MauiXaml Update="Controls\VariableBorder.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </MauiXaml>
     <MauiXaml Update="Views\PrivacyPolicy.xaml">
       <Generator>MSBuild:Compile</Generator>
     </MauiXaml>

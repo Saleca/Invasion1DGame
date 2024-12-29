@@ -10,11 +10,18 @@ public partial class StartMenu : ContentPage
     public StartMenu()
     {
         InitializeComponent();
+
         //check why title property need to be set in code
         Menu.Title = "Start Menu";
+
+        //BorderTest.InnerBackgroundColor = Colors.Red;
+        //BorderTest.BorderThickness = new(1,0,1,1);
+        //BorderTest.BorderColor = Colors.Transparent;
+
         Random random = new();
         seed = random.Next(10000);
         SeedEntry.Text = seed.ToString();
+
     }
 
     private void Start_Clicked(object sender, EventArgs e)

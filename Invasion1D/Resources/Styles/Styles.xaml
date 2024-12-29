@@ -139,7 +139,7 @@
     <Style TargetType="Button" x:Key="ThemeButton" BasedOn="{StaticResource BaseButton}">
         <Setter Property="BorderColor" Value="Transparent"/>
         <Setter Property="BorderWidth" Value="0"/>
-        
+
         <Setter Property="MinimumHeightRequest" Value="10"/>
         <Setter Property="MinimumWidthRequest" Value="10"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
@@ -164,7 +164,7 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-    
+
     <Style TargetType="Button" x:Key="SelectedThemeButton" BasedOn="{StaticResource ThemeButton}">
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -237,10 +237,11 @@
     </Style>
 
     <Style TargetType="Entry">
-        <Setter Property="HorizontalTextAlignment" Value="Center"/>
+        <Setter Property="HorizontalTextAlignment" Value="Start"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
+        <Setter Property="Keyboard" Value="Numeric"/>
         <Setter Property="IsTextPredictionEnabled" Value="False"/>
         <Setter Property="ClearButtonVisibility" Value="Never"/>
         <Setter Property="ReturnType" Value="Done"/>
