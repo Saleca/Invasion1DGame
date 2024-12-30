@@ -9,9 +9,9 @@ public partial class PrivacyPolicy : ContentView
     const string url = "https://saleca.github.io/Home/invasion1d/privacy-policy";
 
     readonly static Style
-        documentTextStyle,
-        documentSubTitleStyle,
-        documentTitleStyle,
+        textStyle,
+        subTitleStyle,
+        titleStyle,
         menuButtonStyle;
 
     readonly Dictionary<string, List<Label>> langContent = [];
@@ -19,17 +19,17 @@ public partial class PrivacyPolicy : ContentView
 
     static PrivacyPolicy()
     {
-        if (!ResourcesInterop.TryGetResource("DocumentText", out Style? textStyle)
-           || !ResourcesInterop.TryGetResource("DocumentSubTitle", out Style? subTitleStyle)
-           || !ResourcesInterop.TryGetResource("DocumentTitle", out Style? titleStyle)
+        if (!ResourcesInterop.TryGetResource("Text", out Style? textStyle)
+           || !ResourcesInterop.TryGetResource("SubTitle", out Style? subTitleStyle)
+           || !ResourcesInterop.TryGetResource("Title", out Style? titleStyle)
            || !ResourcesInterop.TryGetResource("MenuButton", out Style? menuButton))
         {
             throw new Exception();
         }
 
-        documentTextStyle = textStyle!;
-        documentSubTitleStyle = subTitleStyle!;
-        documentTitleStyle = titleStyle!;
+        PrivacyPolicy.textStyle = textStyle!;
+        PrivacyPolicy.subTitleStyle = subTitleStyle!;
+        PrivacyPolicy.titleStyle = titleStyle!;
         menuButtonStyle = menuButton!;
     }
 
@@ -47,12 +47,12 @@ public partial class PrivacyPolicy : ContentView
             Contents.Add(new Label()
             {
                 Text = "An error corrued please check you internet connectivity or visit the website.",
-                Style = documentTextStyle,
+                Style = textStyle,
             });
             Contents.Add(new Label()
             {
                 Text = url,
-                Style = documentTextStyle,
+                Style = textStyle,
             });
             return;
         }
@@ -109,16 +109,16 @@ public partial class PrivacyPolicy : ContentView
                 Style style = null!;
                 if (contentNode.Name == "h1")
                 {
-                    style = documentTitleStyle;
+                    style = titleStyle;
                 }
                 else if (contentNode.Name == "h2")
                 {
-                    style = documentSubTitleStyle;
+                    style = subTitleStyle;
                 }
                 else if (contentNode.Name == "p")
                 {
                     //add margins to style (windows vs android)
-                    style = documentTextStyle;
+                    style = textStyle;
                 }
 
                 Label content = new()

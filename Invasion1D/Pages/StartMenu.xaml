@@ -8,22 +8,21 @@
     <local:PopupMenu
         x:Name="Menu">
         <local:PopupMenu.MenuContent>
+            
+            <local:Space HeightRequest="50"/>
             <Button
                 x:Name="Start"
                 Text="Start"
                 Clicked="Start_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
-
             <Button
                 Text="Tutorial"
                 Clicked="Tutorial_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
-
             <Button 
                  Text="Settings"
                  Clicked="SettingsButton_Clicked"
                  Style="{StaticResource VerticalMenuButton}"/>
-
             <Button
                 x:Name="PrivacyPolicy"
                 Text="Privacy Policy"

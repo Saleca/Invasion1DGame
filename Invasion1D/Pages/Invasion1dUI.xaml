@@ -8,21 +8,15 @@
              Title="Invasion 1D">
 
     <Grid RowDefinitions="2*,6*,2*">
-        <!-- remove margins ?-->
         <Grid 
             x:Name="StatsGrid"
             Grid.Column="0"
             RowDefinitions="*,*"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
-            Margin="5"
             IsVisible="false">
             <Grid 
                 Grid.Row="0"
                 RowDefinitions="*,*"
-                ColumnDefinitions="*,*,*,*"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
+                ColumnDefinitions="*,*,*,*">
                 <Label
                     Grid.Row="0"
                     Grid.Column="0"
@@ -61,9 +55,7 @@
             <Grid 
                 Grid.Row="1"
                 RowDefinitions="*,*"
-                ColumnDefinitions="*,*,*"
-                HorizontalOptions="FillAndExpand"
-                VerticalOptions="FillAndExpand">
+                ColumnDefinitions="*,*,*">
                 <Label
                     Text="Health"
                     Grid.Row="0"
@@ -93,7 +85,6 @@
                 <local:InvertedProgressBar
                     x:Name="WeaveCooldownProgressBar"
                     ProgressBarColor="{StaticResource Weave}"
-                    
                     Grid.Row="1"
                     Grid.Column="2"/>
             </Grid>
@@ -102,20 +93,16 @@
         <Frame 
             x:Name="MainFrame"
             Grid.Row="1">
-            <AbsoluteLayout
-                Padding="0">
+            <AbsoluteLayout>
                 <Frame
                     x:Name="PlayerView"
                     android:VisualElement.Elevation="0"
-                    Margin="0"
-                    BackgroundColor="{AppThemeBinding Light={StaticResource White}, Dark={StaticResource Black}}"
+                    BackgroundColor="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}"
                     AbsoluteLayout.LayoutBounds="0.5, 0.5, AutoSize, AutoSize"
                     AbsoluteLayout.LayoutFlags="PositionProportional"/>
 
                 <AbsoluteLayout
-                    x:Name="MapView"
-                    Padding="0"
-                    Margin="0"/>
+                    x:Name="MapView"/>
             </AbsoluteLayout>
         </Frame>
 
@@ -124,8 +111,6 @@
             RowDefinitions="*,*"
             ColumnDefinitions="*,*"
             Grid.Row="2"
-            HorizontalOptions="FillAndExpand"
-            VerticalOptions="FillAndExpand"
             IsVisible="false">
             <Button
                 x:Name="NegKey"

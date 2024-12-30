@@ -1,2 +1,2 @@
 ﻿namespace Invasion1D.Controls;
-internal class Space : ContentView { }
+internal partial class Space : ContentView { }

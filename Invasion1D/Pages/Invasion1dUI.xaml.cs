@@ -117,7 +117,6 @@ public partial class Invasion1dUI : ContentPage
 
     public void AddWarpium()
     {
-        WarpiumContainer.Add(new Space() { WidthRequest = 5 });
         WarpiumContainer.Add(new WarpiumControl());
     }
     public void RemoveWarpium()
@@ -177,6 +176,7 @@ public partial class Invasion1dUI : ContentPage
 
     public void CenterMapView(object? sender, EventArgs e)
     {
+        //TODO:
         //remove hardcoded margins
         double scaleX = MainFrame.Width / (MapView.Width + 20);
         double scaleY = MainFrame.Height / (MapView.Height + 20);

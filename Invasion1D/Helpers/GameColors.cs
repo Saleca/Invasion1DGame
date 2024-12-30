@@ -10,6 +10,9 @@ internal static class GameColors
     internal static Color Health { get; }
     internal static Color Weave { get; }
     internal static Color Warpium { get; }
+    internal static Color Light { get; }
+    internal static Color Dark { get; }
+
 
     static GameColors()
     {
@@ -19,7 +22,9 @@ internal static class GameColors
             || !ResourcesInterop.TryGetResource(nameof(VitaluxModel).Replace("Model", ""), out Color? vitaluxColor)
             || !ResourcesInterop.TryGetResource(nameof(HealthModel).Replace("Model", ""), out Color? healthColor)
             || !ResourcesInterop.TryGetResource(nameof(WeaveModel).Replace("Model", ""), out Color? weaveColor)
-            || !ResourcesInterop.TryGetResource(nameof(WarpiumModel).Replace("Model", ""), out Color? warpiumColor))
+            || !ResourcesInterop.TryGetResource(nameof(WarpiumModel).Replace("Model", ""), out Color? warpiumColor)
+            || !ResourcesInterop.TryGetResource("Light", out Color? LightColor)
+            || !ResourcesInterop.TryGetResource("Dark", out Color? DarkColor))
         {
             throw exception;
         }
@@ -30,6 +35,8 @@ internal static class GameColors
         Health = healthColor!;
         Weave = weaveColor!;
         Warpium = warpiumColor!;
+        Light = LightColor!;
+        Dark = DarkColor!;
     }
 
     internal static Color LinearInterpolation(Color a, Color b, float i)
@@ -71,8 +78,8 @@ internal static class GameColors
 
     public static Color VoidColor => Application.Current?.RequestedTheme switch
     {
-        AppTheme.Dark => Colors.Black,
-        AppTheme.Light => Colors.White,
-        _ => Colors.Black,
+        AppTheme.Dark => Dark,
+        AppTheme.Light => Light,
+        _ => Dark,
     };
 }

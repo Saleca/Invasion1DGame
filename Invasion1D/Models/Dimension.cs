@@ -1,9 +1,10 @@
-﻿using Invasion1D.Logic;
+﻿using Invasion1D.Helpers;
+using Invasion1D.Logic;
 
 namespace Invasion1D.Models;
 
 public abstract class Dimension()
-    : GFX(6, Colors.Black, Colors.White)
+    : GFX(6, GameColors.Dark, GameColors.Dark)
 {
     public readonly List<Interactive> interactiveObjects = [];
 

@@ -6,17 +6,24 @@
     xmlns:system="clr-namespace:System;assembly=mscorlib"
     xmlns:local="clr-namespace:Invasion1D.Controls">
 
+    <x:Double x:Key="MenuItemHeight">50</x:Double>
+    <x:Double x:Key="WideScreenWidth">400</x:Double>
+    <x:Double x:Key="NormalFontSize">16</x:Double>
+    <x:Double x:Key="MediumFontSize">20</x:Double>
+    <x:Double x:Key="LargeFontSize">24</x:Double>
+    <x:Double x:Key="Spacing">5</x:Double>
+
     <Style TargetType="ContentPage" x:Key="ContentPage">
         <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Light}, Dark={StaticResource Dark}}" />
-        <Setter Property="Padding" Value="5"/>
+        <Setter Property="Padding" Value="{StaticResource Spacing}"/>
     </Style>
 
     <Style TargetType="Frame" x:Key="BaseFrame">
         <Setter Property="CornerRadius" Value="8"/>
         <Setter Property="Margin" Value="0"/>
-        <Setter Property="Padding" Value="5"/>
-        <Setter Property="HorizontalOptions" Value="FillAndExpand" />
-        <Setter Property="VerticalOptions" Value="FillAndExpand" />
+        <Setter Property="Padding" Value="{StaticResource Spacing}"/>
+        <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
+        <Setter Property="VerticalOptions" Value="FillAndExpand"/>
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
     </Style>
@@ -32,19 +39,19 @@
             <Setter.Value>
                 <OnPlatform x:TypeArguments="x:Double">
                     <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
                 </OnPlatform>
             </Setter.Value>
         </Setter>
     </Style>
 
     <Style TargetType="Frame" x:Key="MenuItem" BasedOn="{StaticResource BaseFrame}">
-        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="HeightRequest" Value="{StaticResource MenuItemHeight}"/>
         <Setter Property="MaximumWidthRequest">
             <Setter.Value>
                 <OnPlatform x:TypeArguments="x:Double">
                     <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
                 </OnPlatform>
             </Setter.Value>
         </Setter>
@@ -62,7 +69,7 @@
         <Setter Property="BorderWidth" Value="1"/>
         <Setter Property="HorizontalOptions" Value="FillAndExpand"/>
         <Setter Property="VerticalOptions" Value="FillAndExpand"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="{StaticResource NormalFontSize}"/>
         <Setter Property="Padding" Value="2,1"/>
         <Setter Property="Margin" Value="0"/>
         <Setter Property="MinimumHeightRequest" Value="15"/>
@@ -93,7 +100,7 @@
     <Style TargetType="Button" BasedOn="{StaticResource BaseButton}"/>
 
     <Style TargetType="Button" x:Key="MenuButton" BasedOn="{StaticResource BaseButton}">
-        <Setter Property="HeightRequest" Value="50"/>
+        <Setter Property="HeightRequest" Value="{StaticResource MenuItemHeight}"/>
         <Setter Property="Padding" Value="20,10"/>
     </Style>
 
@@ -102,7 +109,7 @@
             <Setter.Value>
                 <OnPlatform x:TypeArguments="x:Double">
                     <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
                 </OnPlatform>
             </Setter.Value>
         </Setter>
@@ -141,19 +148,19 @@
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
-                    <VisualState x:Name="Normal" >
+                    <VisualState x:Name="Normal">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="Gray" />
+                            <Setter Property="BackgroundColor" Value="Gray"/>
                         </VisualState.Setters>
                     </VisualState>
-                    <VisualState x:Name="Pressed" >
+                    <VisualState x:Name="Pressed">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="Transparent" />
+                            <Setter Property="BackgroundColor" Value="Transparent"/>
                         </VisualState.Setters>
                     </VisualState>
-                    <VisualState x:Name="Released" >
+                    <VisualState x:Name="Released">
                         <VisualState.Setters>
-                            <Setter Property="BackgroundColor" Value="Gray" />
+                            <Setter Property="BackgroundColor" Value="Gray"/>
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -166,7 +173,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="HorizontalTextAlignment" Value="Center"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
-        <Setter Property="FontSize" Value="15" />
+        <Setter Property="FontSize" Value="{StaticResource NormalFontSize}" />
     </Style>
     <Style TargetType="Label" BasedOn="{StaticResource BaseLabel}"/>
 
@@ -178,18 +185,7 @@
             <Setter.Value>
                 <OnPlatform x:TypeArguments="x:Double">
                     <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
-                </OnPlatform>
-            </Setter.Value>
-        </Setter>
-    </Style>
-
-    <Style TargetType="Label" x:Key="DocumentText" BasedOn="{StaticResource Text}">
-        <Setter Property="MaximumWidthRequest">
-            <Setter.Value>
-                <OnPlatform x:TypeArguments="x:Double">
-                    <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
                 </OnPlatform>
             </Setter.Value>
         </Setter>
@@ -204,16 +200,37 @@
     </Style>
 
     <Style TargetType="Label" x:Key="Title" BasedOn="{StaticResource BaseLabel}">
-        <Setter Property="FontSize" Value="25" />
+        <Setter Property="FontSize" Value="{StaticResource LargeFontSize}" />
         <Setter Property="FontAttributes" Value="Bold"/>
+        <Setter Property="LineBreakMode" Value="WordWrap"/>
+        <Setter Property="MaximumWidthRequest">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="x:Double">
+                    <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
+        <Setter Property="Margin">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="5, 0, 5, 15" />
+                    <On Platform="WinUI" Value="0,0,0,15" />
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
     </Style>
 
-    <Style TargetType="Label" x:Key="DocumentTitle" BasedOn="{StaticResource Title}">
-        <Setter Property="Margin" Value="5,0,5,15"/>
-    </Style>
-
-    <Style TargetType="Label" x:Key="DocumentSubTitle" BasedOn="{StaticResource DocumentTitle}">
-        <Setter Property="FontSize" Value="20"/>
+    <Style TargetType="Label" x:Key="SubTitle" BasedOn="{StaticResource Title}">
+        <Setter Property="FontSize" Value="{StaticResource MediumFontSize}"/>
+        <Setter Property="Margin">
+            <Setter.Value>
+                <OnPlatform x:TypeArguments="Thickness">
+                    <On Platform="Android" Value="5, 0, 5, 10" />
+                    <On Platform="WinUI" Value="0,0,0,10" />
+                </OnPlatform>
+            </Setter.Value>
+        </Setter>
     </Style>
 
     <Style TargetType="Entry">
@@ -222,7 +239,7 @@
         <Setter Property="HorizontalTextAlignment" Value="Start"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
         <Setter Property="Margin" Value="0,0,0,-6"/>
-        <Setter Property="FontSize" Value="15"/>
+        <Setter Property="FontSize" Value="{StaticResource NormalFontSize}"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="Keyboard" Value="Numeric"/>
@@ -237,26 +254,31 @@
 
     <Style TargetType="Grid">
         <Setter Property="Margin" Value="0"/>
-        <Setter Property="RowSpacing" Value="5"/>
-        <Setter Property="ColumnSpacing" Value="5"/>
+        <Setter Property="RowSpacing" Value="{StaticResource Spacing}"/>
+        <Setter Property="ColumnSpacing" Value="{StaticResource Spacing}"/>
     </Style>
 
     <Style TargetType="VerticalStackLayout">
-        <Setter Property="Spacing" Value="5"/>
+        <Setter Property="Spacing" Value="{StaticResource Spacing}"/>
     </Style>
 
-    <Style TargetType="HorizontalStackLayout">
-        <Setter Property="Spacing" Value="5"/>
+    <Style TargetType="HorizontalStackLayout" x:Key="BaseHorizontalStackLayout">
+        <Setter Property="Spacing" Value="{StaticResource Spacing}"/>
     </Style>
 
-    <Style TargetType="HorizontalStackLayout" x:Key="WarpiumContainer">
-        <Setter Property="Spacing" Value="0"/>
+    <Style TargetType="HorizontalStackLayout" BasedOn="{StaticResource BaseHorizontalStackLayout}"/>
+
+    <Style TargetType="HorizontalStackLayout" x:Key="WarpiumContainer" BasedOn="{StaticResource BaseHorizontalStackLayout}">
         <Setter Property="HorizontalOptions" Value="Center"/>
     </Style>
 
     <Style TargetType="local:WarpiumControl">
         <Setter Property="BackgroundColor" Value="{StaticResource Warpium}"/>
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
+    </Style>
+
+    <Style TargetType="local:Space" x:Key="MenuSpace">
+        <Setter Property="WidthRequest" Value="{StaticResource MenuItemHeight}"/>
     </Style>
 
     <Style TargetType="local:Space" x:Key="VerticalSeparator">
@@ -269,7 +291,7 @@
             <Setter.Value>
                 <OnPlatform x:TypeArguments="x:Double">
                     <On Platform="Android" Value="{x:Static system:Double.MaxValue}" />
-                    <On Platform="WinUI" Value="400" />
+                    <On Platform="WinUI" Value="{StaticResource WideScreenWidth}" />
                 </OnPlatform>
             </Setter.Value>
         </Setter>
