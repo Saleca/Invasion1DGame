@@ -278,7 +278,7 @@
     </Style>
 
     <Style TargetType="local:Space" x:Key="MenuSpace">
-        <Setter Property="WidthRequest" Value="{StaticResource MenuItemHeight}"/>
+        <Setter Property="HeightRequest" Value="{StaticResource MenuItemHeight}"/>
     </Style>
 
     <Style TargetType="local:Space" x:Key="VerticalSeparator">

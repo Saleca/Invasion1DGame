@@ -10,19 +10,21 @@
                 <Label 
                     Text="Welcome"
                     Style="{StaticResource Title}"/>
-
                 <Label 
-                    Text="You are an one dimentional beeing that landed on a multiverse with mean one dimentional creatures."
+                    Text="This might seem overwhelming but its preety simple, first the weird words: you shoot Vitalux and use Warpium to teleport. Now the concept:"
                     Style="{StaticResource Text}"/>
-
                 <Label 
-                    Text="Luckily you have the means to defend and counquer, use vitalux to shoot your enemies and warp to teleport to another dimention. Be wise, what goes around comes around, specially with Weave - this temporary power weakens the damage of the shot but it will not fade"
+                    Text="Invasion 1D is a 1st person shooter but in one dimention, so you can only move one way or the oposite way, the world only has one axis. The only way you can diferentiate objects is by color and they fade with distance."
                     Style="{StaticResource Text}"/>
-
+                <Label 
+                    Text="You have to manage the Vitalux and Warpium powers to survive and clear all enemies."
+                    Style="{StaticResource Text}"/>
+                <Label 
+                    Text="Remember: Enemies are blue, Health is red, Weave is violet, Vitalux is yellow and Warpium is teal, if Vitalux color is still its an item to recharge your power"
+                    Style="{StaticResource Text}"/>
                 <Label 
                     Text="In this tutorial you can see the multiverse from a higher dimention. Are you ready?"
                     Style="{StaticResource Text}"/>
-
             </VerticalStackLayout>
         </ScrollView>
         <Button 

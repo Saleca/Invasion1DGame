@@ -8,15 +8,16 @@
     <local:PopupMenu
         x:Name="Menu">
         <local:PopupMenu.MenuContent>
-            
-            <local:Space HeightRequest="50"/>
+            <Label 
+                Text="A true one dimentional shooter game"/>
+            <local:Space Style="{StaticResource MenuSpace}"/>
             <Button
                 x:Name="Start"
                 Text="Start"
                 Clicked="Start_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
             <Button
-                Text="Tutorial"
+                Text="Learn More"
                 Clicked="Tutorial_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
             <Button 
