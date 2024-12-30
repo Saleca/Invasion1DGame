@@ -72,7 +72,7 @@
 		<MauiXaml Update="Controls\Views\TutorialIntro.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\PrivacyPolicy.xaml">
+		<MauiXaml Update="Controls\Views\PrivacyPolicy.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\StartMenu.xaml">

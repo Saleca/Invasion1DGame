@@ -61,7 +61,8 @@
                     ImageSource="{AppThemeBinding Dark=refresh_light.png, Light=refresh_dark.png}"
                     WidthRequest="33"
                     HeightRequest="33"
-                    Grid.Column="1">
+                    Grid.Column="1"
+                    Padding="5">
                 </Button>
 
             </Grid>

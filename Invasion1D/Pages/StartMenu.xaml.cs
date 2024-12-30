@@ -1,5 +1,6 @@
 using Invasion1D.Controls;
 using Invasion1D.Logic;
+using Invasion1D.Views;
 
 namespace Invasion1D.Pages;
 

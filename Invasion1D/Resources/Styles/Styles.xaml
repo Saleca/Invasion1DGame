@@ -54,10 +54,6 @@
         <Setter Property="Padding" Value="0"/>
     </Style>
 
-    <Style TargetType="BoxView">
-        <Setter Property="HorizontalOptions" Value="Start"/>
-    </Style>
-
     <Style TargetType="Button" x:Key="BaseButton">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BorderColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}"/>
@@ -221,14 +217,22 @@
     </Style>
 
     <Style TargetType="Entry">
+        <Setter Property="HorizontalOptions" Value="Fill"/>
+        <Setter Property="VerticalOptions" Value="Center"/>
         <Setter Property="HorizontalTextAlignment" Value="Start"/>
         <Setter Property="VerticalTextAlignment" Value="Center"/>
+        <Setter Property="Margin" Value="0,0,0,-6"/>
+        <Setter Property="FontSize" Value="15"/>
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Dark}, Dark={StaticResource Light}}" />
         <Setter Property="BackgroundColor" Value="Transparent"/>
         <Setter Property="Keyboard" Value="Numeric"/>
         <Setter Property="IsTextPredictionEnabled" Value="False"/>
         <Setter Property="ClearButtonVisibility" Value="Never"/>
         <Setter Property="ReturnType" Value="Done"/>
+    </Style>
+
+    <Style TargetType="BoxView">
+        <Setter Property="HorizontalOptions" Value="Start"/>
     </Style>
 
     <Style TargetType="Grid">

@@ -1,7 +1,8 @@
 using HtmlAgilityPack;
 using Invasion1D.Helpers;
+using Invasion1D.Pages;
 
-namespace Invasion1D.Pages;
+namespace Invasion1D.Views;
 
 public partial class PrivacyPolicy : ContentView
 {
