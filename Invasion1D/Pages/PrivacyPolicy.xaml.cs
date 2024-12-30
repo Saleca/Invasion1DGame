@@ -1,9 +1,9 @@
 using HtmlAgilityPack;
 using Invasion1D.Helpers;
 
-namespace Invasion1D.Views;
+namespace Invasion1D.Pages;
 
-public partial class PrivacyPolicy : ContentPage
+public partial class PrivacyPolicy : ContentView
 {
     const string url = "https://saleca.github.io/Home/invasion1d/privacy-policy";
 
@@ -40,8 +40,23 @@ public partial class PrivacyPolicy : ContentPage
 
     private void FormatPrivacyPolicy()
     {
-        HtmlNode mainNode = ExtractMainContent() ?? throw new Exception();
-        HtmlNode[] langNodes = mainNode.ChildNodes.Where(x => x.NodeType is HtmlNodeType.Element).ToArray();
+        HtmlNode? mainNode = ExtractMainContent();
+        if (mainNode == null)
+        {
+            Contents.Add(new Label()
+            {
+                Text = "An error corrued please check you internet connectivity or visit the website.",
+                Style = documentTextStyle,
+            });
+            Contents.Add(new Label()
+            {
+                Text = url,
+                Style = documentTextStyle,
+            });
+            return;
+        }
+
+        HtmlNode[] langNodes = mainNode!.ChildNodes.Where(x => x.NodeType is HtmlNodeType.Element).ToArray();
 
         ColumnDefinitionCollection langColumns = [];
 
@@ -134,6 +149,11 @@ public partial class PrivacyPolicy : ContentPage
     public static HtmlNode? ExtractMainContent()
     {
         HtmlWeb web = new();
+        if (Connectivity.Current.NetworkAccess != NetworkAccess.Internet)
+        {
+            return null;
+        }
+        //check if connection exists
         HtmlDocument doc = web.Load(url);
 
         HtmlNode mainNode = doc.DocumentNode.SelectSingleNode("//main");

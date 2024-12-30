@@ -1,6 +1,6 @@
 ﻿namespace Invasion1D.Controls;
 
-internal class WarpiumControl : Frame
+internal partial class WarpiumControl : Frame
 {
 	private const float Proportion = 0.5f;
 

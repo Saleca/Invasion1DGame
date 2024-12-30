@@ -1,7 +1,7 @@
 using Invasion1D.Controls;
 using Invasion1D.Logic;
 
-namespace Invasion1D.Views;
+namespace Invasion1D.Pages;
 
 public partial class StartMenu : ContentPage
 {
@@ -11,10 +11,6 @@ public partial class StartMenu : ContentPage
 
         //check why title property need to be set in code
         Menu.Title = "Start Menu";
-
-        //BorderTest.InnerBackgroundColor = Colors.Red;
-        //BorderTest.BorderThickness = new(1,0,1,1);
-        //BorderTest.BorderColor = Colors.Transparent;
     }
 
     private void Start_Clicked(object sender, EventArgs e)
@@ -24,10 +20,8 @@ public partial class StartMenu : ContentPage
 
     private void PrivacyPolicy_Clicked(object sender, EventArgs e)
     {
-        App.Current!.MainPage = new PrivacyPolicy();
+        Menu.Modal = new PrivacyPolicy();
     }
-
-
 
     private void Tutorial_Clicked(object sender, EventArgs e)
     {

@@ -1,12 +1,9 @@
 ﻿using Invasion1D.Controls;
-using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
-using Microsoft.Maui.Controls;
 using Microsoft.Maui.Controls.Shapes;
-using System.Diagnostics;
 
-namespace Invasion1D.Views;
+namespace Invasion1D.Pages;
 
 public partial class Invasion1dUI : ContentPage
 {

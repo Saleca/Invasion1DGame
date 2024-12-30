@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:Invasion1D.Controls"
+             x:Class="Invasion1D.Pages.PrivacyPolicy">
+    <Grid
+        RowDefinitions="auto,*,auto">
+        <Grid 
+            Grid.Row="0"
+            x:Name="LangButtons"/>
+
+        <ScrollView
+            Grid.Row="1">
+            <VerticalStackLayout 
+                x:Name="Contents"/>
+        </ScrollView>
+        <Button
+            Text="Open in browser"
+            Clicked="OpenInBrowser_Clicked"
+            Grid.Row="2"
+            Style="{StaticResource VerticalMenuButton}"/>
+    </Grid>
+</ContentView>

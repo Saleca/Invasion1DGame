@@ -1,4 +1,4 @@
-﻿using Invasion1D.Views;
+﻿using Invasion1D.Pages;
 
 namespace Invasion1D;
 

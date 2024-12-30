@@ -51,31 +51,31 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<Compile Update="Views\Invasion1dUI.xaml.cs">
+		<Compile Update="Pages\Invasion1dUI.xaml.cs">
 			<DependentUpon>Invasion1dUI.xaml</DependentUpon>
 		</Compile>
 	</ItemGroup>
 
 	<ItemGroup>
-		<MauiXaml Update="Controls\PopupMenu.xaml">
+		<MauiXaml Update="Controls\Views\PopupMenu.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Controls\SeedView.xaml">
+		<MauiXaml Update="Controls\Views\SeedView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Controls\Settings.xaml">
+		<MauiXaml Update="Controls\Views\Settings.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Controls\ThemeSelector.xaml">
+		<MauiXaml Update="Controls\Views\ThemeSelector.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Controls\TutorialIntro.xaml">
+		<MauiXaml Update="Controls\Views\TutorialIntro.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Views\PrivacyPolicy.xaml">
+		<MauiXaml Update="Pages\PrivacyPolicy.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Views\StartMenu.xaml">
+		<MauiXaml Update="Pages\StartMenu.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>

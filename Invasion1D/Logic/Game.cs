@@ -1,7 +1,7 @@
 ﻿using Invasion1D.Data;
 using Invasion1D.Helpers;
 using Invasion1D.Models;
-using Invasion1D.Views;
+using Invasion1D.Pages;
 using System.Diagnostics;
 
 namespace Invasion1D.Logic;

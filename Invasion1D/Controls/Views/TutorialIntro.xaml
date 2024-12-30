@@ -5,7 +5,7 @@
     <Grid
         RowDefinitions="*,auto">
         <ScrollView
-        Grid.Row="0">
+            Grid.Row="0">
             <VerticalStackLayout>
                 <Label 
                     Text="Welcome"
@@ -29,6 +29,6 @@
              Text="Start"
              Clicked="StartTutorialButton_Clicked"
              Grid.Row="1"
-             Style="{StaticResource MenuButton}"/>
+             Style="{StaticResource VerticalMenuButton}"/>
     </Grid>
 </ContentView>

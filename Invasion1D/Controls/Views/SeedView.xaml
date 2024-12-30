@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Invasion1D.Controls"
     x:Class="Invasion1D.Controls.SeedView"
-    Style="{StaticResource VerticalMenuFrame}">
+    Style="{StaticResource MenuItem}">
     <Grid
         ColumnDefinitions="*,*">
         <Label 

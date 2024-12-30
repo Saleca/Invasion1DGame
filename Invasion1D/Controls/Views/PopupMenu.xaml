@@ -3,7 +3,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Invasion1D.Controls"
     x:Class="Invasion1D.Controls.PopupMenu"
-    Style="{StaticResource PopupMenu}">
+    Style="{StaticResource BaseFrame}">
     <AbsoluteLayout>
         <Grid
             AbsoluteLayout.LayoutBounds=".5,.5,1,1"
@@ -21,7 +21,7 @@
             AbsoluteLayout.LayoutBounds=".5,.5,1,1"
             AbsoluteLayout.LayoutFlags="All"
             IsVisible="False"
-            Style="{StaticResource PopupPage}">
+            Style="{StaticResource OverlayMenu}">
             <Grid
                 RowDefinitions="*,auto">
                 <ContentView 
