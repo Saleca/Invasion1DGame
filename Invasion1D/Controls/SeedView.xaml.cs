@@ -1,35 +1,23 @@
 using Invasion1D.Logic;
-using Microsoft.UI.Xaml.Documents;
 
 namespace Invasion1D.Controls;
 
 public partial class SeedView : Frame
 {
-    public static readonly BindableProperty IsReadOnlyProperty = BindableProperty.Create(nameof(IsReadOnly), typeof(bool), typeof(PopupMenu), default(bool));
-    public bool IsReadOnly
-    {
-        get => (bool)GetValue(IsReadOnlyProperty);
-        set
-        {
-            SetValue(IsReadOnlyProperty, value);
-            SeedEntry.IsEnabled = !value;
-            if (!value)
-            {
-                UnderLineControl.UnderlineColor = Colors.Transparent;
-                SeedEntry.HorizontalTextAlignment = TextAlignment.Center;
-                //remove pointover underline
-            }
-            else
-            {
-                //handle underline with default color
-                SeedEntry.HorizontalTextAlignment = TextAlignment.Start;
-            }
-        }
-    }
-
     public SeedView()
     {
         InitializeComponent();
+        SeedEntry.Text = Seed.Current.ToString();
+    }
+
+    public void Disable()
+    {
+        IsEnabled = false;
+    }
+
+    public void GetNewSeed(object s, EventArgs e)
+    {
+        SeedEntry.Text = Seed.New().ToString();
     }
 
     private void SeedEntry_TextChanged(object sender, TextChangedEventArgs e)

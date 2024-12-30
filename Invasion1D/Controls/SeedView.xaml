@@ -7,18 +7,70 @@
     <Grid
         ColumnDefinitions="*,*">
         <Label 
-             Text="Seed"
-             Grid.Column="0"/>
-        <local:UnderLineEntry
-            x:Name="UnderLineControl"
-            UnderlineColor="{AppThemeBinding Dark={StaticResource Light}, Light={StaticResource Dark}}"
+            Text="Seed"
+            Grid.Column="0"/>
+        <Grid 
+            RowDefinitions="*,auto"
             Grid.Column="1">
-            <Entry
-                 x:Name="SeedEntry"
-                 Text="0"
-                 TextChanged="SeedEntry_TextChanged"
-                 Completed="SeedEntry_Completed"
-                 Focused="SeedEntry_Focused"/>
-        </local:UnderLineEntry>
+            <VisualStateManager.VisualStateGroups>
+                <VisualStateGroup 
+                    x:Name="CommonStates">
+                    <VisualState 
+                        x:Name="Normal"/>
+                    <VisualState 
+                            x:Name="PointerOver">
+                        <VisualState.Setters>
+                            <Setter 
+                                TargetName="Underline" 
+                                Property="BoxView.BackgroundColor" 
+                                Value="Gray"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                    <VisualState 
+                        x:Name="Disabled">
+                        <VisualState.Setters>
+                            <Setter 
+                                TargetName="Underline" 
+                                Property="BoxView.BackgroundColor" 
+                                Value="Transparent"/>
+                            <Setter 
+                                TargetName="SeedEntry" 
+                                Property="Entry.HorizontalTextAlignment" 
+                                Value="Center"/>
+                            <Setter 
+                                TargetName="SeedGen" 
+                                Property="Button.IsVisible" 
+                                Value="False"/>
+                        </VisualState.Setters>
+                    </VisualState>
+                </VisualStateGroup>
+            </VisualStateManager.VisualStateGroups>
+
+            <Grid
+                ColumnDefinitions="*,auto">
+                <Entry
+                     x:Name="SeedEntry"
+                     Text="0"
+                     TextChanged="SeedEntry_TextChanged"
+                     Completed="SeedEntry_Completed"
+                     Focused="SeedEntry_Focused">
+                </Entry>
+                <Button
+                    x:Name="SeedGen"
+                    Clicked="GetNewSeed"
+                    ImageSource="{AppThemeBinding Dark=refresh_light.png, Light=refresh_dark.png}"
+                    WidthRequest="33"
+                    HeightRequest="33"
+                    Grid.Column="1">
+                </Button>
+
+            </Grid>
+            <BoxView
+                x:Name="Underline"
+                BackgroundColor="{AppThemeBinding Dark={StaticResource Light}, Light={StaticResource Dark}}"
+                HeightRequest="1"
+                HorizontalOptions="FillAndExpand"
+                Grid.Row="1"/>
+        </Grid>
     </Grid>
 </Frame>

@@ -2,6 +2,8 @@
 
 internal static class Seed
 {
+    static readonly Random random;
+
     static int seed = 0;
     public static int Current
     {
@@ -11,7 +13,13 @@ internal static class Seed
 
     static Seed()
     {
-        Random random = new();
-        seed = random.Next(10000);
+        random = new((int)Math.Round((DateTime.Now - DateTime.Today).TotalMinutes));
+        seed = random.Next(int.MaxValue);
+    }
+
+    public static int New()
+    {
+        seed = random.Next(int.MaxValue);
+        return seed;
     }
 }

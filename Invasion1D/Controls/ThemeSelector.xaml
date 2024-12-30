@@ -2,7 +2,7 @@
 <Frame xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Invasion1D.Controls"
-    Style="{StaticResource BaseFrame}"
+    Style="{StaticResource VerticalMenuFrame}"
     x:Class="Invasion1D.Controls.ThemeSelector">
     <Grid
         ColumnDefinitions="*,auto,*,auto,*">
