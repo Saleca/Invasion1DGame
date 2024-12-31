@@ -34,8 +34,8 @@ public class Populate
 
         Linear
             l1 = new(new(90, 75), new(300, 0)),
-            l2 = new(new(200, 300), new(500, 350)),
-            l3 = new(new(0, 200), new(100, 200));
+            l2 = new(new(200, 300), new(400, 350)),
+            l3 = new(new(0, 200), new(100, 250));
 
         _ = new EnemyModel(l1, .25f, 10);
         _ = new WarpiumModel(l1, .7f);

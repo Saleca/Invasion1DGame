@@ -17,7 +17,7 @@ public abstract class Kinetic(Dimension dimension, float position, Color color, 
     public float DistanceFromTarget(Interactive target, bool direction)
     {
         float distance = currentDimension.GetDistanceBetweenPointsOnShape(PositionPercentage, target.PositionPercentage, direction);
-        distance -= Size;
+        distance -= Radius;
         return distance;
     }
 

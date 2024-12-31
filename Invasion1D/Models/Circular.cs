@@ -8,38 +8,40 @@ public class Circular : Dimension, ICircular
     const float TwoPI = 2 * MathF.PI;
 
     public PointF Position { get; set; }
-    public float Size { get; init; }
+    public float Radius { get; init; }
 
     public Circular(PointF position, float radius) : base()
     {
         Position = position;
-        Size = radius;
+        //TODO
+        //Radius is being treated as diameter sometimes
+        Radius = radius;
 
-        float circleDiameter = Size * 2;
-        float circleOffset = Size - strokeThickness;
+        float diameter = Radius * 2;
+        float offset = Radius - strokeThickness;
         body = new Ellipse()
         {
             StrokeThickness = strokeThickness,
             Margin = 0,
 
-            WidthRequest = circleDiameter,
-            HeightRequest = circleDiameter,
+            WidthRequest = diameter,
+            HeightRequest = diameter,
 
-            TranslationX = Position.X - circleOffset,
-            TranslationY = Position.Y - circleOffset
+            TranslationX = Position.X - offset,
+            TranslationY = Position.Y - offset
         };
         body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
 
         Game.Instance.universe.dimensions.Add(this);
     }
 
-    public override PointF GetPositionInShape(float positionPercentage, float halfSize)
+    public override PointF GetPositionInShape(float positionPercentage, float radius)
     {
         float angle = positionPercentage * TwoPI;
-        float offset = Size - strokeThickness / 2;
+        float offset = Radius - strokeThickness / 2;
         return new(
-            (offset * MathF.Cos(angle)) + Position.X + strokeThickness - halfSize,
-            (offset * MathF.Sin(angle)) + Position.Y + strokeThickness - halfSize);
+            (offset * MathF.Cos(angle)) + Position.X + (strokeThickness - radius),
+            (offset * MathF.Sin(angle)) + Position.Y + (strokeThickness - radius));
     }
 
     /// <summary>
@@ -69,12 +71,18 @@ public class Circular : Dimension, ICircular
     /// </summary>
     /// <param name="distance">arc length</param>
     /// <returns>angle of arc length</returns>
-    public override float GetPercentageFromDistance(float distance) => distance / Size / TwoPI;
+
+    //TODO:
+    //Radius might have diameter values
+    public override float GetPercentageFromDistance(float distance) => distance / Radius / TwoPI;
 
     /// <summary>
     /// 
     /// </summary>
     /// <param name="percentage">angle from 0 to 1</param>
     /// <returns>arc length of the angle</returns>
-    public override float GetDistanceFromPercentage(float percentage) => percentage * Size * TwoPI;
+    /// 
+    //TODO:
+    //Radius might have diameter values
+    public override float GetDistanceFromPercentage(float percentage) => percentage * Radius * TwoPI;
 }

@@ -4,16 +4,15 @@
              xmlns:local="clr-namespace:Invasion1D.Controls"
              x:Class="Invasion1D.Views.PrivacyPolicy">
     <Grid
-        RowDefinitions="auto,*,auto">
-        <Grid 
-            Grid.Row="0"
-            x:Name="LangButtons"/>
-
+        RowDefinitions="*,auto,auto">
         <ScrollView
-            Grid.Row="1">
+            Grid.Row="0">
             <VerticalStackLayout 
                 x:Name="Contents"/>
         </ScrollView>
+        <Grid 
+            Grid.Row="1"
+            x:Name="LangButtons"/>
         <Button
             Text="Open in browser"
             Clicked="OpenInBrowser_Clicked"

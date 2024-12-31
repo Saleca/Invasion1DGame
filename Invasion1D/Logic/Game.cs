@@ -10,7 +10,7 @@ internal class Game
 {
     readonly static Game instance = new();
     public static Game Instance => instance;
-    Game() { } //private constructor
+    Game() { }
 
     public Invasion1dUI UI = null!;
     public Random Fate = null!;
@@ -78,6 +78,9 @@ internal class Game
 
             try
             {
+                //TODO:
+                //Update on universe any Unviverse related update
+                //Game should only act as the engine
                 UpdateGameObjects();
                 ManageDisposedGameObjects();
 

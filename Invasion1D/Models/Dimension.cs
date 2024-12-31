@@ -4,7 +4,7 @@ using Invasion1D.Logic;
 namespace Invasion1D.Models;
 
 public abstract class Dimension()
-    : GFX(6, GameColors.Dark, GameColors.Dark)
+    : GFX(6, GameColors.Dark, GameColors.Light)
 {
     public readonly List<Interactive> interactiveObjects = [];
 
@@ -39,7 +39,7 @@ public abstract class Dimension()
         Game.Instance.universe.dimensions.Remove(this);
     }
 
-    public abstract PointF GetPositionInShape(float positionPercentage, float halfSize);
+    public abstract PointF GetPositionInShape(float positionPercentage, float radius);
     public abstract float GetDistanceBetweenPointsOnShape(float positionA, float positionB, bool clockwise);
     public abstract float GetPercentageFromDistance(float distance);
     public abstract float GetDistanceFromPercentage(float percentage);
@@ -48,38 +48,38 @@ public abstract class Dimension()
     /// 
     /// </summary>
     /// <param name="position"></param>
-    /// <param name="halfSize"></param>
+    /// <param name="radius"></param>
     /// <returns>true if available</returns>
-    public bool CheckIfPositionIsAvailable(float positionPercentage, float halfSize, out PointF? position)
+    public bool CheckIfPositionIsAvailable(float positionPercentage, float radius, out PointF? position)
     {
         position = null;
-        float sizePercentage = GetPercentageFromDistance(halfSize);
+        float sizePercentage = GetPercentageFromDistance(radius);
         if (CheckOverlap(sizePercentage, positionPercentage))
         {
             return false;
         }
-        position = GetPositionInShape(positionPercentage, halfSize);
+        position = GetPositionInShape(positionPercentage, radius);
         return true;
     }
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="halfSizePercentage"></param>
+    /// <param name="radiusPercentage"></param>
     /// <param name="position"></param>
     /// <returns>true if overlap</returns>
-    public bool CheckOverlap(float halfSizePercentage, float position)
+    public bool CheckOverlap(float radiusPercentage, float position)
     {
-        float start1 = position - halfSizePercentage;
-        float end1 = position + halfSizePercentage;
+        float start1 = position - radiusPercentage;
+        float end1 = position + radiusPercentage;
 
         lock (interactiveObjects)
         {
             foreach (var obj in interactiveObjects)
             {
-                float halfSize = obj.sizePercentage / 2;
-                float start2 = obj.PositionPercentage - halfSize;
-                float end2 = obj.PositionPercentage + halfSize;
+                float radius = obj.sizePercentage / 2;
+                float start2 = obj.PositionPercentage - radius;
+                float end2 = obj.PositionPercentage + radius;
 
                 if (start1 < end2 && start2 < end1)
                 {

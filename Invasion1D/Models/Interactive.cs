@@ -7,7 +7,7 @@ public abstract class Interactive : GFX, ICircular
 {
     protected bool disposed = false;
 
-    public float Size { get; init; }
+    public float Radius { get; init; }
     public PointF Position { get; set; }
 
     public float sizePercentage;
@@ -24,7 +24,9 @@ public abstract class Interactive : GFX, ICircular
     public Interactive(Dimension dimension, float positionPercentage, Color color)
         : base(0, color, color)
     {
-        Size = Stats.interactiveObjectSize;
+        //TODO:
+        //Object size is Radius*2
+        Radius = Stats.interactiveObjectSize;
 
         GoToDimension(dimension, positionPercentage);
 
@@ -33,8 +35,8 @@ public abstract class Interactive : GFX, ICircular
             StrokeThickness = strokeThickness,
             Margin = 0,
 
-            WidthRequest = Size,
-            HeightRequest = Size,
+            WidthRequest = Radius,
+            HeightRequest = Radius,
 
             TranslationX = Position.X,
             TranslationY = Position.Y,
@@ -48,10 +50,12 @@ public abstract class Interactive : GFX, ICircular
     {
         currentDimension = dimension;
         dimension.AddInteractiveObject(this);
-        sizePercentage = dimension.GetPercentageFromDistance(Size);
+        sizePercentage = dimension.GetPercentageFromDistance(Radius);
 
         PositionPercentage = positionPercentage;
-        Position = dimension.GetPositionInShape(this.positionPercentage, Size / 2);
+        //TODO:
+        //WHY PASS HALF RADIUS
+        Position = dimension.GetPositionInShape(this.positionPercentage, Radius / 2);
     }
 
     /// <summary>
@@ -61,7 +65,9 @@ public abstract class Interactive : GFX, ICircular
     public void MovePositionByPercentage(float offsetPercentage)
     {
         PositionPercentage += offsetPercentage;
-        Position = currentDimension.GetPositionInShape(positionPercentage, Size / 2);
+        //TODO:
+        //WHY PASS HALF RADIUS
+        Position = currentDimension.GetPositionInShape(positionPercentage, Radius / 2);
     }
 
     public override void Dispose()

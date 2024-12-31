@@ -61,7 +61,9 @@ public class PlayerModel : Character
                 positionPercentageForNewDimention = Game.Instance.Fate.NextSingle();
                 newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
                     positionPercentage: positionPercentageForNewDimention,
-                    halfSize: Size / 2,
+                    //TODO:
+                    //WHY PASS HALF RADIUS
+                    radius: Radius / 2,
                     position: out newPosition);
             } while (!newPositionFound);
             currentDimension.RemoveInteractiveObject(this);
@@ -79,7 +81,7 @@ public class PlayerModel : Character
     {
         const float scale = 5;
 
-        float playerOffset = Size - strokeThickness,
+        float playerOffset = Radius - strokeThickness,
             mainFrameCenterX = (float)(Game.Instance.UI.MainFrameAccess.Width / 2) - playerOffset,
             mainFrameCenterY = (float)(Game.Instance.UI.MainFrameAccess.Height / 2) - playerOffset,
 
