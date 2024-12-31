@@ -7,26 +7,6 @@
 
     <maui:MauiWinUIApplication.Resources>
         <ResourceDictionary>
-            <!--
-            <ResourceDictionary.ThemeDictionaries>
-                <ResourceDictionary x:Key="Light">
-                    <SolidColorBrush x:Key="TextControlBorderBrush" Color="#333"/>
-                    <Thickness x:Key="TextControlBorderThemeThickness">0,0,0,1</Thickness>
-                    <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#555"/>
-                    <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#333"/>
-                    <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,1</Thickness>
-                </ResourceDictionary>
-                
-                <ResourceDictionary x:Key="Dark">
-            <SolidColorBrush x:Key="TextControlBorderBrush" Color="#bbb"/>
-            <Thickness x:Key="TextControlBorderThemeThickness">0,0,0,1</Thickness>
-            <SolidColorBrush x:Key="TextControlBorderBrushPointerOver" Color="#999"/>
-            <SolidColorBrush x:Key="TextControlBorderBrushFocused" Color="#bbb"/>
-            <Thickness x:Key="TextControlBorderThemeThicknessFocused">0,0,0,1</Thickness>
-
-            <Thickness x:Key="TextControlThemePadding">0</Thickness>
-            -->
-            
             <Thickness x:Key="TextControlBorderThemeThickness">0</Thickness>
             <Thickness x:Key="TextControlBorderThemeThicknessFocused">0</Thickness>
         </ResourceDictionary>

@@ -8,8 +8,8 @@ public static class Stats
     public const int
         minCircleRadius = 33,
         maxCircleRadius = 66,
-        minLineSize = 180,
-        maxLineSize = 360,
+        minLineLength = 180,
+        maxLineLength = 360,
         maxMultiverseSize = 500;
 
     //Items
@@ -29,9 +29,9 @@ public static class Stats
 
     //Kinetic
     public const float
-        playerSpeed = 10,
-        enemySpeed = 5,
-        bulletSpeed = 20;
+        playerSpeed = 1,
+        enemySpeed = 1,
+        bulletSpeed = 2;
 
     public const int
         bulletDurationF = 60,
@@ -40,7 +40,7 @@ public static class Stats
 
     //Interactive
     public const float
-        interactiveObjectSize = 10; //make sure is divisible by 2
+        interactiveObjectRadius = 5;
 
     //Player
     public const uint

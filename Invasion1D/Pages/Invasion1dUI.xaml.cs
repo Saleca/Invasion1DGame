@@ -210,6 +210,11 @@ public partial class Invasion1dUI : ContentPage
     {
         PlayerView.WidthRequest = MainFrame.Width;
         PlayerView.HeightRequest = MainFrame.Height;
+
+        if(Game.Instance.IsTutorial)
+        {
+            CenterMapView(null, EventArgs.Empty);
+        }
     }
 
     private void InitializeMap(object? sender, EventArgs e)

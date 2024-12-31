@@ -2,17 +2,14 @@
 
 namespace Invasion1D.Models;
 
-public abstract class Kinetic(Dimension dimension, float position, Color color, float speed)
+public abstract class Kinetic(Dimension dimension, float position, Color color, float stepDistance)
     : Interactive(dimension, position, color)
 {
-    public float speed = speed;
     public bool
         direction,
         isMoving = false;
 
-    //TODO:modify stepDistance and movementInterval when implementing framerate and delta time
-    protected float stepDistance = speed / 10;
-    protected TimeSpan movementInterval = TimeSpan.FromMilliseconds(100);
+    protected float stepDistance = stepDistance;
 
     public float DistanceFromTarget(Interactive target, bool direction)
     {

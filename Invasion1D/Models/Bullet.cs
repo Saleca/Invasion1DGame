@@ -58,14 +58,12 @@ namespace Invasion1D.Models
                 }
             }
 
-            if (direction)
+            var step = currentDimension.GetPercentageFromDistance(stepDistance);
+            if (!direction)
             {
-                MovePositionByPercentage(currentDimension.GetPercentageFromDistance(stepDistance));
+                step = -step;
             }
-            else
-            {
-                MovePositionByPercentage(-currentDimension.GetPercentageFromDistance(stepDistance));
-            }
+            MovePositionByPercentage(step);
         }
 
         public override void TakeDamage(float damage)

@@ -8,24 +8,21 @@ public class Circular : Dimension, ICircular
     const float TwoPI = 2 * MathF.PI;
 
     public PointF Position { get; set; }
+    public float Diameter { get; init; }
     public float Radius { get; init; }
 
     public Circular(PointF position, float radius) : base()
     {
         Position = position;
-        //TODO
-        //Radius is being treated as diameter sometimes
         Radius = radius;
+        Diameter = Radius * 2;
 
-        float diameter = Radius * 2;
         float offset = Radius - strokeThickness;
         body = new Ellipse()
         {
             StrokeThickness = strokeThickness,
-            Margin = 0,
-
-            WidthRequest = diameter,
-            HeightRequest = diameter,
+            WidthRequest = Diameter,
+            HeightRequest = Diameter,
 
             TranslationX = Position.X - offset,
             TranslationY = Position.Y - offset
@@ -38,7 +35,7 @@ public class Circular : Dimension, ICircular
     public override PointF GetPositionInShape(float positionPercentage, float radius)
     {
         float angle = positionPercentage * TwoPI;
-        float offset = Radius - strokeThickness / 2;
+        float offset = Radius - (strokeThickness / 2);
         return new(
             (offset * MathF.Cos(angle)) + Position.X + (strokeThickness - radius),
             (offset * MathF.Sin(angle)) + Position.Y + (strokeThickness - radius));
@@ -72,8 +69,6 @@ public class Circular : Dimension, ICircular
     /// <param name="distance">arc length</param>
     /// <returns>angle of arc length</returns>
 
-    //TODO:
-    //Radius might have diameter values
     public override float GetPercentageFromDistance(float distance) => distance / Radius / TwoPI;
 
     /// <summary>
@@ -82,7 +77,5 @@ public class Circular : Dimension, ICircular
     /// <param name="percentage">angle from 0 to 1</param>
     /// <returns>arc length of the angle</returns>
     /// 
-    //TODO:
-    //Radius might have diameter values
     public override float GetDistanceFromPercentage(float percentage) => percentage * Radius * TwoPI;
 }

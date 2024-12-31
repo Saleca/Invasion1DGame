@@ -7,10 +7,12 @@ public abstract class Interactive : GFX, ICircular
 {
     protected bool disposed = false;
 
+    public float Diameter { get; init; }
     public float Radius { get; init; }
+
     public PointF Position { get; set; }
 
-    public float sizePercentage;
+    public float diameterPercentage;
 
     public Dimension currentDimension = null!;
 
@@ -24,20 +26,16 @@ public abstract class Interactive : GFX, ICircular
     public Interactive(Dimension dimension, float positionPercentage, Color color)
         : base(0, color, color)
     {
-        //TODO:
-        //Object size is Radius*2
-        Radius = Stats.interactiveObjectSize;
+        Radius = Stats.interactiveObjectRadius;
+        Diameter = Radius * 2;
 
         GoToDimension(dimension, positionPercentage);
 
         body = new Ellipse()
         {
             StrokeThickness = strokeThickness,
-            Margin = 0,
-
-            WidthRequest = Radius,
-            HeightRequest = Radius,
-
+            WidthRequest = Diameter,
+            HeightRequest = Diameter,
             TranslationX = Position.X,
             TranslationY = Position.Y,
             ZIndex = 1
@@ -50,12 +48,10 @@ public abstract class Interactive : GFX, ICircular
     {
         currentDimension = dimension;
         dimension.AddInteractiveObject(this);
-        sizePercentage = dimension.GetPercentageFromDistance(Radius);
+        diameterPercentage = dimension.GetPercentageFromDistance(Diameter);
 
         PositionPercentage = positionPercentage;
-        //TODO:
-        //WHY PASS HALF RADIUS
-        Position = dimension.GetPositionInShape(this.positionPercentage, Radius / 2);
+        Position = dimension.GetPositionInShape(this.positionPercentage, Radius);
     }
 
     /// <summary>
@@ -65,9 +61,7 @@ public abstract class Interactive : GFX, ICircular
     public void MovePositionByPercentage(float offsetPercentage)
     {
         PositionPercentage += offsetPercentage;
-        //TODO:
-        //WHY PASS HALF RADIUS
-        Position = currentDimension.GetPositionInShape(positionPercentage, Radius / 2);
+        Position = currentDimension.GetPositionInShape(positionPercentage, Radius);
     }
 
     public override void Dispose()

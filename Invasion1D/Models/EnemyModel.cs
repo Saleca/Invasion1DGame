@@ -58,8 +58,8 @@ public class EnemyModel : Character
             Debug.WriteLine($"direction: {direction}");
             Bullet bullet = new(dimension: currentDimension,
                     position: direction ?
-                        GameMath.AddPercentage(PositionPercentage, sizePercentage) :
-                        GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
+                        GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
+                        GameMath.SubtractPercentage(PositionPercentage, diameterPercentage),
                     direction: direction,
                     weave: weave,
                     color: weave ? GameColors.Weave : GameColors.Vitalux);

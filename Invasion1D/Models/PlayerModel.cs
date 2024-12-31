@@ -61,9 +61,7 @@ public class PlayerModel : Character
                 positionPercentageForNewDimention = Game.Instance.Fate.NextSingle();
                 newPositionFound = travelingToDimension.CheckIfPositionIsAvailable(
                     positionPercentage: positionPercentageForNewDimention,
-                    //TODO:
-                    //WHY PASS HALF RADIUS
-                    radius: Radius / 2,
+                    radius: Radius,
                     position: out newPosition);
             } while (!newPositionFound);
             currentDimension.RemoveInteractiveObject(this);
@@ -81,7 +79,7 @@ public class PlayerModel : Character
     {
         const float scale = 5;
 
-        float playerOffset = Radius - strokeThickness,
+        float playerOffset = Diameter - strokeThickness,
             mainFrameCenterX = (float)(Game.Instance.UI.MainFrameAccess.Width / 2) - playerOffset,
             mainFrameCenterY = (float)(Game.Instance.UI.MainFrameAccess.Height / 2) - playerOffset,
 
@@ -152,8 +150,9 @@ public class PlayerModel : Character
 
             Bullet bullet = new(dimension: currentDimension,
                     position: direction ?
-                        GameMath.AddPercentage(PositionPercentage, sizePercentage) :
-                        GameMath.SubtractPercentage(PositionPercentage, sizePercentage),
+                        //possibly add radius of player and radius of bullet
+                        GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
+                        GameMath.SubtractPercentage(PositionPercentage, diameterPercentage),
                     direction: direction,
                     weave: weave,
                     color: weave ? GameColors.Weave : GameColors.Vitalux);

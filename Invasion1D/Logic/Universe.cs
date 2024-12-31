@@ -27,8 +27,8 @@ namespace Invasion1D.Logic
             initialEnemyCount = enemies.Count;
 
             float pp = .9f;
-            player = new((Circular)dimensions[0], pp, 10);
-            _ = new WeaveModel((Circular)dimensions[0], 0);
+            player = new(dimensions[0], pp, Stats.playerSpeed);
+           // _ = new WeaveModel((Circular)dimensions[0], 0);
 
             player.GetView(
                 view: out Color? view,

@@ -53,8 +53,8 @@ public abstract class Dimension()
     public bool CheckIfPositionIsAvailable(float positionPercentage, float radius, out PointF? position)
     {
         position = null;
-        float sizePercentage = GetPercentageFromDistance(radius);
-        if (CheckOverlap(sizePercentage, positionPercentage))
+        float radiusPercentage = GetPercentageFromDistance(radius);
+        if (CheckOverlap(radiusPercentage, positionPercentage))
         {
             return false;
         }
@@ -66,20 +66,20 @@ public abstract class Dimension()
     /// 
     /// </summary>
     /// <param name="radiusPercentage"></param>
-    /// <param name="position"></param>
+    /// <param name="positionPercentage"></param>
     /// <returns>true if overlap</returns>
-    public bool CheckOverlap(float radiusPercentage, float position)
+    public bool CheckOverlap(float radiusPercentage, float positionPercentage)
     {
-        float start1 = position - radiusPercentage;
-        float end1 = position + radiusPercentage;
+        float start1 = positionPercentage - radiusPercentage;
+        float end1 = positionPercentage + radiusPercentage;
 
         lock (interactiveObjects)
         {
             foreach (var obj in interactiveObjects)
             {
-                float radius = obj.sizePercentage / 2;
-                float start2 = obj.PositionPercentage - radius;
-                float end2 = obj.PositionPercentage + radius;
+                float objRadiusPercentage = obj.diameterPercentage / 2;
+                float start2 = obj.PositionPercentage - objRadiusPercentage;
+                float end2 = obj.PositionPercentage + objRadiusPercentage;
 
                 if (start1 < end2 && start2 < end1)
                 {
