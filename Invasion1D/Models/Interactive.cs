@@ -13,6 +13,7 @@ public abstract class Interactive : GFX, ICircular
     public PointF Position { get; set; }
 
     public float diameterPercentage;
+    public float radiusPercentage;
 
     public Dimension currentDimension = null!;
 
@@ -40,6 +41,7 @@ public abstract class Interactive : GFX, ICircular
             TranslationY = Position.Y,
             ZIndex = 1
         };
+
         body.SetAppThemeColor(Shape.StrokeProperty, lightTheme, darkTheme);
         body.SetAppThemeColor(Shape.FillProperty, lightTheme, darkTheme);
     }
@@ -49,6 +51,7 @@ public abstract class Interactive : GFX, ICircular
         currentDimension = dimension;
         dimension.AddInteractiveObject(this);
         diameterPercentage = dimension.GetPercentageFromDistance(Diameter);
+        radiusPercentage = diameterPercentage / 2;
 
         PositionPercentage = positionPercentage;
         Position = dimension.GetPositionInShape(this.positionPercentage, Radius);

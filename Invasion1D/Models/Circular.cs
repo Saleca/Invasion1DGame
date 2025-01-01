@@ -1,5 +1,6 @@
 ﻿using Invasion1D.Logic;
 using Microsoft.Maui.Controls.Shapes;
+using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
@@ -44,23 +45,26 @@ public class Circular : Dimension, ICircular
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="angleA"></param>
-    /// <param name="angleB"></param>
+    /// <param name="positionPercentageA"></param>
+    /// <param name="positionPercentageB"></param>
     /// <param name="direction">direction that character is looking</param>
     /// <returns>arc length between two points</returns>
-    public override float GetDistanceBetweenPointsOnShape(float angleA, float angleB, bool direction)
+    public override float GetDistanceBetweenPointsOnShape(float positionPercentageA, float positionPercentageB, bool direction)
     {
-        float angleDiff;
+        float percentageDistance;
         if (direction) // Clockwise
         {
-            angleDiff = (angleB - angleA + 1) % 1;
+            percentageDistance = positionPercentageB - positionPercentageA;
         }
         else // Counterclockwise
         {
-            angleDiff = (angleA - angleB + 1) % 1;
+            percentageDistance = positionPercentageA - positionPercentageB;
         }
 
-        return GetDistanceFromPercentage(angleDiff);
+        percentageDistance += 1;
+        percentageDistance %= 1;
+
+        return GetDistanceFromPercentage(percentageDistance);
     }
 
     /// <summary>

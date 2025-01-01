@@ -55,7 +55,6 @@ public class EnemyModel : Character
         {
             vitalux -= currentAttackCost;
 
-            Debug.WriteLine($"direction: {direction}");
             Bullet bullet = new(dimension: currentDimension,
                     position: direction ?
                         GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
@@ -86,29 +85,31 @@ public class EnemyModel : Character
         if (weave) ignore.Add(typeof(WeaveModel));
 
         Interactive? target = FindInteractive(out float distanceFromTarget, direction, this, ignoreTypes: [.. ignore]);
-
-        if (target is EnemyModel)
-        {
-            direction = !direction;
-            return;
-        }
-
-        if (target is PlayerModel)
-        {
-            targetInSight = target;
-        }
-
         float step = stepDistance;
-        if (distanceFromTarget < step)
+        if (target != null)
         {
-            if (target is Item item)
+            if (target is EnemyModel)
             {
-                _ = item.Power(this);
+                direction = !direction;
+                return;
             }
-            else
+
+            if (target is PlayerModel)
             {
-                step = distanceFromTarget;
-                StopMovement();
+                targetInSight = target;
+            }
+
+            if (distanceFromTarget < step)
+            {
+                if (target is Item item)
+                {
+                    _ = item.Power(this);
+                }
+                else
+                {
+                    step = distanceFromTarget;
+                    StopMovement();
+                }
             }
         }
 

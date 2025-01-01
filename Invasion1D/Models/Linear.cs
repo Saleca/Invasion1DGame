@@ -42,16 +42,16 @@ public partial class Linear : Dimension
     public override PointF GetPositionInShape(float positionPercentage, float radius) =>
         GameMath.GetPositionInLine(this, positionPercentage, radius);
 
-    public override float GetDistanceBetweenPointsOnShape(float positionA, float positionB, bool direction)
+    public override float GetDistanceBetweenPointsOnShape(float percentagePositionA, float percentagePositionB, bool direction)
     {
         float percentageDistance;
         if (direction) // positive
         {
-            percentageDistance = positionB - positionA;
+            percentageDistance = percentagePositionB - percentagePositionA;
         }
         else // negative
         {
-            percentageDistance = positionA - positionB;
+            percentageDistance = percentagePositionA - percentagePositionB;
         }
 
         percentageDistance += 1;

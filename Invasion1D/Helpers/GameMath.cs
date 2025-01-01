@@ -17,17 +17,7 @@ internal static class GameMath
         float x = LinearInterpolation(line.StartPosition.X, line.EndPosition.X, percentage);
         float y = LinearInterpolation(line.StartPosition.Y, line.EndPosition.Y, percentage);
 
-        /*
-        float angleRadians = MathF.Atan2(line.EndPosition.Y - line.StartPosition.Y,
-                               line.EndPosition.X - line.StartPosition.X);
-        float offsetDistance = MathF.Max(0, (line.strokeThickness / 2) - radius);
-        float offsetX = offsetDistance * MathF.Cos(angleRadians + MathF.PI / 2);
-        float offsetY = offsetDistance * MathF.Sin(angleRadians + MathF.PI / 2);
-        x -= offsetX;
-        y -= offsetY;
-        //*/
-
-        /*
+        /* keeping this for now maybe to use on the line body offset 
         Vector2 start = new(line.StartPosition.X, line.StartPosition.Y);
         Vector2 end = new(line.EndPosition.X, line.EndPosition.Y);
         Vector2 direction = Vector2.Normalize(end - start);

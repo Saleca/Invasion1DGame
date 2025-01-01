@@ -14,6 +14,7 @@ namespace Invasion1D.Models
             : base(dimension, position, color, Stats.bulletSpeed)
         {
             this.direction = direction;
+
             if (weave)
             {
                 damage = condition = Stats.weaveAttackDamage;
@@ -46,16 +47,8 @@ namespace Invasion1D.Models
             if (distanceFromTarget < stepDistance)
             {
                 target?.TakeDamage(damage);
-                float damageReceived = damage;
-                if (target is Bullet bullet)
-                {
-                    damageReceived = bullet.damage;
-                }
-                TakeDamage(damageReceived);
-                if (condition <= 0)
-                {
-                    return;
-                }
+                TakeDamage(0);
+                return;
             }
 
             var step = currentDimension.GetPercentageFromDistance(stepDistance);
@@ -68,12 +61,7 @@ namespace Invasion1D.Models
 
         public override void TakeDamage(float damage)
         {
-            condition -= damage;
-            if (condition > 0)
-            {
-                return;
-            }
-
+            condition = 0;
             toDispose = true;
         }
     }

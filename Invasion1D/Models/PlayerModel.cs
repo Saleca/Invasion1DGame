@@ -180,7 +180,7 @@ public class PlayerModel : Character
         if (weave) ignore.Add(typeof(WeaveModel));
 
         Interactive? target = FindInteractive(
-                                closestTargetDistance: out float distanceFromTarget,
+                                targetDistance: out float distanceFromTarget,
                                 direction: direction,
                                 ignoreTypes: [.. ignore]);
 

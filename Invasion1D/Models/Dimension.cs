@@ -75,16 +75,32 @@ public abstract class Dimension()
 
         lock (interactiveObjects)
         {
-            foreach (var obj in interactiveObjects)
+            foreach (Interactive obj in interactiveObjects)
             {
-                float objRadiusPercentage = obj.diameterPercentage / 2;
-                float start2 = obj.PositionPercentage - objRadiusPercentage;
-                float end2 = obj.PositionPercentage + objRadiusPercentage;
+                float start2 = obj.PositionPercentage - obj.radiusPercentage;
+                float end2 = obj.PositionPercentage + obj.radiusPercentage;
 
                 if (start1 < end2 && start2 < end1)
                 {
                     return true;
                 }
+            }
+        }
+        return false;
+    }
+    public bool CheckOverlap(Interactive a, Interactive b)
+    {
+        lock (interactiveObjects)
+        {
+            float start1 = a.PositionPercentage - a.radiusPercentage;
+            float end1 = a.PositionPercentage + a.radiusPercentage;
+
+            float start2 = b.PositionPercentage - b.radiusPercentage;
+            float end2 = b.PositionPercentage + b.radiusPercentage;
+
+            if (start1 < end2 && start2 < end1)
+            {
+                return true;
             }
         }
         return false;

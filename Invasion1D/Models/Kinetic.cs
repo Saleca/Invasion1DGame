@@ -1,4 +1,5 @@
 ﻿using Invasion1D.Helpers;
+using System.Diagnostics;
 
 namespace Invasion1D.Models;
 
@@ -13,34 +14,45 @@ public abstract class Kinetic(Dimension dimension, float position, Color color, 
 
     public float DistanceFromTarget(Interactive target, bool direction)
     {
-        float distance = currentDimension.GetDistanceBetweenPointsOnShape(PositionPercentage, target.PositionPercentage, direction);
-        distance -= Radius;
+        float marginPosition = PositionPercentage + (direction ? radiusPercentage : -radiusPercentage);
+        float targetMarginPosition = target.PositionPercentage + (direction ? -target.radiusPercentage : target.radiusPercentage);
+        float distance = currentDimension.GetDistanceBetweenPointsOnShape(marginPosition, targetMarginPosition, direction);
         return distance;
     }
 
-    public Interactive? FindInteractive(out float closestTargetDistance, bool direction, Interactive? ignoreInstance = null, params Type[] ignoreTypes)
+    public Interactive? FindInteractive(out float targetDistance, bool direction, Interactive? ignoreInstance = null, params Type[] ignoreTypes)
     {
-        Interactive? closestTarget = null;
-        closestTargetDistance = float.MaxValue;
+        Interactive? target = null;
+        targetDistance = float.MaxValue;
 
         lock (currentDimension.interactiveObjects)
         {
-            foreach (var target in currentDimension.interactiveObjects)
+            foreach (var interactiveObject in currentDimension.interactiveObjects)
             {
-                if (ignoreTypes.Any(t => target.GetType() == t)
-                    || ReferenceEquals(target, ignoreInstance))
-                    continue;
-
-                float distance = DistanceFromTarget(target, direction);
-
-                if (distance < closestTargetDistance)
+                if (ignoreTypes.Any(t => interactiveObject.GetType() == t)
+                    || ReferenceEquals(interactiveObject, ignoreInstance))
                 {
-                    closestTargetDistance = distance;
-                    closestTarget = target;
+                    continue;
+                }
+
+                //*
+                if (this is Bullet bullet && currentDimension.CheckOverlap(bullet, interactiveObject))
+                {
+                    targetDistance = 0;
+                    return interactiveObject;
+                }
+                //*/
+
+                float distance = DistanceFromTarget(interactiveObject, direction);
+
+                if (distance < targetDistance)
+                {
+                    targetDistance = distance;
+                    target = interactiveObject;
                 }
             }
         }
-        return closestTarget;
+        return target;
     }
 
     public void GetView(out Color? view, out Color? rearView)
