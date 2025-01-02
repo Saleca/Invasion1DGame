@@ -2,33 +2,37 @@
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Invasion1D.Controls.TutorialIntro">
-    <ScrollView>
-        <VerticalStackLayout>
-            <Label 
+    <Grid
+        RowDefinitions="*,auto">
+        <ScrollView>
+            <VerticalStackLayout>
+                <Label 
                 Text="Welcome"
                 Style="{StaticResource Title}"/>
-            <Label 
+                <Label 
                 Text="This might seem overwhelming but its preety simple, first the weird words: you shoot Vitalux and use Warpium to teleport. Now the concept:"
                 Style="{StaticResource Text}"/>
-            <Label 
+                <Label 
                 Text="Invasion 1D is a 1st person shooter but in one dimention, so you can only move one way or the oposite way, the world only has one axis. The only way you can diferentiate objects is by color and they fade with distance."
                 Style="{StaticResource Text}"/>
-            <Label 
+                <Label 
                 Text="You have to manage the Vitalux and Warpium powers to survive and clear all enemies."
                 Style="{StaticResource Text}"/>
-            <Label 
+                <Label 
                 Text="Remember: Whats on the center of the view is in front of you and what is on the periferal vision is behind. Enemies are blue, Health is red, Weave is violet, Vitalux is yellow and Warpium is teal, if Vitalux color is still its an item to recharge your power"
                 Style="{StaticResource Text}"/>
-            <Label 
+                <Label 
                 Text="In this tutorial you can see the multiverse from a higher dimention. You are the green one, ready?"
                 Style="{StaticResource Text}"/>
-            <Label 
+                <Label 
                 Text="PS: Weave is a special shooting power currently has a weaker damage but if it doesnt hit anything it will keep going, although i will probably change it to temporary unlimited vitalux"
                 Style="{StaticResource Text}"/>
-            <Button 
-                Text="Start Tutorial"
-                Clicked="StartTutorialButton_Clicked"
-                Style="{StaticResource VerticalMenuButton}"/>
-        </VerticalStackLayout>
-    </ScrollView>
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button 
+            Text="Start Tutorial"
+            Clicked="StartTutorialButton_Clicked"
+            Style="{StaticResource VerticalMenuButton}"
+            Grid.Row="1"/>
+    </Grid>
 </ContentView>
