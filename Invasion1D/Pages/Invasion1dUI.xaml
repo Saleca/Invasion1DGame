@@ -55,7 +55,7 @@
             <Grid 
                 Grid.Row="1"
                 RowDefinitions="*,*"
-                ColumnDefinitions="*,*,*">
+                ColumnDefinitions="*,*">
                 <Label
                     Text="Health"
                     Grid.Row="0"
@@ -77,16 +77,6 @@
                     Progress="1"
                     Grid.Row="1"
                     Grid.Column="1"/>
-
-                <Label
-                     Text="Weave"
-                     Grid.Row="0"
-                     Grid.Column="2"/>
-                <local:InvertedProgressBar
-                    x:Name="WeaveCooldownProgressBar"
-                    ProgressBarColor="{StaticResource Weave}"
-                    Grid.Row="1"
-                    Grid.Column="2"/>
             </Grid>
         </Grid>
 

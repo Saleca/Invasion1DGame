@@ -149,7 +149,7 @@ public class PlayerModel : Character
                 return;
             }
             vitalux -= Stats.AttackCost;
-            Game.Instance.UI.UpdateVitaLux(vitalux);
+            Game.Instance.UI.UpdateVitalux(vitalux);
         }
 
         Bullet bullet = new(dimension: currentDimension,
@@ -194,7 +194,7 @@ public class PlayerModel : Character
                     switch (item)
                     {
                         case VitaluxModel:
-                            Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateVitaLux(vitalux));
+                            Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateVitalux(vitalux));
                             break;
                         case WarpiumModel:
                             Game.Instance.UI.RunOnUIThread(Game.Instance.UI.AddWarpium);
@@ -203,7 +203,7 @@ public class PlayerModel : Character
                             Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateHealth(health));
                             break;
                         case WeaveModel:
-                            Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateVitaLux(vitalux));
+                            Game.Instance.UI.RunOnUIThread(() => Game.Instance.UI.UpdateVitalux(vitalux));
                             break;
                     }
                 }
@@ -250,7 +250,8 @@ public class PlayerModel : Character
                     {
                         return;
                     }
-                    Game.Instance.UI.UpdateWeaveCooldown(1);
+                    Game.Instance.UI.UpdateVitalux(1);
+                    Game.Instance.UI.UpdateVitaluxColor(true);
                 });
             },
             update: (progress) =>
@@ -261,7 +262,7 @@ public class PlayerModel : Character
                     {
                         return;
                     }
-                    Game.Instance.UI.UpdateWeaveCooldown(progress);
+                    Game.Instance.UI.UpdateVitalux(progress);
                 });
             },
             complete: () =>
@@ -273,7 +274,8 @@ public class PlayerModel : Character
                     {
                         return;
                     }
-                    Game.Instance.UI.UpdateWeaveCooldown(0);
+                    Game.Instance.UI.UpdateVitalux(1);
+                    Game.Instance.UI.UpdateVitaluxColor(false);
                 });
             },
             interval: Stats.smoothIncrementIntervalF,

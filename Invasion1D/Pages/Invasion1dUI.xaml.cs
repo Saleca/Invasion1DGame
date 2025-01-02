@@ -53,13 +53,6 @@ public partial class Invasion1dUI : ContentPage
 
         HealthProgressBar.SizeChanged += InitializeHealthProgressBar;
         VitaluxProgressBar.SizeChanged += InitializeVitaluxProgressBar;
-
-        SizeChanged += Invasion1dUI_SizeChanged;
-    }
-
-    private void Invasion1dUI_SizeChanged(object? sender, EventArgs e)
-    {
-       
     }
 
     private void InitializeVitaluxProgressBar(object? sender, EventArgs e)
@@ -118,8 +111,9 @@ public partial class Invasion1dUI : ContentPage
     }
 
     public void UpdateHealth(float progress) => HealthProgressBar.Progress = progress;
-    public void UpdateVitaLux(float progress) => VitaluxProgressBar.Progress = progress;
-    public void UpdateWeaveCooldown(float progress) => WeaveCooldownProgressBar.Progress = progress;
+    public void UpdateVitalux(float progress) => VitaluxProgressBar.Progress = progress;
+    public void UpdateVitaluxColor(bool weave) => VitaluxProgressBar.ProgressBarColor = weave?GameColors.Weave:GameColors.Vitalux;
+
     public void UpdateShootCooldown(float progress) => ShootCooldownProgressBar.Progress = progress;
     public void UpdateWarpCooldown(float progress) => WarpCooldownProgressBar.Progress = progress;
 
