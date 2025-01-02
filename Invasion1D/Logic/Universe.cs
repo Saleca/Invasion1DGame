@@ -28,7 +28,7 @@ namespace Invasion1D.Logic
 
             float pp = .9f;
             player = new(dimensions[0], pp, Stats.playerSpeed);
-           // _ = new WeaveModel((Circular)dimensions[0], 0);
+            _ = new WeaveModel((Circular)dimensions[0], 0);
 
             player.GetView(
                 view: out Color? view,
@@ -42,7 +42,7 @@ namespace Invasion1D.Logic
         {
             enemies.AsParallel().ForAll(enemy => enemy.Start());
         }
-       
+
         public void Stop()
         {
             enemies.AsParallel().ForAll(enemy => enemy.Stop());

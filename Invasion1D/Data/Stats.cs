@@ -17,10 +17,10 @@ public static class Stats
         startWarpiumCount = 0;
 
     public const float
-        regularAttackCost = 0.25f,
-        regularAttackDamage = 0.5f,
+        AttackCost = 0.25f,
+        AttackDamage = 0.5f,
 
-        weaveAttackCost = 0.5f,
+        weaveAttackCost = 0.1f,
         weaveAttackDamage = 0.5f,
 
         minScoreItem = 0.5f,
@@ -54,7 +54,8 @@ public static class Stats
     public const int
         smoothIncrementIntervalF = 1;
     public const float
-        weaveCooldownIncrement = .01f,
+        weaveCooldownIncrement = .02f,
+        weaveShootCooldownIncrement = .25f,
         shootCooldownIncrement = .05f,
         warpCooldownIncrement = 1.0f / warpCooldownIncrementCount;
 

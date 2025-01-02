@@ -1,4 +1,5 @@
 ﻿using Invasion1D.Data;
+using Invasion1D.Helpers;
 using Invasion1D.Logic;
 
 namespace Invasion1D.Models
@@ -10,24 +11,18 @@ namespace Invasion1D.Models
             damage;
         Cooldown? lifeSpan;
 
-        public Bullet(Dimension dimension, float position, bool direction, bool weave, Color color)
-            : base(dimension, position, color, Stats.bulletSpeed)
+        public Bullet(Dimension dimension, float position, bool direction)
+            : base(dimension, position, GameColors.Vitalux, Stats.bulletSpeed)
         {
             this.direction = direction;
 
-            if (weave)
-            {
-                damage = condition = Stats.weaveAttackDamage;
-            }
-            else
-            {
-                damage = condition = Stats.regularAttackDamage;
+            damage = condition = Stats.AttackDamage;
 
-                lifeSpan = new(
-                    interval: Stats.bulletDurationF,
-                    complete: () => { TakeDamage(damage); });
-                lifeSpan.Activate();
-            }
+            lifeSpan = new(
+                interval: Stats.bulletDurationF,
+                complete: () => { TakeDamage(damage); });
+            lifeSpan.Activate();
+
             Game.Instance.universe.bullets.Add(this);
         }
 

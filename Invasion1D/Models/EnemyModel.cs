@@ -50,7 +50,7 @@ public class EnemyModel : Character
 
     public override void Attack()
     {
-        float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.regularAttackCost;
+        float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.AttackCost;
         if (vitalux >= currentAttackCost)
         {
             vitalux -= currentAttackCost;
@@ -59,9 +59,7 @@ public class EnemyModel : Character
                     position: direction ?
                         GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
                         GameMath.SubtractPercentage(PositionPercentage, diameterPercentage),
-                    direction: direction,
-                    weave: weave,
-                    color: weave ? GameColors.Weave : GameColors.Vitalux);
+                    direction: direction);
 
             Bullet.AddToUI(bullet);
 

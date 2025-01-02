@@ -142,34 +142,34 @@ public class PlayerModel : Character
             return;
         }
 
-        float currentAttackCost = weave ? Stats.weaveAttackCost : Stats.regularAttackCost;
-        if (vitalux >= currentAttackCost)
+        if (!weave)
         {
-            vitalux -= currentAttackCost;
+            if (vitalux < Stats.AttackCost)
+            {
+                return;
+            }
+            vitalux -= Stats.AttackCost;
             Game.Instance.UI.UpdateVitaLux(vitalux);
-
-            Bullet bullet = new(dimension: currentDimension,
-                    position: direction ?
-                        //possibly add radius of player and radius of bullet
-                        GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
-                        GameMath.SubtractPercentage(PositionPercentage, diameterPercentage),
-                    direction: direction,
-                    weave: weave,
-                    color: weave ? GameColors.Weave : GameColors.Vitalux);
-
-            Bullet.AddToUI(bullet);
-
-            if (direction)
-            {
-                bullet.PositiveMove();
-            }
-            else
-            {
-                bullet.NegativeMove();
-            }
-
-            shootCooldown.Activate();
         }
+
+        Bullet bullet = new(dimension: currentDimension,
+                position: direction ?
+                    //possibly add radius of player and radius of bullet
+                    GameMath.AddPercentage(PositionPercentage, diameterPercentage) :
+                    GameMath.SubtractPercentage(PositionPercentage, diameterPercentage),
+                direction: direction);
+
+        Bullet.AddToUI(bullet);
+
+        if (direction)
+        {
+            bullet.PositiveMove();
+        }
+        else
+        {
+            bullet.NegativeMove();
+        }
+        shootCooldown.Activate(increment: weave? Stats.weaveShootCooldownIncrement: Stats.shootCooldownIncrement);
     }
 
     public override void Move()

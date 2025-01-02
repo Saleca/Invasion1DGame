@@ -4,7 +4,6 @@ namespace Invasion1D.Logic;
 
 public class Cooldown(Action? start = null, Action<float>? update = null, Action? complete = null, float increment = 0, int interval = 1, bool inverted = false)
 {
-    readonly float increment = increment;
     readonly bool inverted = inverted;
     readonly Action?
         start = start,
@@ -29,19 +28,27 @@ public class Cooldown(Action? start = null, Action<float>? update = null, Action
     }
 
     int interval = interval;
+    float increment = increment;
+
     int currentInterval;
 
     float progress;
 
-    public void Activate(int? interval = null)
+    public void Activate(int? interval = null, float? increment = null)
     {
         active = true;
         progress = inverted ? 1 : 0;
+
 
         if (interval != null)
         {
             this.interval = interval.Value;
         }
+        if(increment != null)
+        {
+            this.increment = increment.Value;
+        }
+
         currentInterval = this.interval;
 
         start?.Invoke();
