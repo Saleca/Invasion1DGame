@@ -51,6 +51,9 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Controls\Views\InfoSheet.xaml.cs">
+		  <DependentUpon>InfoSheet.xaml</DependentUpon>
+		</Compile>
 		<Compile Update="Pages\Invasion1dUI.xaml.cs">
 			<DependentUpon>Invasion1dUI.xaml</DependentUpon>
 		</Compile>
@@ -63,8 +66,14 @@
 		<MauiXaml Update="Controls\Views\SeedView.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Controls\Views\InfoSheet.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Controls\Views\Settings.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Controls\Views\InfoItem.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Controls\Views\ThemeSelector.xaml">
 			<Generator>MSBuild:Compile</Generator>

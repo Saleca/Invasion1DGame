@@ -1,4 +1,4 @@
-namespace Invasion1D.Controls;
+namespace Invasion1D.Controls.Views;
 
 public partial class Settings : ContentView
 {

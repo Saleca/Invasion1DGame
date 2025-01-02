@@ -1,4 +1,5 @@
-﻿using Invasion1D.Controls;
+﻿using Invasion1D.Controls.Views;
+using Invasion1D.Controls;
 using Invasion1D.Helpers;
 using Invasion1D.Logic;
 using Microsoft.Maui.Controls.Shapes;
@@ -126,7 +127,6 @@ public partial class Invasion1dUI : ContentPage
     }
     public void RemoveWarpium()
     {
-        WarpiumContainer.RemoveAt(0);
         WarpiumContainer.RemoveAt(0);
     }
     public void ClearWarpium() => WarpiumContainer.Clear();
@@ -275,5 +275,11 @@ public partial class Invasion1dUI : ContentPage
     private void SettingsButton_Clicked(object sender, EventArgs e)
     {
         Menu.Modal = new Settings(seedReadOnly: true);
+    }
+
+
+    private void InfoSheetButton_Clicked(object sender, EventArgs e)
+    {
+        Menu.Modal = new InfoSheet();
     }
 }

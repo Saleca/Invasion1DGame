@@ -1,4 +1,4 @@
-namespace Invasion1D.Controls;
+namespace Invasion1D.Controls.Views;
 
 public partial class PopupMenu : Frame
 {
@@ -50,6 +50,11 @@ public partial class PopupMenu : Frame
         Modal = null;
         MenuContent = [];
         MenuContentView.Content = MenuContent;
+
+        TitleLabel.SetBinding(Label.TextProperty, new Binding(nameof(Title), source: this));
+        MenuContentView.SetBinding(ContentProperty, new Binding(nameof(MenuContent), source: this));
+        ModalView.SetBinding(ContentProperty, new Binding(nameof(Modal), source: this));
+
     }
 
     private void BackButton_Clicked(object sender, EventArgs e)

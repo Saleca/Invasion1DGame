@@ -2,12 +2,14 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Invasion1D.Controls"
+             xmlns:views="clr-namespace:Invasion1D.Controls.Views"
              x:Class="Invasion1D.Pages.StartMenu"
              Style="{StaticResource ContentPage}"
              Title="Start Menu">
-    <local:PopupMenu
+    <views:PopupMenu
+        Title="Start Menu"
         x:Name="Menu">
-        <local:PopupMenu.MenuContent>
+        <views:PopupMenu.MenuContent>
             <Label 
                 Text="A true one dimentional shooter game"/>
             <local:Space Style="{StaticResource MenuSpace}"/>
@@ -17,7 +19,7 @@
                 Clicked="Start_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
             <Button
-                Text="Learn More"
+                Text="How to play"
                 Clicked="Tutorial_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
             <Button 
@@ -29,6 +31,6 @@
                 Text="Privacy Policy"
                 Clicked="PrivacyPolicy_Clicked"
                 Style="{StaticResource VerticalMenuButton}"/>
-        </local:PopupMenu.MenuContent>
-    </local:PopupMenu>
+        </views:PopupMenu.MenuContent>
+    </views:PopupMenu>
 </ContentPage>

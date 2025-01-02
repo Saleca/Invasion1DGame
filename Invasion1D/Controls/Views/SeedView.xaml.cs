@@ -1,6 +1,6 @@
 using Invasion1D.Logic;
 
-namespace Invasion1D.Controls;
+namespace Invasion1D.Controls.Views;
 
 public partial class SeedView : Frame
 {

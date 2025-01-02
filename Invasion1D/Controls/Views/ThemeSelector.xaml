@@ -3,11 +3,11 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:local="clr-namespace:Invasion1D.Controls"
     Style="{StaticResource MenuItem}"
-    x:Class="Invasion1D.Controls.ThemeSelector">
+    x:Class="Invasion1D.Controls.Views.ThemeSelector">
     <Grid
         ColumnDefinitions="*,auto,*,auto,*">
         <Button 
-            x:Name="Light"
+            x:Name="LightButton"
             Text="Light"
             Clicked="LightButton_Clicked"
             Grid.Column="0"
@@ -18,7 +18,7 @@
             Style="{StaticResource VerticalSeparator}"/>
 
         <Button 
-            x:Name="Device"
+            x:Name="DeviceButton"
             Text="Device"
             Clicked="DeviceButton_Clicked"
             Grid.Column="2"
@@ -29,7 +29,7 @@
             Style="{StaticResource VerticalSeparator}"/>
 
         <Button
-            x:Name="Dark"
+            x:Name="DarkButton"
             Text="Dark"
             Clicked="DarkButton_Clicked"
             Grid.Column="4"

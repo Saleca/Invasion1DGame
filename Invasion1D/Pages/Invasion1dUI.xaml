@@ -2,6 +2,7 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Invasion1D.Controls"
+             xmlns:views="clr-namespace:Invasion1D.Controls.Views"
              xmlns:android="clr-namespace:Microsoft.Maui.Controls.PlatformConfiguration.AndroidSpecific;assembly=Microsoft.Maui.Controls"
              x:Class="Invasion1D.Pages.Invasion1dUI"
              Style="{StaticResource ContentPage}"
@@ -141,13 +142,13 @@
             </Grid>
         </Grid>
 
-        <local:PopupMenu
+        <views:PopupMenu
             x:Name="Menu"
             Title="Pause"
             Grid.RowSpan="3"
             IsVisible="False"
             Style="{StaticResource ConstrainedOverlayMenu}">
-            <local:PopupMenu.MenuContent>
+            <views:PopupMenu.MenuContent>
                 <Button 
                     x:Name="ContinueButton"
                     Text="Continue"
@@ -157,6 +158,10 @@
                     x:Name="RestartKey"
                     Text="Restart"
                     Clicked="RestartClicked"
+                    Style="{StaticResource VerticalMenuButton}"/>
+                <Button
+                    Text="Info sheet"
+                    Clicked="InfoSheetButton_Clicked"
                     Style="{StaticResource VerticalMenuButton}"/>
                 <Button 
                     x:Name="SettingsButton"
@@ -168,7 +173,7 @@
                     Text="Quit"
                     Clicked="LaunchPage_Clicked"
                     Style="{StaticResource VerticalMenuButton}"/>
-            </local:PopupMenu.MenuContent>
-        </local:PopupMenu>
+            </views:PopupMenu.MenuContent>
+        </views:PopupMenu>
     </Grid>
 </ContentPage>

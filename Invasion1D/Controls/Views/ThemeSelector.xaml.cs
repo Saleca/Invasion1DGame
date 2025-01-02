@@ -1,6 +1,6 @@
 using Invasion1D.Helpers;
 
-namespace Invasion1D.Controls;
+namespace Invasion1D.Controls.Views;
 
 public partial class ThemeSelector : Frame
 {
@@ -25,26 +25,18 @@ public partial class ThemeSelector : Frame
         InitializeComponent();
         if (device)
         {
-            selected = Device;
+            selected = DeviceButton;
         }
         else
         {
             AppTheme currentTheme = App.Current!.RequestedTheme;
-            switch (currentTheme)
+            selected = currentTheme switch
             {
-                case AppTheme.Light:
-                    selected = Light;
-                    break;
-                case AppTheme.Dark:
-                    selected = Dark;
-                    break;
-                case AppTheme.Unspecified:
-                    selected = Device;
-                    break;
-                default:
-                    selected = Device;
-                    break;
-            }
+                AppTheme.Light => LightButton,
+                AppTheme.Dark => DarkButton,
+                AppTheme.Unspecified => DeviceButton,
+                _ => DeviceButton,
+            };
         }
 
         selected.Style = selectedThemeButtonStyle;
@@ -53,7 +45,7 @@ public partial class ThemeSelector : Frame
     private void LightButton_Clicked(object sender, EventArgs e)
     {
         selected.Style = themeButtonStyle;
-        selected = Light;
+        selected = LightButton;
         selected.Style = selectedThemeButtonStyle;
         Application.Current!.UserAppTheme = AppTheme.Light;
         device = false;
@@ -62,7 +54,7 @@ public partial class ThemeSelector : Frame
     private void DeviceButton_Clicked(object sender, EventArgs e)
     {
         selected.Style = themeButtonStyle;
-        selected = Device;
+        selected = DeviceButton;
         selected.Style = selectedThemeButtonStyle;
         Application.Current!.UserAppTheme = AppTheme.Unspecified;
         device = true;
@@ -71,7 +63,7 @@ public partial class ThemeSelector : Frame
     private void DarkButton_Clicked(object sender, EventArgs e)
     {
         selected.Style = themeButtonStyle;
-        selected = Dark;
+        selected = DarkButton;
         selected.Style = selectedThemeButtonStyle;
         Application.Current!.UserAppTheme = AppTheme.Dark;
         device = false;

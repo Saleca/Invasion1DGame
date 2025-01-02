@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentView xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Invasion1D.Controls"
-    x:Class="Invasion1D.Controls.Settings">
+    xmlns:views="clr-namespace:Invasion1D.Controls.Views"
+    x:Class="Invasion1D.Controls.Views.Settings">
     <VerticalStackLayout>
-        <local:ThemeSelector/>
-        <local:SeedView
+        <views:ThemeSelector/>
+        <views:SeedView
             x:Name="SeedViewControl"/>
     </VerticalStackLayout>
 </ContentView>
