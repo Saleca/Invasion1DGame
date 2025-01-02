@@ -12,7 +12,7 @@ public class Populate
         Circular
             c1 = new(new(33, 33), 33),
             c2 = new(new(150, 150), 50),
-            c3 = new(new(400, 100), 66);
+            c3 = new(new(300, 100), 66);
 
         _ = new EnemyModel(c1, .20f, Stats.enemySpeed);
         _ = new EnemyModel(c1, .70f, Stats.enemySpeed);
@@ -36,7 +36,7 @@ public class Populate
         Linear
            l1 = new(new(90, 75), new(300, 0)),
            l2 = new(new(0, 200), new(100, 250)),
-           l3 = new(new(200, 300), new(400, 350));
+           l3 = new(new(200, 250), new(400, 250));
 
         _ = new EnemyModel(l1, .25f, Stats.enemySpeed);
         _ = new WarpiumModel(l1, .7f);

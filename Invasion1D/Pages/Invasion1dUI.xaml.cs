@@ -32,23 +32,34 @@ public partial class Invasion1dUI : ContentPage
     public AbsoluteLayout
         MapViewAccess => MapView;
 
-    readonly Style selectedButtonStyle;
-    public Invasion1dUI()
-    {
-        InitializeComponent();
+    static readonly Style selectedButtonStyle;
 
-        if (!ResourcesInterop.TryGetResource("SelectedButton", out Style? selectedButtonStyle))
+    static Invasion1dUI()
+    {
+        if (!ResourcesInterop.TryGetResource("SelectedButton", out Style? selectedButton))
         {
             throw new Exception();
         }
 
-        this.selectedButtonStyle = selectedButtonStyle!;
+        selectedButtonStyle = selectedButton!;
+    }
+
+    public Invasion1dUI()
+    {
+        InitializeComponent();
 
         MainFrame.SizeChanged += ViewSizeChanged;
         MapView.SizeChanged += InitializeMap;
 
         HealthProgressBar.SizeChanged += InitializeHealthProgressBar;
-        VitaluxProgressBar.SizeChanged += InitializeVitaluxProgressBar; ;
+        VitaluxProgressBar.SizeChanged += InitializeVitaluxProgressBar;
+
+        SizeChanged += Invasion1dUI_SizeChanged;
+    }
+
+    private void Invasion1dUI_SizeChanged(object? sender, EventArgs e)
+    {
+       
     }
 
     private void InitializeVitaluxProgressBar(object? sender, EventArgs e)
@@ -178,8 +189,8 @@ public partial class Invasion1dUI : ContentPage
     {
         //TODO:
         //remove hardcoded margins
-        double scaleX = MainFrame.Width / (MapView.Width + 20);
-        double scaleY = MainFrame.Height / (MapView.Height + 20);
+        double scaleX = MainFrame.Width / (MapView.Width + 40);
+        double scaleY = MainFrame.Height / (MapView.Height + 40);
 
         double scale = Math.Min(scaleX, scaleY);
         MapView.Scale = scale;
@@ -211,7 +222,7 @@ public partial class Invasion1dUI : ContentPage
         PlayerView.WidthRequest = MainFrame.Width;
         PlayerView.HeightRequest = MainFrame.Height;
 
-        if(Game.Instance.IsTutorial)
+        if (Game.Instance.IsTutorial)
         {
             CenterMapView(null, EventArgs.Empty);
         }
